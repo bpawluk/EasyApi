@@ -15,7 +15,9 @@ public sealed class App(IHost app) : IDisposable
     {
         var builder = Host.CreateApplicationBuilder();
         builder.Services.AddSingleton(httpClientProvider);
-        builder.Services.AddClient(typeof(TestRequest).Assembly);
+        builder.Services.AddEasyApi()
+                        .WithContract(typeof(TestRequest).Assembly)
+                        .WithClient();
         var app = builder.Build();
         app.Start();
         return new App(app);

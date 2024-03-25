@@ -8,8 +8,16 @@ using System.Reflection;
 
 namespace BlazorUtils.EasyApi.Shared.Contract;
 
-public class RequestAccessor<Request> where Request : class, IRequest, new()
+public abstract class RequestAccessor 
 {
+    public abstract Type RequestType { get; }
+}
+
+public class RequestAccessor<Request> : RequestAccessor
+    where Request : class, IRequest, new()
+{
+    public override Type RequestType => typeof(Request);
+
     public string GetRoute() => RequestUtils.GetRoute<Request>();
 
     public IEnumerable<IPropertyWrapper> GetBodyParams(Request request) => GetParamsWith<BodyParamAttribute>();

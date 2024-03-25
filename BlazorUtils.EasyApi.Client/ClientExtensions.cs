@@ -1,32 +1,32 @@
 ﻿using BlazorUtils.EasyApi.Client.Http;
 using BlazorUtils.EasyApi.Shared.Contract;
 using BlazorUtils.EasyApi.Shared.Reflection;
+using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Linq;
-using System.Reflection;
 
 namespace BlazorUtils.EasyApi.Client;
 
 public static class ClientExtensions
 {
-    public static IServiceCollection AddClient(this IServiceCollection services, Assembly contractSource)
+    public static AppBuilder WithClient(this AppBuilder builder)
     {
-        var requests = contractSource.GetTypes().Where(t => typeof(IRequest).IsAssignableFrom(t));
-        foreach (var request in requests)
+        foreach (var request in builder.Requests.All)
         {
-            if (request.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>)) is Type requestIface)
+            var requestType = request.RequestType;
+            if (requestType.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>)) is Type requestInterface)
             {
-                var response = requestIface.GetGenericArguments().Single();
-                typeof(ClientExtensions).InvokeGeneric(nameof(AddRequestWithResponse), new Type[] { request, response }, services);
+                var responseType = requestInterface.GetGenericArguments().Single();
+                typeof(ClientExtensions).InvokeGeneric(nameof(AddRequestWithResponse), new Type[] { requestType, responseType }, builder.Services);
             }
             else
             {
-                typeof(ClientExtensions).InvokeGeneric(nameof(AddRequest), request, services);
+                typeof(ClientExtensions).InvokeGeneric(nameof(AddRequest), requestType, builder.Services);
             }
         }
-        return services;
+        return builder;
     }
 
     public static void AddRequest<Request>(IServiceCollection services)

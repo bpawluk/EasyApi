@@ -8,9 +8,11 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddServer(typeof(TestRequest).Assembly);
+        builder.Services.AddEasyApi()
+                        .WithContract(typeof(TestRequest).Assembly)
+                        .WithServer();
         var app = builder.Build();
-        app.MapRequests(typeof(TestRequest).Assembly);
+        app.MapRequests();
         app.Run();
     }
 }

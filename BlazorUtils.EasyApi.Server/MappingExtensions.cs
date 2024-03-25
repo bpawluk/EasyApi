@@ -1,27 +1,29 @@
 ﻿using BlazorUtils.EasyApi.Server.Http;
+using BlazorUtils.EasyApi.Shared.Contract;
 using BlazorUtils.EasyApi.Shared.Reflection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
-using System.Reflection;
 
 namespace BlazorUtils.EasyApi.Server;
 
 public static class MappingExtensions
 {
-    public static WebApplication MapRequests(this WebApplication app, Assembly contractSource)
+    public static WebApplication MapRequests(this WebApplication app)
     {
-        var requests = contractSource.GetTypes().Where(t => typeof(IRequest).IsAssignableFrom(t));
-        foreach (var request in requests)
+        var requests = app.Services.GetRequiredService<Requests>();
+        foreach (var request in requests.All)
         {
-            if (request.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>)) is Type requestIface)
+            var requestType = request.RequestType;
+            if (requestType.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>)) is Type requestIface)
             {
-                var response = requestIface.GetGenericArguments().Single();
-                typeof(MappingExtensions).InvokeGeneric(nameof(MapRequestWithResponse), new Type[] { request, response }, app);
+                var responseType = requestIface.GetGenericArguments().Single();
+                typeof(MappingExtensions).InvokeGeneric(nameof(MapRequestWithResponse), new Type[] { requestType, responseType }, app);
             }
             else
             {
-                typeof(MappingExtensions).InvokeGeneric(nameof(MapRequest), request, app);
+                typeof(MappingExtensions).InvokeGeneric(nameof(MapRequest), requestType, app);
             }
         }
         return app;

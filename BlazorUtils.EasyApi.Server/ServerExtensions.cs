@@ -1,6 +1,7 @@
 ﻿using BlazorUtils.EasyApi.Server.Handling;
 using BlazorUtils.EasyApi.Shared.Contract;
 using BlazorUtils.EasyApi.Shared.Reflection;
+using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
@@ -12,23 +13,23 @@ namespace BlazorUtils.EasyApi.Server;
 
 public static class ServerExtensions
 {
-    public static IServiceCollection AddServer(this IServiceCollection services, Assembly contractSource)
+    public static AppBuilder WithServer(this AppBuilder builder)
     {
-        var requests = contractSource.GetTypes().Where(t => typeof(IRequest).IsAssignableFrom(t));
         var handlers = Assembly.GetCallingAssembly().GetTypes().Where(t => typeof(IHandle).IsAssignableFrom(t));
-        foreach (var request in requests)
+        foreach (var request in builder.Requests.All)
         {
-            if (request.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>)) is Type requestIface)
+            var requestType = request.RequestType;
+            if (requestType.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>)) is Type requestIface)
             {
-                var response = requestIface.GetGenericArguments().Single();
-                typeof(ServerExtensions).InvokeGeneric(nameof(AddRequestWithResponse), new Type[] { request, response }, services, handlers);
+                var responseType = requestIface.GetGenericArguments().Single();
+                typeof(ServerExtensions).InvokeGeneric(nameof(AddRequestWithResponse), new Type[] { requestType, responseType }, builder.Services, handlers);
             }
             else
             {
-                typeof(ServerExtensions).InvokeGeneric(nameof(AddRequest), request, services, handlers);
+                typeof(ServerExtensions).InvokeGeneric(nameof(AddRequest), requestType, builder.Services, handlers);
             }
         }
-        return services;
+        return builder;
     }
 
     public static void AddRequest<Request>(IServiceCollection services, IEnumerable<Type> handlers)
