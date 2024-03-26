@@ -8,14 +8,17 @@ using System.Reflection;
 
 namespace BlazorUtils.EasyApi.Shared.Contract;
 
-public abstract class RequestAccessor 
+public abstract class RequestAccessor
 {
+    public string Route { get; }
+
     public Type RequestType { get; }
 
     public Type? ResponseType { get; }
 
-    public RequestAccessor(Type requestType)
+    public RequestAccessor(string route, Type requestType)
     {
+        Route = route;
         RequestType = requestType;
         ResponseType = requestType
             .GetInterfaces()
@@ -28,9 +31,16 @@ public abstract class RequestAccessor
 public class RequestAccessor<Request> : RequestAccessor
     where Request : class, IRequest, new()
 {
-    public RequestAccessor() : base(typeof(Request)) { }
+    public RequestAccessor() : base(GetRoute(), typeof(Request)) { }
 
-    public string GetRoute() => RequestUtils.GetRoute<Request>();
+    public static string GetRoute()
+    {
+        if (Attribute.GetCustomAttribute(typeof(Request), typeof(RouteAttribute)) is RouteAttribute route)
+        {
+            return route.Value;
+        }
+        return string.Empty;
+    }
 
     public IEnumerable<IPropertyWrapper> GetBodyParams(Request request) => GetParamsWith<BodyParamAttribute>();
 
@@ -47,8 +57,8 @@ public class RequestAccessor<Request> : RequestAccessor
 
     private IPropertyWrapper GetPropertyWrapper(PropertyInfo property)
     {
-        var propertyType = property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>) 
-            ? Nullable.GetUnderlyingType(property.PropertyType)! 
+        var propertyType = property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>)
+            ? Nullable.GetUnderlyingType(property.PropertyType)!
             : property.PropertyType;
         return (typeof(PropertyWrapper<>)
             .Apply(propertyType)

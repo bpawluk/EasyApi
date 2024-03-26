@@ -11,34 +11,38 @@ public static class MappingExtensions
 {
     public static WebApplication MapRequests(this WebApplication app)
     {
-        var requests = app.Services.GetRequiredService<Requests>();
-        foreach (var request in requests.All)
+        foreach (var request in app.Services.GetRequiredService<Requests>().All)
         {
-            var requestType = request.RequestType;
             if (request.ResponseType is Type responseType)
             {
-                typeof(MappingExtensions).InvokeGeneric(nameof(MapRequestWithResponse), new Type[] { requestType, responseType }, app);
+                typeof(MappingExtensions).InvokeGeneric(
+                    nameof(MapRequestWithResponse), 
+                    new Type[] { request.RequestType, responseType }, 
+                    request.Route,
+                    app);
             }
             else
             {
-                typeof(MappingExtensions).InvokeGeneric(nameof(MapRequest), requestType, app);
+                typeof(MappingExtensions).InvokeGeneric(
+                    nameof(MapRequest), 
+                    request.RequestType, 
+                    request.Route,
+                    app);
             }
         }
         return app;
     }
 
-    public static void MapRequest<Request>(this WebApplication app)
+    public static void MapRequest<Request>(string route, WebApplication app)
         where Request : class, IRequest, new()
     {
-        var route = RequestUtils.GetRoute<Request>();
         var method = new string[] { HttpMethodUtils.GetHttpMethod<Request>() };
         app.MapMethods(route, method, HttpHandler.Handle<Request>);
     }
 
-    public static void MapRequestWithResponse<Request, Response>(this WebApplication app)
+    public static void MapRequestWithResponse<Request, Response>(string route, WebApplication app)
         where Request : class, IRequest<Response>, new()
     {
-        var route = RequestUtils.GetRoute<Request>();
         var method = new string[] { HttpMethodUtils.GetHttpMethod<Request, Response>() };
         app.MapMethods(route, method, HttpHandler.Handle<Request, Response>);
     }
