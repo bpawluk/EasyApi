@@ -4,7 +4,6 @@ using BlazorUtils.EasyApi.Shared.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Linq;
 
 namespace BlazorUtils.EasyApi.Server;
 

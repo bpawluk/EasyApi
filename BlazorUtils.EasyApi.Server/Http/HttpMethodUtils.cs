@@ -11,12 +11,12 @@ public static class HttpMethodUtils
     {
         return typeof(Request) switch
         {
-            Type type when type.Implements(typeof(IGet)) => HttpMethods.Get,
-            Type type when type.Implements(typeof(IHead)) => HttpMethods.Head,
-            Type type when type.Implements(typeof(IPost)) => HttpMethods.Post,
-            Type type when type.Implements(typeof(IPut)) => HttpMethods.Put,
-            Type type when type.Implements(typeof(IPatch)) => HttpMethods.Patch,
-            Type type when type.Implements(typeof(IDelete)) => HttpMethods.Delete,
+            Type type when type.Implements<IGet>() => HttpMethods.Get,
+            Type type when type.Implements<IHead>() => HttpMethods.Head,
+            Type type when type.Implements<IPost>() => HttpMethods.Post,
+            Type type when type.Implements<IPut>() => HttpMethods.Put,
+            Type type when type.Implements<IPatch>() => HttpMethods.Patch,
+            Type type when type.Implements<IDelete>() => HttpMethods.Delete,
             _ => throw new ArgumentException($"Failed to match HTTP method for {typeof(Request).Name}")
         };
     }
@@ -26,11 +26,11 @@ public static class HttpMethodUtils
     {
         return typeof(Request) switch
         {
-            Type type when type.Implements(typeof(IGet<Response>)) => HttpMethods.Get,
-            Type type when type.Implements(typeof(IPost<Response>)) => HttpMethods.Post,
-            Type type when type.Implements(typeof(IPut<Response>)) => HttpMethods.Post,
-            Type type when type.Implements(typeof(IPatch<Response>)) => HttpMethods.Patch,
-            Type type when type.Implements(typeof(IDelete<Response>)) => HttpMethods.Delete,
+            Type type when type.Implements<IGet<Response>>() => HttpMethods.Get,
+            Type type when type.Implements<IPost<Response>>() => HttpMethods.Post,
+            Type type when type.Implements<IPut<Response>>() => HttpMethods.Post,
+            Type type when type.Implements<IPatch<Response>>() => HttpMethods.Patch,
+            Type type when type.Implements<IDelete<Response>>() => HttpMethods.Delete,
             _ => throw new ArgumentException($"Failed to match HTTP method for {typeof(Request).Name}")
         };
     }

@@ -1,4 +1,5 @@
 ﻿using BlazorUtils.EasyApi.Server.Handling;
+using BlazorUtils.EasyApi.Shared.Exceptions;
 using BlazorUtils.EasyApi.Shared.Reflection;
 using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,39 +12,57 @@ namespace BlazorUtils.EasyApi.Server;
 
 public static class ServerExtensions
 {
-    public static AppBuilder WithServer(this AppBuilder builder)
+    public static AppBuilder WithServer(this AppBuilder builder, params Assembly[] sources)
     {
-        var handlers = Assembly.GetCallingAssembly().GetTypes().Where(t => typeof(IHandle).IsAssignableFrom(t));
+        var defaultSource = Assembly.GetCallingAssembly();
+        var handlers = sources
+            .Append(defaultSource)
+            .Distinct()
+            .SelectMany(assembly => assembly.GetTypes())
+            .Where(type => type.Implements<IHandle>());
+
         foreach (var request in builder.Requests.All)
         {
-            var requestType = request.RequestType;
             if (request.ResponseType is Type responseType)
             {
-                typeof(ServerExtensions).InvokeGeneric(nameof(AddRequestWithResponse), new Type[] { requestType, responseType }, builder.Services, handlers);
+                typeof(ServerExtensions).InvokeGeneric(
+                    nameof(AddRequestWithResponse),
+                    new Type[] { request.RequestType, responseType },
+                    builder.Services,
+                    handlers);
             }
             else
             {
-                typeof(ServerExtensions).InvokeGeneric(nameof(AddRequest), requestType, builder.Services, handlers);
+                typeof(ServerExtensions).InvokeGeneric(
+                    nameof(AddRequest),
+                    request.RequestType,
+                    builder.Services,
+                    handlers);
             }
         }
+
         return builder;
     }
 
     public static void AddRequest<Request>(IServiceCollection services, IEnumerable<Type> handlers)
         where Request : class, IRequest, new()
     {
-        var handler = handlers.SingleOrDefault(t => typeof(IHandle<Request>).IsAssignableFrom(t) && !t.IsInterface)
-            ?? throw new ArgumentException($"Could not locate a request handler for {typeof(Request).Name}");
+        var handlerInterface = typeof(IHandle<Request>);
+        services.AddTransient(handlerInterface, FindHandler(handlers, handlerInterface));
         services.AddTransient<ICall<Request>, HandlerCaller<Request>>();
-        services.AddTransient(typeof(IHandle<Request>), handler);
     }
 
     public static void AddRequestWithResponse<Request, Response>(IServiceCollection services, IEnumerable<Type> handlers)
         where Request : class, IRequest<Response>, new()
     {
-        var handler = handlers.SingleOrDefault(t => typeof(IHandle<Request, Response>).IsAssignableFrom(t) && !t.IsInterface)
-            ?? throw new ArgumentException($"Could not locate a request handler for {typeof(Request).Name}");
+        var handlerInterface = typeof(IHandle<Request, Response>);
+        services.AddTransient(handlerInterface, FindHandler(handlers, handlerInterface));
         services.AddTransient<ICall<Request, Response>, HandlerCaller<Request, Response>>();
-        services.AddTransient(typeof(IHandle<Request, Response>), handler);
+    }
+
+    private static Type FindHandler(IEnumerable<Type> handlers, Type handlerInterface)
+    {
+        var handler = handlers.SingleOrDefault(type => type.Implements(handlerInterface));
+        return handler ?? throw new SetupException($"A request handler of type {handlerInterface.GetGenericName()} is not registered");
     }
 }

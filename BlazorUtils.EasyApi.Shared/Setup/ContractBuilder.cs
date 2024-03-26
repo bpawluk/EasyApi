@@ -20,8 +20,8 @@ public class ContractBuilder
         var requests = sources
             .Distinct()
             .SelectMany(assembly => assembly.GetTypes())
-            .Where(t => typeof(IRequest).IsAssignableFrom(t))
-            .ToDictionary(t => t, t => (typeof(RequestAccessor<>).Apply(t).Create() as RequestAccessor)!);
+            .Where(type => type.Implements<IRequest>())
+            .ToDictionary(type => type, type => (typeof(RequestAccessor<>).Apply(type).Create() as RequestAccessor)!);
         var contract = new Requests(requests);
         _services.AddSingleton(contract);
         return new(_services, contract);

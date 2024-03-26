@@ -3,7 +3,6 @@ using BlazorUtils.EasyApi.Shared.Reflection;
 using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Linq;
 
 namespace BlazorUtils.EasyApi.Client;
 
@@ -13,14 +12,19 @@ public static class ClientExtensions
     {
         foreach (var request in builder.Requests.All)
         {
-            var requestType = request.RequestType;
             if (request.ResponseType is Type responseType)
             {
-                typeof(ClientExtensions).InvokeGeneric(nameof(AddRequestWithResponse), new Type[] { requestType, responseType }, builder.Services);
+                typeof(ClientExtensions).InvokeGeneric(
+                    nameof(AddRequestWithResponse), 
+                    new Type[] { request.RequestType, responseType }, 
+                    builder.Services);
             }
             else
             {
-                typeof(ClientExtensions).InvokeGeneric(nameof(AddRequest), requestType, builder.Services);
+                typeof(ClientExtensions).InvokeGeneric(
+                    nameof(AddRequest),
+                    request.RequestType, 
+                    builder.Services);
             }
         }
         return builder;

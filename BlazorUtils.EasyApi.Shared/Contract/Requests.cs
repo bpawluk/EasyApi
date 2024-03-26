@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlazorUtils.EasyApi.Shared.Exceptions;
+using System;
 using System.Collections.Generic;
 
 namespace BlazorUtils.EasyApi.Shared.Contract;
@@ -22,6 +23,6 @@ public class Requests
         {
             return (_requests[requestType] as RequestAccessor<Request>)!;
         }
-        throw new ArgumentException($"A request of type {requestType.Name} was not registered");
+        throw new SetupException($"A request of type {requestType.Name} is not registered");
     }
 }
