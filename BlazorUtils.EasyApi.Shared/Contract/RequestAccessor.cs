@@ -10,13 +10,25 @@ namespace BlazorUtils.EasyApi.Shared.Contract;
 
 public abstract class RequestAccessor 
 {
-    public abstract Type RequestType { get; }
+    public Type RequestType { get; }
+
+    public Type? ResponseType { get; }
+
+    public RequestAccessor(Type requestType)
+    {
+        RequestType = requestType;
+        ResponseType = requestType
+            .GetInterfaces()
+            .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>))?
+            .GetGenericArguments()
+            .Single();
+    }
 }
 
 public class RequestAccessor<Request> : RequestAccessor
     where Request : class, IRequest, new()
 {
-    public override Type RequestType => typeof(Request);
+    public RequestAccessor() : base(typeof(Request)) { }
 
     public string GetRoute() => RequestUtils.GetRoute<Request>();
 

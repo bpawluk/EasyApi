@@ -1,9 +1,7 @@
 ﻿using BlazorUtils.EasyApi.Server.Handling;
-using BlazorUtils.EasyApi.Shared.Contract;
 using BlazorUtils.EasyApi.Shared.Reflection;
 using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +17,8 @@ public static class ServerExtensions
         foreach (var request in builder.Requests.All)
         {
             var requestType = request.RequestType;
-            if (requestType.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>)) is Type requestIface)
+            if (request.ResponseType is Type responseType)
             {
-                var responseType = requestIface.GetGenericArguments().Single();
                 typeof(ServerExtensions).InvokeGeneric(nameof(AddRequestWithResponse), new Type[] { requestType, responseType }, builder.Services, handlers);
             }
             else
@@ -37,7 +34,6 @@ public static class ServerExtensions
     {
         var handler = handlers.SingleOrDefault(t => typeof(IHandle<Request>).IsAssignableFrom(t) && !t.IsInterface)
             ?? throw new ArgumentException($"Could not locate a request handler for {typeof(Request).Name}");
-        services.TryAddSingleton<RequestAccessor<Request>>();
         services.AddTransient<ICall<Request>, HandlerCaller<Request>>();
         services.AddTransient(typeof(IHandle<Request>), handler);
     }
@@ -47,7 +43,6 @@ public static class ServerExtensions
     {
         var handler = handlers.SingleOrDefault(t => typeof(IHandle<Request, Response>).IsAssignableFrom(t) && !t.IsInterface)
             ?? throw new ArgumentException($"Could not locate a request handler for {typeof(Request).Name}");
-        services.TryAddSingleton<RequestAccessor<Request>>();
         services.AddTransient<ICall<Request, Response>, HandlerCaller<Request, Response>>();
         services.AddTransient(typeof(IHandle<Request, Response>), handler);
     }

@@ -19,10 +19,19 @@ public class CallingTests : IClassFixture<WebApplicationFactory<Program>>, IDisp
     }
 
     [Fact]
-    public async Task Test()
+    public async Task Calls()
     {
-        var request = new TestRequest() { Number = 1 };
-        var caller = _sut.Services.GetRequiredService<ICall<TestRequest, TestRequest.Response>>();
+        var request = new PostRequest() { Number = 1 };
+        var caller = _sut.Services.GetRequiredService<ICall<PostRequest>>();
+
+        await caller.Call(request, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task CallsWithResponse()
+    {
+        var request = new GetRequest() { Number = 1 };
+        var caller = _sut.Services.GetRequiredService<ICall<GetRequest, GetRequest.Response>>();
 
         var response = await caller.Call(request, CancellationToken.None);
 

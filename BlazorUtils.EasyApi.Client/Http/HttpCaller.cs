@@ -13,8 +13,8 @@ namespace BlazorUtils.EasyApi.Client.Http;
 internal class HttpCaller<Request> : HttpCallerBase<Request>, ICall<Request>
     where Request : class, IRequest, new()
 {
-    public HttpCaller(IHttpClientProvider httpClientProvider, RequestAccessor<Request> accessor) 
-        : base(httpClientProvider, accessor) { }
+    public HttpCaller(IHttpClientProvider httpClientProvider, Requests requests) 
+        : base(httpClientProvider, requests) { }
 
     public async Task Call(Request request, CancellationToken cancellationToken)
     {
@@ -27,8 +27,8 @@ internal class HttpCaller<Request> : HttpCallerBase<Request>, ICall<Request>
 internal class HttpCaller<Request, Response> : HttpCallerBase<Request>, ICall<Request, Response>
     where Request : class, IRequest<Response>, new()
 {
-    public HttpCaller(IHttpClientProvider httpClientProvider, RequestAccessor<Request> accessor) 
-        : base(httpClientProvider, accessor) { }
+    public HttpCaller(IHttpClientProvider httpClientProvider, Requests requests) 
+        : base(httpClientProvider, requests) { }
 
     public async Task<Response> Call(Request request, CancellationToken cancellationToken)
     {
@@ -46,10 +46,10 @@ internal abstract class HttpCallerBase<Request>
     private readonly RequestAccessor<Request> _accessor;
     private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-    protected HttpCallerBase(IHttpClientProvider httpClientProvider, RequestAccessor<Request> accessor)
+    protected HttpCallerBase(IHttpClientProvider httpClientProvider, Requests requests)
     {
         _httpClientProvider = httpClientProvider;
-        _accessor = accessor;
+        _accessor = requests.Get<Request>();
         _jsonSerializerOptions = new JsonSerializerOptions();
         _jsonSerializerOptions.Converters.Add(new RequestBodyConverter<Request>(_accessor));
     }

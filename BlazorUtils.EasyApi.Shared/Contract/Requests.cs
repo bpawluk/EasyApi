@@ -14,7 +14,7 @@ public class Requests
         _requests = requests;
     }
 
-    internal RequestAccessor<Request> Get<Request>()
+    public RequestAccessor<Request> Get<Request>()
         where Request : class, IRequest, new()
     {
         var requestType = typeof(Request);

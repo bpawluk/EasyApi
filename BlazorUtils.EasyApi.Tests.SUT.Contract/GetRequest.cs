@@ -1,11 +1,11 @@
-﻿using static BlazorUtils.EasyApi.Tests.SUT.Contract.TestRequest;
+﻿using static BlazorUtils.EasyApi.Tests.SUT.Contract.GetRequest;
 
 namespace BlazorUtils.EasyApi.Tests.SUT.Contract;
 
 [Route("test")]
-public class TestRequest : IPost<Response>
+public class GetRequest : IGet<Response>
 {
-    [BodyParam]
+    [HeaderParam]
     public int Number { get; init; }
 
     public class Response 

@@ -12,11 +12,12 @@ internal static class HttpHandler
 {
     public async static Task<IResult> Handle<Request>(
         HttpRequest httpRequest,
-        RequestAccessor<Request> accessor,
+        Requests requests,
         IHandle<Request> handler,
         CancellationToken cancellationToken)
         where Request : class, IRequest, new()
     {
+        var accessor = requests.Get<Request>();
         var request = await GetRequest(httpRequest, accessor).ConfigureAwait(false);
         await handler.Handle(request, cancellationToken).ConfigureAwait(false);
         return Results.Ok();
@@ -24,11 +25,12 @@ internal static class HttpHandler
 
     public async static Task<IResult> Handle<Request, Response>(
         HttpRequest httpRequest,
-        RequestAccessor<Request> accessor,
-        IHandle<Request, Response> handler, 
+        Requests requests,
+        IHandle<Request, Response> handler,
         CancellationToken cancellationToken)
         where Request : class, IRequest<Response>, new()
     {
+        var accessor = requests.Get<Request>();
         var request = await GetRequest(httpRequest, accessor).ConfigureAwait(false);
         var result = await handler.Handle(request, cancellationToken).ConfigureAwait(false);
         return Results.Ok(result);
@@ -62,7 +64,7 @@ internal static class HttpHandler
     private static async Task AddBodyParams<Request>(Request request, RequestAccessor<Request> accessor, Stream body)
         where Request : class, IRequest, new()
     {
-        if (body.CanRead)
+        if (body.CanRead && body.Length > 0)
         {
             var jsonBody = await JsonDocument.ParseAsync(body).ConfigureAwait(false);
             foreach (var param in accessor.GetBodyParams(request))

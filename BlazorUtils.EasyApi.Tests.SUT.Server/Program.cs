@@ -9,7 +9,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddEasyApi()
-                        .WithContract(typeof(TestRequest).Assembly)
+                        .WithContract(typeof(PostRequest).Assembly)
                         .WithServer();
         var app = builder.Build();
         app.MapRequests();

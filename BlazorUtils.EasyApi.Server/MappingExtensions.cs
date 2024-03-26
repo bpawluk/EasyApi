@@ -16,9 +16,8 @@ public static class MappingExtensions
         foreach (var request in requests.All)
         {
             var requestType = request.RequestType;
-            if (requestType.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>)) is Type requestIface)
+            if (request.ResponseType is Type responseType)
             {
-                var responseType = requestIface.GetGenericArguments().Single();
                 typeof(MappingExtensions).InvokeGeneric(nameof(MapRequestWithResponse), new Type[] { requestType, responseType }, app);
             }
             else
