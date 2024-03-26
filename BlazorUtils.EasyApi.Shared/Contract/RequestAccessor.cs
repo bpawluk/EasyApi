@@ -10,37 +10,27 @@ namespace BlazorUtils.EasyApi.Shared.Contract;
 
 public abstract class RequestAccessor
 {
-    public string Route { get; }
-
     public Type RequestType { get; }
 
     public Type? ResponseType { get; }
 
-    public RequestAccessor(string route, Type requestType)
+    public string Route { get; }
+
+    public RequestAccessor(Type requestType, Type? responseType, string route)
     {
-        Route = route;
         RequestType = requestType;
-        ResponseType = requestType
-            .GetInterfaces()
-            .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>))?
-            .GetGenericArguments()
-            .Single();
+        ResponseType = responseType;
+        Route = route;
     }
 }
 
 public class RequestAccessor<Request> : RequestAccessor
     where Request : class, IRequest, new()
 {
-    public RequestAccessor() : base(GetRoute(), typeof(Request)) { }
-
-    public static string GetRoute()
-    {
-        if (Attribute.GetCustomAttribute(typeof(Request), typeof(RouteAttribute)) is RouteAttribute route)
-        {
-            return route.Value;
-        }
-        return string.Empty;
-    }
+    public RequestAccessor() : base(
+        GetRequestType(), 
+        GetResponseType(),
+        GetRoute()) { }
 
     public IEnumerable<IPropertyWrapper> GetBodyParams(Request request) => GetParamsWith<BodyParamAttribute>();
 
@@ -66,4 +56,21 @@ public class RequestAccessor<Request> : RequestAccessor
     }
 
     private IParamConverter GetConverter(Type type) => (new ConvertersProvider().InvokeGeneric(nameof(IConvertersProvider.Get), type) as IParamConverter)!;
+
+    private static Type GetRequestType() => typeof(Request);
+
+    private static Type? GetResponseType() => GetRequestType()
+        .GetInterfaces()
+        .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>))?
+        .GetGenericArguments()
+        .Single();
+
+    private static string GetRoute()
+    {
+        if (Attribute.GetCustomAttribute(GetRequestType(), typeof(RouteAttribute)) is RouteAttribute route)
+        {
+            return route.Value;
+        }
+        return string.Empty;
+    }
 }
