@@ -1,29 +1,17 @@
-using BlazorUtils.EasyApi.Tests.SUT.Client;
 using BlazorUtils.EasyApi.Tests.SUT.Contract;
 using BlazorUtils.EasyApi.Tests.SUT.Server;
-using BlazorUtils.EasyApi.Tests.Utils;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorUtils.EasyApi.Tests;
 
-public class CallingTests : IClassFixture<WebApplicationFactory<Program>>, IDisposable
+public class CallingTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
 {
-    private readonly App _sut;
-
-    public CallingTests(WebApplicationFactory<Program> factory)
-    {
-        var httpClient = factory.CreateClient();
-        var httpClientProvider = new HttpClientProvider(httpClient);
-        _sut = App.Create(httpClientProvider);
-    }
-
     [Fact]
     public async Task Calls()
     {
         var request = new PostRequest() { Number = 1 };
         var caller = _sut.Services.GetRequiredService<ICall<PostRequest>>();
-
         await caller.Call(request, CancellationToken.None);
     }
 
@@ -37,11 +25,5 @@ public class CallingTests : IClassFixture<WebApplicationFactory<Program>>, IDisp
 
         Assert.NotNull(response);
         Assert.Equal(request.Number + 1, response.Number);
-    }
-
-    public void Dispose()
-    {
-        _sut.Dispose();
-        GC.SuppressFinalize(this);
     }
 }
