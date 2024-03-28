@@ -1,4 +1,5 @@
 ﻿using BlazorUtils.EasyApi.Shared.Contract;
+using BlazorUtils.EasyApi.Shared.Json;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Linq;
@@ -19,8 +20,8 @@ internal static class HttpHandler
     {
         var accessor = requests.Get<Request>();
         var request = await GetRequest(httpRequest, accessor, cancellationToken).ConfigureAwait(false);
-        await handler.Handle(request, cancellationToken).ConfigureAwait(false);
-        return Results.Ok();
+        var result = await handler.Handle(request, cancellationToken).ConfigureAwait(false);
+        return Results.StatusCode((int)result.StatusCode);
     }
 
     public async static Task<IResult> Handle<Request, Response>(
@@ -33,11 +34,15 @@ internal static class HttpHandler
         var accessor = requests.Get<Request>();
         var request = await GetRequest(httpRequest, accessor, cancellationToken).ConfigureAwait(false);
         var result = await handler.Handle(request, cancellationToken).ConfigureAwait(false);
-        return Results.Ok(result);
+        if (result.HasResponse)
+        {
+            return Results.Json(result.Response, options: JsonOptions.Get, statusCode: (int)result.StatusCode);
+        }
+        return Results.StatusCode((int)result.StatusCode);
     }
 
     private async static Task<Request> GetRequest<Request>(
-        HttpRequest httpRequest, 
+        HttpRequest httpRequest,
         RequestAccessor<Request> accessor,
         CancellationToken cancellationToken) where Request : class, IRequest, new()
     {
@@ -64,10 +69,10 @@ internal static class HttpHandler
     }
 
     private static async Task AddBodyParams<Request>(
-        Request request, 
-        RequestAccessor<Request> accessor, 
+        Request request,
+        RequestAccessor<Request> accessor,
         Stream body,
-        CancellationToken cancellationToken)  where Request : class, IRequest, new()
+        CancellationToken cancellationToken) where Request : class, IRequest, new()
     {
         if (body != Stream.Null && body.CanRead)
         {

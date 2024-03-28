@@ -5,8 +5,5 @@ namespace BlazorUtils.EasyApi.Tests.SUT.Server.Handlers;
 
 public class PostRequestHandler : IHandle<PostRequest>
 {
-    public Task Handle(PostRequest request, CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
+    Task<HttpResult> IHandle<PostRequest>.Handle(PostRequest request, CancellationToken cancellationToken) => Task.FromResult(HttpResult.Ok());
 }

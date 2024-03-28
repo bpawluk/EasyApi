@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using BlazorUtils.EasyApi.Shared.Json;
+using System.Text.Json;
 
 namespace BlazorUtils.EasyApi.Shared.Serialization.Converters;
 
@@ -8,7 +9,7 @@ internal class DefaultParamConverter<T> : IParamConverter<T>
 
     public static DefaultParamConverter<T> Instance => _instance ??= new DefaultParamConverter<T>();
 
-    public T Read(string value) => JsonSerializer.Deserialize<T>(value)!;
+    public T Read(string value) => JsonSerializer.Deserialize<T>(value, JsonOptions.Get)!;
 
-    public string Write(T value) => JsonSerializer.Serialize(value);
+    public string Write(T value) => JsonSerializer.Serialize(value, JsonOptions.Get);
 }

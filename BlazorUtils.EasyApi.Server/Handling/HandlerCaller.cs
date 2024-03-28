@@ -13,7 +13,13 @@ internal class HandlerCaller<Request> : ICall<Request>
         _handler = handler;
     }
 
-    public Task Call(Request request, CancellationToken cancellationToken) => _handler.Handle(request, cancellationToken);
+    public async Task Call(Request request, CancellationToken cancellationToken)
+    {
+        var result = await _handler.Handle(request, cancellationToken);
+        result.EnsureSucceeded();
+    }
+
+    public Task<HttpResult> CallHttp(Request request, CancellationToken cancellationToken) => _handler.Handle(request, cancellationToken);
 }
 
 internal class HandlerCaller<Request, Response> : ICall<Request, Response>
@@ -26,5 +32,12 @@ internal class HandlerCaller<Request, Response> : ICall<Request, Response>
         _handler = handler;
     }
 
-    public Task<Response> Call(Request request, CancellationToken cancellationToken) => _handler.Handle(request, cancellationToken);
+    public async Task<Response> Call(Request request, CancellationToken cancellationToken)
+    {
+        var result = await _handler.Handle(request, cancellationToken);
+        result.EnsureSucceeded();
+        return result.Response!;
+    }
+
+    public Task<HttpResult<Response>> CallHttp(Request request, CancellationToken cancellationToken) => _handler.Handle(request, cancellationToken);
 }

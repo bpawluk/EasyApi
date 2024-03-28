@@ -1,5 +1,6 @@
 ﻿using BlazorUtils.EasyApi.Shared.Contract;
 using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -17,19 +18,23 @@ internal class RequestBodyConverter<Request> : JsonConverter<Request>
 
     public override Request Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
     }
 
     public override void Write(Utf8JsonWriter writer, Request request, JsonSerializerOptions options)
     {
-        writer.WriteStartObject();
-
-        foreach (var param in _accessor.GetBodyParams(request))
+        var bodyParams = _accessor.GetBodyParams(request);
+        if (bodyParams.Any())
         {
-            writer.WritePropertyName(param.Name);
-            JsonSerializer.Serialize(writer, param.ReadFrom(request), options);
-        }
+            writer.WriteStartObject();
 
-        writer.WriteEndObject();
+            foreach (var param in bodyParams)
+            {
+                writer.WritePropertyName(param.Name);
+                JsonSerializer.Serialize(writer, param.ReadFrom(request), options);
+            }
+
+            writer.WriteEndObject();
+        }
     }
 }
