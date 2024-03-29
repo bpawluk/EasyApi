@@ -3,6 +3,7 @@ using BlazorUtils.EasyApi.Shared.Contract;
 using BlazorUtils.EasyApi.Shared.Json;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -124,5 +125,12 @@ internal abstract class HttpCallerBase<Request>
         return new(route, UriKind.Relative);
     }
 
-    private JsonContent WriteContent(Request request) => JsonContent.Create(request, options: _jsonSerializerOptions);
+    private HttpContent? WriteContent(Request request)
+    {
+        if (_accessor.GetBodyParams(request).Any())
+        {
+            return JsonContent.Create(request, options: _jsonSerializerOptions);
+        }
+        return null;
+    }
 }
