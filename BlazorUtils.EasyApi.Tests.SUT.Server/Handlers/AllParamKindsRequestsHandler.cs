@@ -2,7 +2,7 @@
 
 namespace BlazorUtils.EasyApi.Tests.SUT.Contract;
 
-internal class ParamKindsRequestsHandler
+internal class AllParamKindsRequestsHandler
     : HandlerBase
     , IHandle<HeaderParamRequest>
     , IHandle<RouteParamRequest>

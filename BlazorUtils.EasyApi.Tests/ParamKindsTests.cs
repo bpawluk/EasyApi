@@ -1,17 +1,15 @@
 ﻿using BlazorUtils.EasyApi.Tests.SUT.Contract;
 using BlazorUtils.EasyApi.Tests.SUT.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net;
 
-namespace BlazorUtils.EasyApi.Tests.ByParamKind;
+namespace BlazorUtils.EasyApi.Tests;
 
 public class ParamKindsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
 {
     [Fact]
-    public async Task SendingRequests_WithHeaderParams()
+    public async Task Request_WithHeaderParams()
     {
-        var request = new HeaderParamRequest() 
+        var request = new HeaderParamRequest()
         {
             Number = 1,
             Text = "text",
@@ -28,16 +26,11 @@ public class ParamKindsTests(WebApplicationFactory<Program> factory) : TestsBase
                 CreatedAt = DateTime.UtcNow
             }
         };
-        var caller = _sut.Services.GetRequiredService<ICall<HeaderParamRequest>>();
-
-        var response = await caller.CallHttp(request, CancellationToken.None);
-
-        Assert.NotNull(response);
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        await CallHttp(request);
     }
 
     [Fact]
-    public async Task SendingRequests_WithRouteParams()
+    public async Task Request_WithRouteParams()
     {
         var request = new RouteParamRequest()
         {
@@ -56,16 +49,11 @@ public class ParamKindsTests(WebApplicationFactory<Program> factory) : TestsBase
                 CreatedAt = DateTime.UtcNow
             }
         };
-        var caller = _sut.Services.GetRequiredService<ICall<RouteParamRequest>>();
-
-        var response = await caller.CallHttp(request, CancellationToken.None);
-
-        Assert.NotNull(response);
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        await CallHttp(request);
     }
 
     [Fact]
-    public async Task SendingRequests_WithQueryStringParams()
+    public async Task Request_WithQueryStringParams()
     {
         var request = new QueryStringParamRequest()
         {
@@ -84,16 +72,11 @@ public class ParamKindsTests(WebApplicationFactory<Program> factory) : TestsBase
                 CreatedAt = DateTime.UtcNow
             }
         };
-        var caller = _sut.Services.GetRequiredService<ICall<QueryStringParamRequest>>();
-
-        var response = await caller.CallHttp(request, CancellationToken.None);
-
-        Assert.NotNull(response);
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        await CallHttp(request);
     }
 
     [Fact]
-    public async Task SendingRequests_WithBodyParams()
+    public async Task Request_WithBodyParams()
     {
         var request = new BodyParamRequest()
         {
@@ -112,11 +95,6 @@ public class ParamKindsTests(WebApplicationFactory<Program> factory) : TestsBase
                 CreatedAt = DateTime.UtcNow
             }
         };
-        var caller = _sut.Services.GetRequiredService<ICall<BodyParamRequest>>();
-
-        var response = await caller.CallHttp(request, CancellationToken.None);
-
-        Assert.NotNull(response);
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        await CallHttp(request);
     }
 }

@@ -28,7 +28,7 @@ public static class HttpMethodUtils
         {
             Type type when type.Implements<IGet<Response>>() => HttpMethods.Get,
             Type type when type.Implements<IPost<Response>>() => HttpMethods.Post,
-            Type type when type.Implements<IPut<Response>>() => HttpMethods.Post,
+            Type type when type.Implements<IPut<Response>>() => HttpMethods.Put,
             Type type when type.Implements<IPatch<Response>>() => HttpMethods.Patch,
             Type type when type.Implements<IDelete<Response>>() => HttpMethods.Delete,
             _ => throw new ArgumentException($"Failed to match HTTP method for {typeof(Request).Name}")

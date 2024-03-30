@@ -65,8 +65,12 @@ internal class HttpCaller<Request, Response> : HttpCallerBase<Request>, ICall<Re
         var body = await content.ReadAsStreamAsync(cancellationToken);
         if (body != Stream.Null && body.CanRead)
         {
-            var response = await JsonSerializer.DeserializeAsync<Response>(body, JsonOptions.Get, cancellationToken);
-            return (true, response);
+            try
+            {
+                var response = await JsonSerializer.DeserializeAsync<Response>(body, JsonOptions.Get, cancellationToken);
+                return (true, response);
+            }
+            catch (JsonException) { }
         }
         return (false, default);
     }

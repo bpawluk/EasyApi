@@ -4,8 +4,11 @@ namespace BlazorUtils.EasyApi.Tests.SUT.Contract;
 
 internal class HandlerBase
 {
-    protected static Task<HttpResult> HandleRequest(IRequest request) 
+    protected static Task<HttpResult> HandleRequest(IRequest request)
         => Task.FromResult(IsFilled(request) ? HttpResult.Ok() : HttpResult.BadRequest());
+
+    protected static Task<HttpResult<Response>> HandleRequest<Response>(IRequest<Response> request)
+        => Task.FromResult(IsFilled(request) ? HttpResult<Response>.Ok(GetResponse(request)) : HttpResult<Response>.BadRequest());
 
     private static bool IsFilled(object value)
     {
@@ -37,5 +40,19 @@ internal class HandlerBase
             return Equals(value, Activator.CreateInstance(type));
         }
         return value is null;
+    }
+
+    private static Response GetResponse<Response>(IRequest<Response> request)
+    {
+        var response = Activator.CreateInstance(typeof(Response))!;
+        foreach (var requestProperty in request.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        {
+            var responseProperty = typeof(Response).GetProperty(requestProperty.Name);
+            if (responseProperty?.CanWrite is true && responseProperty.PropertyType.IsAssignableFrom(requestProperty.PropertyType))
+            {
+                responseProperty.SetValue(response, requestProperty.GetValue(request));
+            }
+        }
+        return (Response)response;
     }
 }
