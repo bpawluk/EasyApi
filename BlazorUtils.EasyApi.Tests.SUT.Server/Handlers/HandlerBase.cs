@@ -1,14 +1,19 @@
-﻿using System.Reflection;
+﻿using System.Net;
+using System.Reflection;
 
 namespace BlazorUtils.EasyApi.Tests.SUT.Contract;
 
 internal class HandlerBase
 {
-    protected static Task<HttpResult> HandleRequest(IRequest request)
-        => Task.FromResult(IsFilled(request) ? HttpResult.Ok() : HttpResult.BadRequest());
+    protected static Task<HttpResult> HandleRequest(IRequest request, HttpStatusCode successStatusCode = HttpStatusCode.OK)
+        => Task.FromResult(IsFilled(request) 
+            ? HttpResult.WithStatusCode(successStatusCode) 
+            : HttpResult.BadRequest());
 
-    protected static Task<HttpResult<Response>> HandleRequest<Response>(IRequest<Response> request)
-        => Task.FromResult(IsFilled(request) ? HttpResult<Response>.Ok(GetResponse(request)) : HttpResult<Response>.BadRequest());
+    protected static Task<HttpResult<Response>> HandleRequest<Response>(IRequest<Response> request, HttpStatusCode successStatusCode = HttpStatusCode.OK)
+        => Task.FromResult(IsFilled(request) 
+            ? HttpResult<Response>.WithStatusCode(successStatusCode, GetResponse(request)) 
+            : HttpResult<Response>.BadRequest());
 
     private static bool IsFilled(object value)
     {
