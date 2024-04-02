@@ -27,13 +27,24 @@ public class PropertyWrapper<T> : IPropertyWrapper
 
     public string? ReadFrom(IRequest request)
     {
-        var paramValue = _propertyInfo.GetValue(request);
-        return paramValue == null ? default : _converter.Write((T)paramValue);
+        var value = _propertyInfo.GetValue(request);
+        if (typeof(T) == typeof(string))
+        {
+            return value as string;
+        }
+        return value == null ? default : _converter.Write((T)value);
     }
 
-    public void WriteTo(IRequest request, string? value) 
+    public void WriteTo(IRequest request, string? value)
     {
-        var paramValue = value == null ? default : _converter.Read(value!);
-        _propertyInfo.SetValue(request, paramValue);
+        if (typeof(T) == typeof(string))
+        {
+            _propertyInfo.SetValue(request, value);
+        }
+        else
+        {
+            var convertedValue = string.IsNullOrEmpty(value) ? default : _converter.Read(value!);
+            _propertyInfo.SetValue(request, convertedValue);
+        }
     }
 }

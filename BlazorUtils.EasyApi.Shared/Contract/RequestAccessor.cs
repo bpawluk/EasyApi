@@ -45,15 +45,9 @@ public class RequestAccessor<Request> : RequestAccessor
         .Where(property => property.GetCustomAttribute(typeof(AttributeType)) is AttributeType)
         .Select(property => GetPropertyWrapper(property));
 
-    private IPropertyWrapper GetPropertyWrapper(PropertyInfo property)
-    {
-        var propertyType = property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>)
-            ? Nullable.GetUnderlyingType(property.PropertyType)!
-            : property.PropertyType;
-        return (typeof(PropertyWrapper<>)
-            .Apply(propertyType)
-            .Create(property, GetConverter(propertyType)) as IPropertyWrapper)!;
-    }
+    private IPropertyWrapper GetPropertyWrapper(PropertyInfo property) => (typeof(PropertyWrapper<>)
+        .Apply(property.PropertyType)
+        .Create(property, GetConverter(property.PropertyType)) as IPropertyWrapper)!;
 
     private IParamConverter GetConverter(Type type) => (new ConvertersProvider().InvokeGeneric(nameof(IConvertersProvider.Get), type) as IParamConverter)!;
 

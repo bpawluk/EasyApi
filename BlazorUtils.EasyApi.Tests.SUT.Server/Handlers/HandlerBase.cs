@@ -27,7 +27,8 @@ internal class HandlerBase
         {
             foreach (var property in valueType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                if (!IsFilled(property.GetValue(value)!))
+                var mustBeFilled = !property.Name.ToLowerInvariant().Contains("default");
+                if (mustBeFilled && !IsFilled(property.GetValue(value)!))
                 {
                     return false;
                 }
