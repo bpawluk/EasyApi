@@ -9,4 +9,17 @@ public class Product
     public int StockQuantity { get; init; }
 
     public DateTime CreatedAt { get; init; }
+
+    public override bool Equals(object? other)
+    {
+        if (other == null || GetType() != other.GetType())
+        {
+            return false;
+        }
+        var otherProduct = other as Product;
+        return Name == otherProduct!.Name
+            && Price == otherProduct.Price
+            && StockQuantity == otherProduct.StockQuantity
+            && CreatedAt == otherProduct.CreatedAt;
+    }
 }

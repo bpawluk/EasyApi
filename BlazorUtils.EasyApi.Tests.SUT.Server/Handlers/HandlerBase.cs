@@ -23,7 +23,7 @@ internal class HandlerBase
         }
 
         var valueType = value.GetType();
-        if (valueType.Namespace?.StartsWith("System") is false)
+        if (valueType.Namespace?.StartsWith("System") is false && !valueType.IsArray)
         {
             foreach (var property in valueType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {

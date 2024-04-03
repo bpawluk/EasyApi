@@ -1,13 +1,5 @@
 ﻿namespace BlazorUtils.EasyApi.Tests.SUT.Contract.ParamTypes;
 
-public enum Season
-{
-    Spring,
-    Summer,
-    Autumn,
-    Winter
-}
-
 [Route("param-type/enum")]
 public class EnumParamsRequest : IPost<EnumParamsRequest.Response>
 {
@@ -23,4 +15,12 @@ public class EnumParamsRequest : IPost<EnumParamsRequest.Response>
         public Season? NullableEnumWithValue { get; init; }
         public Season? NullableEnumDefault { get; init; }
     }
+}
+
+public enum Season
+{
+    Spring,
+    Summer,
+    Autumn,
+    Winter
 }
