@@ -6,13 +6,13 @@ namespace BlazorUtils.EasyApi.Tests.SUT.Contract;
 internal class HandlerBase
 {
     protected static Task<HttpResult> HandleRequest(IRequest request, HttpStatusCode successStatusCode = HttpStatusCode.OK)
-        => Task.FromResult(IsFilled(request) 
-            ? HttpResult.WithStatusCode(successStatusCode) 
+        => Task.FromResult(IsFilled(request)
+            ? HttpResult.WithStatusCode(successStatusCode)
             : HttpResult.BadRequest());
 
     protected static Task<HttpResult<Response>> HandleRequest<Response>(IRequest<Response> request, HttpStatusCode successStatusCode = HttpStatusCode.OK)
-        => Task.FromResult(IsFilled(request) 
-            ? HttpResult<Response>.WithStatusCode(successStatusCode, GetResponse(request)) 
+        => Task.FromResult(IsFilled(request)
+            ? HttpResult<Response>.WithStatusCode(successStatusCode, GetResponse(request))
             : HttpResult<Response>.BadRequest());
 
     private static bool IsFilled(object value)
@@ -40,12 +40,18 @@ internal class HandlerBase
 
     private static bool IsNullOrDefault(object value)
     {
+        if (value is null)
+        {
+            return true;
+        }
+
         var type = value.GetType();
         if (type.IsValueType)
         {
             return Equals(value, Activator.CreateInstance(type));
         }
-        return value is null;
+
+        return false;
     }
 
     private static Response GetResponse<Response>(IRequest<Response> request)

@@ -128,8 +128,8 @@ public class FloatingParamsRequest : IPost<FloatingParamsRequest.Response>
 public class BooleanParamsRequest : IPost<BooleanParamsRequest.Response>
 {
     [HeaderParam] public bool Bool { get; init; }
-    [HeaderParam] public bool BoolDefault { get; init; }
-    [HeaderParam] public bool? NullableBoolWithValue { get; init; }
+    [QueryStringParam] public bool BoolDefault { get; init; }
+    [BodyParam] public bool? NullableBoolWithValue { get; init; }
     [HeaderParam] public bool? NullableBoolDefault { get; init; }
 
     public class Response
@@ -145,8 +145,8 @@ public class BooleanParamsRequest : IPost<BooleanParamsRequest.Response>
 public class CharacterParamsRequest : IPost<CharacterParamsRequest.Response>
 {
     [HeaderParam] public char Char { get; init; }
-    [HeaderParam] public char CharDefault { get; init; }
-    [HeaderParam] public char? NullableCharWithValue { get; init; }
+    [QueryStringParam] public char CharDefault { get; init; }
+    [BodyParam] public char? NullableCharWithValue { get; init; }
     [HeaderParam] public char? NullableCharDefault { get; init; }
 
     public class Response
