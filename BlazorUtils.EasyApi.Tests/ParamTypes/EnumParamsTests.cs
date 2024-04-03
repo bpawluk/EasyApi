@@ -1,11 +1,9 @@
 ﻿using BlazorUtils.EasyApi.Tests.SUT.Contract.ParamTypes;
-using BlazorUtils.EasyApi.Tests.SUT.Server;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorUtils.EasyApi.Tests.ParamTypes;
 
-public abstract class EnumParamsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
+public abstract class EnumParamsTests(TestsFixture fixture) : TestsBase(fixture)
 {
     [Fact]
     public async Task Request_WithEnumParams()
@@ -27,14 +25,14 @@ public abstract class EnumParamsTests(WebApplicationFactory<Program> factory) : 
     }
 }
 
-public class Client_EnumParamsTests(WebApplicationFactory<Program> factory) : EnumParamsTests(factory)
+public class Client_EnumParamsTests(TestsFixture fixture) : EnumParamsTests(fixture)
 {
     protected override ICall<Request> GetCaller<Request>() => _client.Services.GetRequiredService<ICall<Request>>();
 
     protected override ICall<Request, Response> GetCaller<Request, Response>() => _client.Services.GetRequiredService<ICall<Request, Response>>();
 }
 
-public class Server_EnumParamsTests(WebApplicationFactory<Program> factory) : EnumParamsTests(factory)
+public class Server_EnumParamsTests(TestsFixture fixture) : EnumParamsTests(fixture)
 {
     protected override ICall<Request> GetCaller<Request>() => _server.Services.GetRequiredService<ICall<Request>>();
 

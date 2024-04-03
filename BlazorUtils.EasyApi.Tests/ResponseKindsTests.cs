@@ -1,13 +1,11 @@
 ﻿using BlazorUtils.EasyApi.Tests.SUT.Contract;
-using BlazorUtils.EasyApi.Tests.SUT.Server;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using static BlazorUtils.EasyApi.Tests.SUT.Contract.WithResponseRequest;
 
 namespace BlazorUtils.EasyApi.Tests;
 
-public abstract class ResponseKindsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
+public abstract class ResponseKindsTests(TestsFixture fixture) : TestsBase(fixture)
 {
     public static TheoryData<HttpStatusCode> SuccessStatusCodes => new()
     {
@@ -193,14 +191,14 @@ public abstract class ResponseKindsTests(WebApplicationFactory<Program> factory)
     }
 }
 
-public class Client_ResponseKindsTests(WebApplicationFactory<Program> factory) : ResponseKindsTests(factory)
+public class Client_ResponseKindsTests(TestsFixture fixture) : ResponseKindsTests(fixture)
 {
     protected override ICall<Request> GetCaller<Request>() => _client.Services.GetRequiredService<ICall<Request>>();
 
     protected override ICall<Request, Response> GetCaller<Request, Response>() => _client.Services.GetRequiredService<ICall<Request, Response>>();
 }
 
-public class Server_ResponseKindsTests(WebApplicationFactory<Program> factory) : ResponseKindsTests(factory)
+public class Server_ResponseKindsTests(TestsFixture fixture) : ResponseKindsTests(fixture)
 {
     protected override ICall<Request> GetCaller<Request>() => _server.Services.GetRequiredService<ICall<Request>>();
 

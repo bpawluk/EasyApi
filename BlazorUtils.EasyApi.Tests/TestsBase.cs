@@ -1,23 +1,14 @@
 ﻿using BlazorUtils.EasyApi.Tests.SUT.Client;
 using BlazorUtils.EasyApi.Tests.SUT.Server;
-using BlazorUtils.EasyApi.Tests.Utils;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 
 namespace BlazorUtils.EasyApi.Tests;
 
-public abstract class TestsBase : IClassFixture<WebApplicationFactory<Program>>, IDisposable
+public abstract class TestsBase(TestsFixture fixture) : IClassFixture<TestsFixture>
 {
-    protected readonly App _client;
-    protected readonly WebApplicationFactory<Program> _server;
-
-    public TestsBase(WebApplicationFactory<Program> factory)
-    {
-        var httpClient = factory.CreateClient();
-        var httpClientProvider = new HttpClientProvider(httpClient);
-        _client = App.Create(httpClientProvider);
-        _server = factory;
-    }
+    protected readonly App _client = fixture.Client;
+    protected readonly WebApplicationFactory<Program> _server = fixture.Server;
 
     protected abstract ICall<Request> GetCaller<Request>() 
         where Request : class, IRequest, new();
@@ -43,11 +34,5 @@ public abstract class TestsBase : IClassFixture<WebApplicationFactory<Program>>,
         Assert.Equal(expectedStatusCode, response.StatusCode);
         Assert.True(response.HasResponse);
         return response.Response!;
-    }
-
-    public void Dispose()
-    {
-        _client.Dispose();
-        GC.SuppressFinalize(this);
     }
 }

@@ -1,8 +1,5 @@
-﻿using BlazorUtils.EasyApi.Tests.SUT.Server;
-using Microsoft.AspNetCore.Mvc.Testing;
+﻿namespace BlazorUtils.EasyApi.Tests.ParamTypes;
 
-namespace BlazorUtils.EasyApi.Tests.ParamTypes;
-
-public abstract class ComplexParamsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
+public abstract class ComplexParamsTests(TestsFixture fixture) : TestsBase(fixture)
 {
 }

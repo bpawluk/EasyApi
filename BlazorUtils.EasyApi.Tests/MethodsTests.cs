@@ -1,11 +1,9 @@
 ﻿using BlazorUtils.EasyApi.Tests.SUT.Contract;
-using BlazorUtils.EasyApi.Tests.SUT.Server;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorUtils.EasyApi.Tests;
 
-public abstract class MethodsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
+public abstract class MethodsTests(TestsFixture fixture) : TestsBase(fixture)
 {
     [Fact]
     public async Task Request_HttpGet()
@@ -90,14 +88,14 @@ public abstract class MethodsTests(WebApplicationFactory<Program> factory) : Tes
     }
 }
 
-public class Client_MethodsTests(WebApplicationFactory<Program> factory) : MethodsTests(factory)
+public class Client_MethodsTests(TestsFixture fixture) : MethodsTests(fixture)
 {
     protected override ICall<Request> GetCaller<Request>() => _client.Services.GetRequiredService<ICall<Request>>();
 
     protected override ICall<Request, Response> GetCaller<Request, Response>() => _client.Services.GetRequiredService<ICall<Request, Response>>();
 }
 
-public class Server_MethodsTests(WebApplicationFactory<Program> factory) : MethodsTests(factory)
+public class Server_MethodsTests(TestsFixture fixture) : MethodsTests(fixture)
 {
     protected override ICall<Request> GetCaller<Request>() => _server.Services.GetRequiredService<ICall<Request>>();
 

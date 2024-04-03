@@ -1,11 +1,9 @@
 ﻿using BlazorUtils.EasyApi.Tests.SUT.Contract.ParamTypes;
-using BlazorUtils.EasyApi.Tests.SUT.Server;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorUtils.EasyApi.Tests.ParamTypes;
 
-public abstract class PrimitiveParamsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
+public abstract class PrimitiveParamsTests(TestsFixture fixture) : TestsBase(fixture)
 {
     [Fact]
     public async Task Request_WithPrimitiveParams_IntegralNumbers()
@@ -156,14 +154,14 @@ public abstract class PrimitiveParamsTests(WebApplicationFactory<Program> factor
     }
 }
 
-public class Client_PrimitiveParamsTests(WebApplicationFactory<Program> factory) : PrimitiveParamsTests(factory)
+public class Client_PrimitiveParamsTests(TestsFixture fixture) : PrimitiveParamsTests(fixture)
 {
     protected override ICall<Request> GetCaller<Request>() => _client.Services.GetRequiredService<ICall<Request>>();
 
     protected override ICall<Request, Response> GetCaller<Request, Response>() => _client.Services.GetRequiredService<ICall<Request, Response>>();
 }
 
-public class Server_PrimitiveParamsTests(WebApplicationFactory<Program> factory) : PrimitiveParamsTests(factory)
+public class Server_PrimitiveParamsTests(TestsFixture fixture) : PrimitiveParamsTests(fixture)
 {
     protected override ICall<Request> GetCaller<Request>() => _server.Services.GetRequiredService<ICall<Request>>();
 

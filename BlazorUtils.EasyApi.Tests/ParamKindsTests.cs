@@ -1,11 +1,9 @@
 ﻿using BlazorUtils.EasyApi.Tests.SUT.Contract;
-using BlazorUtils.EasyApi.Tests.SUT.Server;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorUtils.EasyApi.Tests;
 
-public abstract class ParamKindsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
+public abstract class ParamKindsTests(TestsFixture fixture) : TestsBase(fixture)
 {
     [Fact]
     public async Task Request_WithHeaderParams()
@@ -100,14 +98,14 @@ public abstract class ParamKindsTests(WebApplicationFactory<Program> factory) : 
     }
 }
 
-public class Client_ParamKindsTests(WebApplicationFactory<Program> factory) : ParamKindsTests(factory)
+public class Client_ParamKindsTests(TestsFixture fixture) : ParamKindsTests(fixture)
 {
     protected override ICall<Request> GetCaller<Request>() => _client.Services.GetRequiredService<ICall<Request>>();
 
     protected override ICall<Request, Response> GetCaller<Request, Response>() => _client.Services.GetRequiredService<ICall<Request, Response>>();
 }
 
-public class Server_ParamKindsTests(WebApplicationFactory<Program> factory) : ParamKindsTests(factory)
+public class Server_ParamKindsTests(TestsFixture fixture) : ParamKindsTests(fixture)
 {
     protected override ICall<Request> GetCaller<Request>() => _server.Services.GetRequiredService<ICall<Request>>();
 
