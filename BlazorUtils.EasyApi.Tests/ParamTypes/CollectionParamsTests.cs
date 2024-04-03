@@ -2,10 +2,11 @@
 using BlazorUtils.EasyApi.Tests.SUT.Contract.ParamTypes;
 using BlazorUtils.EasyApi.Tests.SUT.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorUtils.EasyApi.Tests.ParamTypes;
 
-public class CollectionParamsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
+public abstract class CollectionParamsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
 {
     private readonly IEnumerable<int> _numbers = [1, 2, 3];
     private readonly IEnumerable<int?> _nullableNumbers = [1, null, 2, null, 3];
@@ -102,4 +103,18 @@ public class CollectionParamsTests(WebApplicationFactory<Program> factory) : Tes
     // queue
 
     // dictionary
+}
+
+public class Client_CollectionParamsTests(WebApplicationFactory<Program> factory) : CollectionParamsTests(factory)
+{
+    protected override ICall<Request> GetCaller<Request>() => _client.Services.GetRequiredService<ICall<Request>>();
+
+    protected override ICall<Request, Response> GetCaller<Request, Response>() => _client.Services.GetRequiredService<ICall<Request, Response>>();
+}
+
+public class Server_CollectionParamsTests(WebApplicationFactory<Program> factory) : CollectionParamsTests(factory)
+{
+    protected override ICall<Request> GetCaller<Request>() => _server.Services.GetRequiredService<ICall<Request>>();
+
+    protected override ICall<Request, Response> GetCaller<Request, Response>() => _server.Services.GetRequiredService<ICall<Request, Response>>();
 }

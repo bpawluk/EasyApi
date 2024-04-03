@@ -1,10 +1,11 @@
 ﻿using BlazorUtils.EasyApi.Tests.SUT.Contract.ParamTypes;
 using BlazorUtils.EasyApi.Tests.SUT.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorUtils.EasyApi.Tests.ParamTypes;
 
-public class SystemParamsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
+public abstract class SystemParamsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
 {
     [Fact]
     public async Task Request_WithSystemParams_Guid()
@@ -68,4 +69,18 @@ public class SystemParamsTests(WebApplicationFactory<Program> factory) : TestsBa
         Assert.Equal(request.DataUri, result.DataUri);
         Assert.Equal(request.DefaultUri, result.DefaultUri);
     }
+}
+
+public class Client_SystemParamsTests(WebApplicationFactory<Program> factory) : SystemParamsTests(factory)
+{
+    protected override ICall<Request> GetCaller<Request>() => _client.Services.GetRequiredService<ICall<Request>>();
+
+    protected override ICall<Request, Response> GetCaller<Request, Response>() => _client.Services.GetRequiredService<ICall<Request, Response>>();
+}
+
+public class Server_SystemParamsTests(WebApplicationFactory<Program> factory) : SystemParamsTests(factory)
+{
+    protected override ICall<Request> GetCaller<Request>() => _server.Services.GetRequiredService<ICall<Request>>();
+
+    protected override ICall<Request, Response> GetCaller<Request, Response>() => _server.Services.GetRequiredService<ICall<Request, Response>>();
 }

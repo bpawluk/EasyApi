@@ -1,10 +1,11 @@
 ﻿using BlazorUtils.EasyApi.Tests.SUT.Contract;
 using BlazorUtils.EasyApi.Tests.SUT.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorUtils.EasyApi.Tests;
 
-public class MethodsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
+public abstract class MethodsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
 {
     [Fact]
     public async Task Request_HttpGet()
@@ -87,4 +88,18 @@ public class MethodsTests(WebApplicationFactory<Program> factory) : TestsBase(fa
         var response = await CallHttp<DeleteRequestWithResponse, MethodRequestResponse>(request);
         Assert.Equal(request.Id, response.Id);
     }
+}
+
+public class Client_MethodsTests(WebApplicationFactory<Program> factory) : MethodsTests(factory)
+{
+    protected override ICall<Request> GetCaller<Request>() => _client.Services.GetRequiredService<ICall<Request>>();
+
+    protected override ICall<Request, Response> GetCaller<Request, Response>() => _client.Services.GetRequiredService<ICall<Request, Response>>();
+}
+
+public class Server_MethodsTests(WebApplicationFactory<Program> factory) : MethodsTests(factory)
+{
+    protected override ICall<Request> GetCaller<Request>() => _server.Services.GetRequiredService<ICall<Request>>();
+
+    protected override ICall<Request, Response> GetCaller<Request, Response>() => _server.Services.GetRequiredService<ICall<Request, Response>>();
 }

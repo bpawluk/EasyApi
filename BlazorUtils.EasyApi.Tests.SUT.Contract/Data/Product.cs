@@ -22,4 +22,6 @@ public class Product
             && StockQuantity == otherProduct.StockQuantity
             && CreatedAt == otherProduct.CreatedAt;
     }
+
+    public override int GetHashCode() => base.GetHashCode();
 }

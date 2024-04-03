@@ -3,6 +3,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace BlazorUtils.EasyApi.Tests.ParamTypes;
 
-internal class TimeParamsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
+public abstract class TimeParamsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
 {
 }

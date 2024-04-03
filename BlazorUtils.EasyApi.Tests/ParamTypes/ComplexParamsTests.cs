@@ -3,6 +3,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace BlazorUtils.EasyApi.Tests.ParamTypes;
 
-internal class ComplexParamsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
+public abstract class ComplexParamsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
 {
 }

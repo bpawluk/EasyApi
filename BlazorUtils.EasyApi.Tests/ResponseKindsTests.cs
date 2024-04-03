@@ -7,7 +7,7 @@ using static BlazorUtils.EasyApi.Tests.SUT.Contract.WithResponseRequest;
 
 namespace BlazorUtils.EasyApi.Tests;
 
-public class ResponseKindsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
+public abstract class ResponseKindsTests(WebApplicationFactory<Program> factory) : TestsBase(factory)
 {
     public static TheoryData<HttpStatusCode> SuccessStatusCodes => new()
     {
@@ -36,7 +36,8 @@ public class ResponseKindsTests(WebApplicationFactory<Program> factory) : TestsB
             Id = Guid.NewGuid(),
             ExpectedStatusCode = expectedStatusCode
         };
-        var caller = _sut.Services.GetRequiredService<ICall<NoResponseRequest>>();
+        var caller = GetCaller<NoResponseRequest>();
+
         await caller.Call(request, CancellationToken.None);
     }
 
@@ -49,7 +50,7 @@ public class ResponseKindsTests(WebApplicationFactory<Program> factory) : TestsB
             Id = Guid.NewGuid(),
             ExpectedStatusCode = expectedStatusCode
         };
-        var caller = _sut.Services.GetRequiredService<ICall<NoResponseRequest>>();
+        var caller = GetCaller<NoResponseRequest>();
 
         var exception = await Assert.ThrowsAsync<HttpRequestException>(() => caller.Call(request, CancellationToken.None));
 
@@ -90,7 +91,7 @@ public class ResponseKindsTests(WebApplicationFactory<Program> factory) : TestsB
             ExpectedStatusCode = expectedStatusCode,
             IncludeResponse = true
         };
-        var caller = _sut.Services.GetRequiredService<ICall<WithResponseRequest, Response>>();
+        var caller = GetCaller<WithResponseRequest, Response>();
 
         var response = await caller.Call(request, CancellationToken.None);
 
@@ -108,7 +109,7 @@ public class ResponseKindsTests(WebApplicationFactory<Program> factory) : TestsB
             ExpectedStatusCode = expectedStatusCode,
             IncludeResponse = false
         };
-        var caller = _sut.Services.GetRequiredService<ICall<WithResponseRequest, Response>>();
+        var caller = GetCaller<WithResponseRequest, Response>();
 
         var exception = await Assert.ThrowsAsync<HttpRequestException>(() => caller.Call(request, CancellationToken.None));
 
@@ -126,7 +127,7 @@ public class ResponseKindsTests(WebApplicationFactory<Program> factory) : TestsB
             ExpectedStatusCode = expectedStatusCode,
             IncludeResponse = true
         };
-        var caller = _sut.Services.GetRequiredService<ICall<WithResponseRequest, Response>>();
+        var caller = GetCaller<WithResponseRequest, Response>();
 
         var exception = await Assert.ThrowsAsync<HttpRequestException>(() => caller.Call(request, CancellationToken.None));
 
@@ -144,7 +145,9 @@ public class ResponseKindsTests(WebApplicationFactory<Program> factory) : TestsB
             ExpectedStatusCode = expectedStatusCode,
             IncludeResponse = true
         };
+
         var response = await CallHttp<WithResponseRequest, Response>(request, expectedStatusCode);
+
         Assert.Equal(request.Id, response.Id);
     }
 
@@ -158,7 +161,7 @@ public class ResponseKindsTests(WebApplicationFactory<Program> factory) : TestsB
             ExpectedStatusCode = expectedStatusCode,
             IncludeResponse = false
         };
-        var caller = _sut.Services.GetRequiredService<ICall<WithResponseRequest, Response>>();
+        var caller = GetCaller<WithResponseRequest, Response>();
 
         var response = await caller.CallHttp(request, CancellationToken.None);
 
@@ -178,7 +181,7 @@ public class ResponseKindsTests(WebApplicationFactory<Program> factory) : TestsB
             ExpectedStatusCode = expectedStatusCode,
             IncludeResponse = true
         };
-        var caller = _sut.Services.GetRequiredService<ICall<WithResponseRequest, Response>>();
+        var caller = GetCaller<WithResponseRequest, Response>();
 
         var response = await caller.CallHttp(request, CancellationToken.None);
 
@@ -188,4 +191,18 @@ public class ResponseKindsTests(WebApplicationFactory<Program> factory) : TestsB
         Assert.NotNull(response.Response);
         Assert.Equal(request.Id, response.Response.Id);
     }
+}
+
+public class Client_ResponseKindsTests(WebApplicationFactory<Program> factory) : ResponseKindsTests(factory)
+{
+    protected override ICall<Request> GetCaller<Request>() => _client.Services.GetRequiredService<ICall<Request>>();
+
+    protected override ICall<Request, Response> GetCaller<Request, Response>() => _client.Services.GetRequiredService<ICall<Request, Response>>();
+}
+
+public class Server_ResponseKindsTests(WebApplicationFactory<Program> factory) : ResponseKindsTests(factory)
+{
+    protected override ICall<Request> GetCaller<Request>() => _server.Services.GetRequiredService<ICall<Request>>();
+
+    protected override ICall<Request, Response> GetCaller<Request, Response>() => _server.Services.GetRequiredService<ICall<Request, Response>>();
 }
