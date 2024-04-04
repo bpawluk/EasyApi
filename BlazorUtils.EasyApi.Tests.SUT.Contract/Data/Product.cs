@@ -23,5 +23,5 @@ public class Product
             && CreatedAt == otherProduct.CreatedAt;
     }
 
-    public override int GetHashCode() => base.GetHashCode();
+    public override int GetHashCode() => HashCode.Combine(Name, Price, StockQuantity, CreatedAt);
 }
