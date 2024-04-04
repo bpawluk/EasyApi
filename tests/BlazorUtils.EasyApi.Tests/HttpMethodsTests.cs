@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorUtils.EasyApi.Tests;
 
-public abstract class MethodsTests(TestsFixture fixture) : TestsBase(fixture)
+public abstract class HttpMethodsTests(TestsFixture fixture) : TestsBase(fixture)
 {
     [Fact]
     public async Task Request_HttpGet()
@@ -88,14 +88,14 @@ public abstract class MethodsTests(TestsFixture fixture) : TestsBase(fixture)
     }
 }
 
-public class Client_MethodsTests(TestsFixture fixture) : MethodsTests(fixture)
+public class Client_HttpMethodsTests(TestsFixture fixture) : HttpMethodsTests(fixture)
 {
     protected override ICall<Request> GetCaller<Request>() => _client.Services.GetRequiredService<ICall<Request>>();
 
     protected override ICall<Request, Response> GetCaller<Request, Response>() => _client.Services.GetRequiredService<ICall<Request, Response>>();
 }
 
-public class Server_MethodsTests(TestsFixture fixture) : MethodsTests(fixture)
+public class Server_HttpMethodsTests(TestsFixture fixture) : HttpMethodsTests(fixture)
 {
     protected override ICall<Request> GetCaller<Request>() => _server.Services.GetRequiredService<ICall<Request>>();
 

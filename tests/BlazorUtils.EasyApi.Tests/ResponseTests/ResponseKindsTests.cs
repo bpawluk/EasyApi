@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using static BlazorUtils.EasyApi.Tests.SUT.Contract.WithResponseRequest;
 
-namespace BlazorUtils.EasyApi.Tests;
+namespace BlazorUtils.EasyApi.Tests.ResponseTests;
 
 public abstract class ResponseKindsTests(TestsFixture fixture) : TestsBase(fixture)
 {

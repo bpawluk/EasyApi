@@ -1,7 +1,7 @@
 ﻿using BlazorUtils.EasyApi.Tests.SUT.Contract.ParamTypes;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazorUtils.EasyApi.Tests.ParamTypes;
+namespace BlazorUtils.EasyApi.Tests.ParamTests.ParamTypesTests;
 
 public abstract class TimeParamsTests(TestsFixture fixture) : TestsBase(fixture)
 {

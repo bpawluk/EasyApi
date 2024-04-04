@@ -1,7 +1,7 @@
 ﻿using BlazorUtils.EasyApi.Tests.SUT.Contract;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazorUtils.EasyApi.Tests;
+namespace BlazorUtils.EasyApi.Tests.ParamTests;
 
 public abstract class ParamKindsTests(TestsFixture fixture) : TestsBase(fixture)
 {
