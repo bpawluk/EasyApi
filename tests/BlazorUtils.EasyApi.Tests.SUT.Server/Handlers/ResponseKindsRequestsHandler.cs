@@ -1,9 +1,10 @@
 ﻿using BlazorUtils.EasyApi.Server;
+using BlazorUtils.EasyApi.Tests.SUT.Server;
 using static BlazorUtils.EasyApi.Tests.SUT.Contract.WithResponseRequest;
 
 namespace BlazorUtils.EasyApi.Tests.SUT.Contract;
 
-internal class AllResponseKindsRequestsHandler
+internal class ResponseKindsRequestsHandler
     : HandlerBase
     , IHandle<NoResponseRequest>
     , IHandle<WithResponseRequest, Response>

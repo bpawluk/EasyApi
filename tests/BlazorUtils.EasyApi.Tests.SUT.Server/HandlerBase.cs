@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Reflection;
 
-namespace BlazorUtils.EasyApi.Tests.SUT.Contract;
+namespace BlazorUtils.EasyApi.Tests.SUT.Server;
 
 internal class HandlerBase
 {

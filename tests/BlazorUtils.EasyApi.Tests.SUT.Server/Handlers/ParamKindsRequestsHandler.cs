@@ -1,8 +1,9 @@
 ﻿using BlazorUtils.EasyApi.Server;
+using BlazorUtils.EasyApi.Tests.SUT.Server;
 
 namespace BlazorUtils.EasyApi.Tests.SUT.Contract;
 
-internal class AllParamKindsRequestsHandler
+internal class ParamKindsRequestsHandler
     : HandlerBase
     , IHandle<HeaderParamRequest>
     , IHandle<RouteParamRequest>

@@ -3,7 +3,7 @@ using BlazorUtils.EasyApi.Tests.SUT.Contract;
 
 namespace BlazorUtils.EasyApi.Tests.SUT.Server.Handlers;
 
-internal class AllMethodsRequestsHandler
+internal class MethodsRequestsHandler
     : HandlerBase
     , IHandle<GetRequest>
     , IHandle<GetRequestWithResponse, MethodRequestResponse>

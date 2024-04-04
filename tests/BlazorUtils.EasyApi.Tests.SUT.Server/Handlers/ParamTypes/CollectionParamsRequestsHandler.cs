@@ -1,6 +1,5 @@
 ﻿using BlazorUtils.EasyApi.Server;
 using BlazorUtils.EasyApi.Tests.SUT.Contract.ParamTypes;
-using BlazorUtils.EasyApi.Tests.SUT.Contract;
 
 namespace BlazorUtils.EasyApi.Tests.SUT.Server.Handlers.ParamTypes;
 
