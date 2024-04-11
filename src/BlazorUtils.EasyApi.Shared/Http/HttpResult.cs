@@ -73,7 +73,7 @@ public class HttpResult<ResponseType> : HttpResultBase
 
     private HttpResult(HttpStatusCode statusCode, ResponseType response) : base(statusCode)
     {
-        HasResponse = true;
+        HasResponse = response != null;
         Response = response;
     }
 
