@@ -19,7 +19,7 @@ public abstract class EnumResponseTests(TestsFixture fixture) : TestsBase(fixtur
     {
         var request = new NullableEnumResponseRequest() { ExpectedResponse = Time.Night };
         var result = await CallHttp<NullableEnumResponseRequest, Time?>(request);
-        Assert.Equal(Time.Night, result);
+        Assert.Equal(request.ExpectedResponse, result);
     }
 
     [Fact]

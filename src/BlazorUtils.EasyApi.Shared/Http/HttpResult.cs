@@ -73,7 +73,9 @@ public class HttpResult<ResponseType> : HttpResultBase
 
     private HttpResult(HttpStatusCode statusCode, ResponseType response) : base(statusCode)
     {
-        HasResponse = response != null;
+        HasResponse = response is string stringResponse 
+            ? !string.IsNullOrEmpty(stringResponse)
+            : response != null;
         Response = response;
     }
 
