@@ -9,15 +9,15 @@ public abstract class EnumResponseTests(TestsFixture fixture) : TestsBase(fixtur
     [Fact]
     public async Task Request_ForResponse_OfEnumType()
     {
-        var request = new EnumResponseRequest();
+        var request = new EnumResponseRequest() { ExpectedResponse = Time.Day };
         var result = await CallHttp<EnumResponseRequest, Time>(request);
-        Assert.Equal(Time.Day, result);
+        Assert.Equal(request.ExpectedResponse, result);
     }
 
     [Fact]
     public async Task Request_ForResponse_OfNullableEnumType_WithValue()
     {
-        var request = new NullableEnumResponseRequest() { ExpectValue = true };
+        var request = new NullableEnumResponseRequest() { ExpectedResponse = Time.Night };
         var result = await CallHttp<NullableEnumResponseRequest, Time?>(request);
         Assert.Equal(Time.Night, result);
     }
@@ -25,7 +25,7 @@ public abstract class EnumResponseTests(TestsFixture fixture) : TestsBase(fixtur
     [Fact]
     public async Task Request_ForResponse_OfNullableEnumType_NoValue()
     {
-        var request = new NullableEnumResponseRequest() { ExpectValue = false };
+        var request = new NullableEnumResponseRequest() { ExpectedResponse = null };
         var caller = GetCaller<NullableEnumResponseRequest, Time?>();
 
         var response = await caller.CallHttp(request, CancellationToken.None);

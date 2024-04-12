@@ -9,8 +9,8 @@ internal class EnumResponseRequestsHandler
     , IHandle<NullableEnumResponseRequest, Time?>
 {
     public Task<HttpResult<Time>> Handle(EnumResponseRequest request, CancellationToken cancellationToken)
-        => Task.FromResult(HttpResult<Time>.Ok(Time.Day));
+        => Task.FromResult(HttpResult<Time>.Ok(request.ExpectedResponse));
 
     public Task<HttpResult<Time?>> Handle(NullableEnumResponseRequest request, CancellationToken cancellationToken)
-        => Task.FromResult(HttpResult<Time?>.Ok(request.ExpectValue ? Time.Night : null));
+        => Task.FromResult(HttpResult<Time?>.Ok(request.ExpectedResponse));
 }
