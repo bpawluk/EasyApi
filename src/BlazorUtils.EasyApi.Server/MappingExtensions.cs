@@ -33,7 +33,6 @@ public static class MappingExtensions
         return app;
     }
 
-    // TODO: Provide a way to configure Authorization and other RouteHandlerBuilder extensions
     public static void MapRequest<Request>(string route, WebApplication app)
         where Request : class, IRequest, new()
     {
