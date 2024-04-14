@@ -21,7 +21,7 @@ internal class HttpCaller<Request> : HttpCallerBase<Request>, ICall<Request>
 
     public async Task Call(Request request, CancellationToken cancellationToken)
     {
-        var httpResult = await CallHttp(request, cancellationToken);
+        var httpResult = await CallHttp(request, cancellationToken).ConfigureAwait(false);
         httpResult.EnsureSucceeded();
     }
 
@@ -42,7 +42,7 @@ internal class HttpCaller<Request, Response> : HttpCallerBase<Request>, ICall<Re
 
     public async Task<Response> Call(Request request, CancellationToken cancellationToken)
     {
-        var httpResult = await CallHttp(request, cancellationToken);
+        var httpResult = await CallHttp(request, cancellationToken).ConfigureAwait(false);
         httpResult.EnsureSucceeded();
         return httpResult.Response!;
     }
@@ -52,7 +52,7 @@ internal class HttpCaller<Request, Response> : HttpCallerBase<Request>, ICall<Re
         var method = request.GetHttpMethod<Request, Response>();
         var httpRequest = GetHttpRequest(request, method);
         var httpResponse = await GetHttpResponse(request, httpRequest, cancellationToken).ConfigureAwait(false);
-        var contentReadingResult = await TryReadContent(httpResponse.Content, cancellationToken);
+        var contentReadingResult = await TryReadContent(httpResponse.Content, cancellationToken).ConfigureAwait(false);
         if (contentReadingResult.HasResponse)
         {
             return HttpResult<Response>.WithStatusCode(httpResponse.StatusCode, contentReadingResult.Response!);
@@ -67,7 +67,7 @@ internal class HttpCaller<Request, Response> : HttpCallerBase<Request>, ICall<Re
         {
             try
             {
-                var response = await JsonSerializer.DeserializeAsync<Response>(body, JsonOptions.Get, cancellationToken);
+                var response = await JsonSerializer.DeserializeAsync<Response>(body, JsonOptions.Get, cancellationToken).ConfigureAwait(false);
                 return (true, response);
             }
             catch (JsonException) { }

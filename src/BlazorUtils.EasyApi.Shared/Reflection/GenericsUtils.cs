@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BlazorUtils.EasyApi.Shared.Reflection;
 
-public static class GenericsUtils
+internal static class GenericsUtils
 {
     public static Type Apply(this Type genericType, params Type[] genericArguments) => genericType.MakeGenericType(genericArguments);
 

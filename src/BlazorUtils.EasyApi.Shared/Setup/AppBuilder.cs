@@ -5,9 +5,9 @@ namespace BlazorUtils.EasyApi.Shared.Setup;
 
 public class AppBuilder
 {
-    public IServiceCollection Services { get; }
+    internal Requests Requests { get; }
 
-    public Requests Requests { get; }
+    internal IServiceCollection Services { get; }
 
     internal AppBuilder(IServiceCollection services, Requests requests)
     {

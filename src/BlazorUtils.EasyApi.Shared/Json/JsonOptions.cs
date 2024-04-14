@@ -2,7 +2,7 @@
 
 namespace BlazorUtils.EasyApi.Shared.Json;
 
-public static class JsonOptions
+internal static class JsonOptions
 {
     public static JsonSerializerOptions Get { get; } = Create();
 

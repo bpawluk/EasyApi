@@ -33,14 +33,14 @@ public static class MappingExtensions
         return app;
     }
 
-    public static void MapRequest<Request>(string route, WebApplication app)
+    private static void MapRequest<Request>(string route, WebApplication app)
         where Request : class, IRequest, new()
     {
         var method = new string[] { HttpMethodUtils.GetHttpMethod<Request>() };
         app.MapMethods(route, method, HttpHandler.Handle<Request>);
     }
 
-    public static void MapRequestWithResponse<Request, Response>(string route, WebApplication app)
+    private static void MapRequestWithResponse<Request, Response>(string route, WebApplication app)
         where Request : class, IRequest<Response>, new()
     {
         var method = new string[] { HttpMethodUtils.GetHttpMethod<Request, Response>() };

@@ -2,7 +2,7 @@
 
 namespace BlazorUtils.EasyApi.Shared.Exceptions;
 
-public class SetupException : Exception 
+internal class SetupException : Exception 
 {
     public SetupException(string message) : base(message) { }
 

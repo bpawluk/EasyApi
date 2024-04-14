@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BlazorUtils.EasyApi.Shared.Contract;
 
-public class Requests
+internal class Requests
 {
     private readonly IDictionary<Type, RequestAccessor> _requests;
 

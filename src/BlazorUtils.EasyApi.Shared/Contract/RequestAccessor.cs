@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace BlazorUtils.EasyApi.Shared.Contract;
 
-public abstract class RequestAccessor
+internal abstract class RequestAccessor
 {
     public Type RequestType { get; }
 
@@ -24,7 +24,7 @@ public abstract class RequestAccessor
     }
 }
 
-public class RequestAccessor<Request> : RequestAccessor
+internal class RequestAccessor<Request> : RequestAccessor
     where Request : class, IRequest, new()
 {
     public RequestAccessor() : base(
@@ -32,22 +32,22 @@ public class RequestAccessor<Request> : RequestAccessor
         GetResponseType(),
         GetRoute()) { }
 
-    public IEnumerable<IPropertyWrapper> GetBodyParams(Request request) => GetParamsWith<BodyParamAttribute>();
+    public IEnumerable<PropertyWrapper> GetBodyParams(Request request) => GetParamsWith<BodyParamAttribute>();
 
-    public IEnumerable<IPropertyWrapper> GetHeaderParams(Request request) => GetParamsWith<HeaderParamAttribute>();
+    public IEnumerable<PropertyWrapper> GetHeaderParams(Request request) => GetParamsWith<HeaderParamAttribute>();
 
-    public IEnumerable<IPropertyWrapper> GetQueryStringParams(Request request) => GetParamsWith<QueryStringParamAttribute>();
+    public IEnumerable<PropertyWrapper> GetQueryStringParams(Request request) => GetParamsWith<QueryStringParamAttribute>();
 
-    public IEnumerable<IPropertyWrapper> GetRouteParams(Request request) => GetParamsWith<RouteParamAttribute>();
+    public IEnumerable<PropertyWrapper> GetRouteParams(Request request) => GetParamsWith<RouteParamAttribute>();
 
-    private IEnumerable<IPropertyWrapper> GetParamsWith<AttributeType>() => typeof(Request)
+    private IEnumerable<PropertyWrapper> GetParamsWith<AttributeType>() => typeof(Request)
         .GetProperties(BindingFlags.Public | BindingFlags.Instance)
         .Where(property => property.GetCustomAttribute(typeof(AttributeType)) is AttributeType)
         .Select(property => GetPropertyWrapper(property));
 
-    private IPropertyWrapper GetPropertyWrapper(PropertyInfo property) => (typeof(PropertyWrapper<>)
+    private PropertyWrapper GetPropertyWrapper(PropertyInfo property) => (typeof(PropertyWrapper<>)
         .Apply(property.PropertyType)
-        .Create(property, GetConverter(property.PropertyType)) as IPropertyWrapper)!;
+        .Create(property, GetConverter(property.PropertyType)) as PropertyWrapper)!;
 
     private IParamConverter GetConverter(Type type) => (new ConvertersProvider().InvokeGeneric(nameof(IConvertersProvider.Get), type) as IParamConverter)!;
 

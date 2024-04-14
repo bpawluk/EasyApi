@@ -30,13 +30,13 @@ public static class ClientExtensions
         return builder;
     }
 
-    public static void AddRequest<Request>(IServiceCollection services)
+    private static void AddRequest<Request>(IServiceCollection services)
         where Request : class, IRequest, new()
     {
         services.AddTransient<ICall<Request>, HttpCaller<Request>>();
     }
 
-    public static void AddRequestWithResponse<Request, Response>(IServiceCollection services)
+    private static void AddRequestWithResponse<Request, Response>(IServiceCollection services)
         where Request : class, IRequest<Response>, new()
     {
         services.AddTransient<ICall<Request, Response>, HttpCaller<Request, Response>>();

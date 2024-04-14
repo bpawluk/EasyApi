@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BlazorUtils.EasyApi.Shared.Reflection;
 
-public static class InterfaceUtils
+internal static class InterfaceUtils
 {
     public static bool Implements<InterfaceType>(this Type type) => type.Implements(typeof(InterfaceType));
 

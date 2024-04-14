@@ -1,8 +1,8 @@
 ﻿namespace BlazorUtils.EasyApi.Shared.Serialization;
 
-public interface IParamConverter { }
+internal interface IParamConverter { }
 
-public interface IParamConverter<T> : IParamConverter
+internal interface IParamConverter<T> : IParamConverter
 {
     T Read(string value);
 

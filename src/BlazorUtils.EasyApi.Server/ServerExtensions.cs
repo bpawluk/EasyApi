@@ -44,7 +44,7 @@ public static class ServerExtensions
         return builder;
     }
 
-    public static void AddRequest<Request>(IServiceCollection services, IEnumerable<Type> handlers)
+    private static void AddRequest<Request>(IServiceCollection services, IEnumerable<Type> handlers)
         where Request : class, IRequest, new()
     {
         var handlerInterface = typeof(IHandle<Request>);
@@ -52,7 +52,7 @@ public static class ServerExtensions
         services.AddTransient<ICall<Request>, HandlerCaller<Request>>();
     }
 
-    public static void AddRequestWithResponse<Request, Response>(IServiceCollection services, IEnumerable<Type> handlers)
+    private static void AddRequestWithResponse<Request, Response>(IServiceCollection services, IEnumerable<Type> handlers)
         where Request : class, IRequest<Response>, new()
     {
         var handlerInterface = typeof(IHandle<Request, Response>);

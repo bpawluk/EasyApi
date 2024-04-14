@@ -4,7 +4,7 @@ using System;
 
 namespace BlazorUtils.EasyApi.Server.Http;
 
-public static class HttpMethodUtils
+internal static class HttpMethodUtils
 {
     public static string GetHttpMethod<Request>()
         where Request : class, IRequest, new()
