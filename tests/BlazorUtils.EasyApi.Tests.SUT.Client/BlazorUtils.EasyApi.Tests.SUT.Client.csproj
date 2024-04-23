@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\BlazorUtils.EasyApi.Client\BlazorUtils.EasyApi.Client.csproj" />
+    <ProjectReference Include="..\BlazorUtils.EasyApi.Tests.SUT.Contract.Params\BlazorUtils.EasyApi.Tests.SUT.Contract.Params.csproj" />
+    <ProjectReference Include="..\BlazorUtils.EasyApi.Tests.SUT.Contract.Response\BlazorUtils.EasyApi.Tests.SUT.Contract.Response.csproj" />
     <ProjectReference Include="..\BlazorUtils.EasyApi.Tests.SUT.Contract\BlazorUtils.EasyApi.Tests.SUT.Contract.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,6 @@
-﻿using BlazorUtils.EasyApi.Tests.SUT.Contract;
+﻿using BlazorUtils.EasyApi.Tests.SUT.Contract.Response;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
-using static BlazorUtils.EasyApi.Tests.SUT.Contract.WithResponseRequest;
 
 namespace BlazorUtils.EasyApi.Tests.ResponseTests;
 
@@ -89,7 +88,7 @@ public abstract class ResponseKindsTests(TestsFixture fixture) : TestsBase(fixtu
             ExpectedStatusCode = expectedStatusCode,
             IncludeResponse = true
         };
-        var caller = GetCaller<WithResponseRequest, Response>();
+        var caller = GetCaller<WithResponseRequest, WithResponseRequest.Response>();
 
         var response = await caller.Call(request, CancellationToken.None);
 
@@ -107,7 +106,7 @@ public abstract class ResponseKindsTests(TestsFixture fixture) : TestsBase(fixtu
             ExpectedStatusCode = expectedStatusCode,
             IncludeResponse = false
         };
-        var caller = GetCaller<WithResponseRequest, Response>();
+        var caller = GetCaller<WithResponseRequest, WithResponseRequest.Response>();
 
         var exception = await Assert.ThrowsAsync<HttpRequestException>(() => caller.Call(request, CancellationToken.None));
 
@@ -125,7 +124,7 @@ public abstract class ResponseKindsTests(TestsFixture fixture) : TestsBase(fixtu
             ExpectedStatusCode = expectedStatusCode,
             IncludeResponse = true
         };
-        var caller = GetCaller<WithResponseRequest, Response>();
+        var caller = GetCaller<WithResponseRequest, WithResponseRequest.Response>();
 
         var exception = await Assert.ThrowsAsync<HttpRequestException>(() => caller.Call(request, CancellationToken.None));
 
@@ -144,7 +143,7 @@ public abstract class ResponseKindsTests(TestsFixture fixture) : TestsBase(fixtu
             IncludeResponse = true
         };
 
-        var response = await CallHttp<WithResponseRequest, Response>(request, expectedStatusCode);
+        var response = await CallHttp<WithResponseRequest, WithResponseRequest.Response>(request, expectedStatusCode);
 
         Assert.Equal(request.Id, response.Id);
     }
@@ -159,7 +158,7 @@ public abstract class ResponseKindsTests(TestsFixture fixture) : TestsBase(fixtu
             ExpectedStatusCode = expectedStatusCode,
             IncludeResponse = false
         };
-        var caller = GetCaller<WithResponseRequest, Response>();
+        var caller = GetCaller<WithResponseRequest, WithResponseRequest.Response>();
 
         var response = await caller.CallHttp(request, CancellationToken.None);
 
@@ -179,7 +178,7 @@ public abstract class ResponseKindsTests(TestsFixture fixture) : TestsBase(fixtu
             ExpectedStatusCode = expectedStatusCode,
             IncludeResponse = true
         };
-        var caller = GetCaller<WithResponseRequest, Response>();
+        var caller = GetCaller<WithResponseRequest, WithResponseRequest.Response>();
 
         var response = await caller.CallHttp(request, CancellationToken.None);
 

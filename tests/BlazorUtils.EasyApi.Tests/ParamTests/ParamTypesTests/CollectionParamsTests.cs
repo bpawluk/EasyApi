@@ -1,5 +1,5 @@
 ﻿using BlazorUtils.EasyApi.Tests.SUT.Contract.Data;
-using BlazorUtils.EasyApi.Tests.SUT.Contract.ParamTypes;
+using BlazorUtils.EasyApi.Tests.SUT.Contract.Params;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorUtils.EasyApi.Tests.ParamTests.ParamTypesTests;

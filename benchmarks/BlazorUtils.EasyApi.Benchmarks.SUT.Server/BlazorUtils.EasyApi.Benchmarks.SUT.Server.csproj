@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\BlazorUtils.EasyApi.Server\BlazorUtils.EasyApi.Server.csproj" />
+    <ProjectReference Include="..\BlazorUtils.EasyApi.Benchmarks.SUT.Contract\BlazorUtils.EasyApi.Benchmarks.SUT.Contract.csproj" />
+  </ItemGroup>
+
+</Project>

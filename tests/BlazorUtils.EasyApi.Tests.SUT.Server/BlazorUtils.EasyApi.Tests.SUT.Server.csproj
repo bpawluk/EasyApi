@@ -8,8 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\BlazorUtils.EasyApi.Server\BlazorUtils.EasyApi.Server.csproj" />
-    <ProjectReference Include="..\BlazorUtils.EasyApi.Tests.SUT.Contract\BlazorUtils.EasyApi.Tests.SUT.Contract.csproj" />
+    <ProjectReference Include="..\BlazorUtils.EasyApi.Tests.SUT.Server.Utils\BlazorUtils.EasyApi.Tests.SUT.Server.Utils.csproj" />
+    <ProjectReference Include="..\BlazorUtils.EasyApi.Tests.SUT.Server.Params\BlazorUtils.EasyApi.Tests.SUT.Server.Params.csproj" />
+    <ProjectReference Include="..\BlazorUtils.EasyApi.Tests.SUT.Server.Response\BlazorUtils.EasyApi.Tests.SUT.Server.Response.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,7 @@
 ﻿using BlazorUtils.EasyApi.Client;
 using BlazorUtils.EasyApi.Tests.SUT.Contract;
+using BlazorUtils.EasyApi.Tests.SUT.Contract.Params;
+using BlazorUtils.EasyApi.Tests.SUT.Contract.Response;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -16,7 +18,10 @@ public sealed class App(IHost app) : IDisposable
         var builder = Host.CreateApplicationBuilder();
         builder.Services.AddSingleton(httpClientProvider);
         builder.Services.AddEasyApi()
-                        .WithContract(typeof(GetRequest).Assembly)
+                        .WithContract(
+                            typeof(GetRequest).Assembly, 
+                            typeof(HeaderParamRequest).Assembly, 
+                            typeof(NoResponseRequest).Assembly)
                         .WithClient();
         var app = builder.Build();
         app.Start();

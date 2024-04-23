@@ -1,4 +1,4 @@
-﻿using BlazorUtils.EasyApi.Tests.SUT.Contract;
+﻿using BlazorUtils.EasyApi.Tests.SUT.Contract.Params;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorUtils.EasyApi.Tests.ParamTests;

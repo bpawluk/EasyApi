@@ -1,4 +1,4 @@
-﻿using BlazorUtils.EasyApi.Tests.SUT.Contract.ResponseTypes;
+﻿using BlazorUtils.EasyApi.Tests.SUT.Contract.Response;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
