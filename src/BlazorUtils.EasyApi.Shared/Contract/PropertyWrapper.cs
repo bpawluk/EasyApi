@@ -1,50 +1,61 @@
-﻿using BlazorUtils.EasyApi.Shared.Serialization;
+﻿using BlazorUtils.EasyApi.Shared.Reflection;
+using BlazorUtils.EasyApi.Shared.Serialization;
+using System;
 using System.Reflection;
 
 namespace BlazorUtils.EasyApi.Shared.Contract;
 
 internal abstract class PropertyWrapper
 {
-    public abstract string Name { get; }
+    public string Name { get; init; } = default!;
 
     public abstract string? ReadFrom(IRequest request);
 
     public abstract void WriteTo(IRequest request, string? value);
 }
 
-internal class PropertyWrapper<T> : PropertyWrapper
+internal class PropertyWrapper<DeclaringType, PropertyType> : PropertyWrapper
+    where DeclaringType : class, IRequest, new()
 {
-    private readonly IParamConverter<T> _converter;
-    private readonly PropertyInfo _propertyInfo;
+    private readonly IParamConverter<PropertyType> _converter;
+    private readonly Func<DeclaringType, PropertyType> _get;
+    private readonly Action<DeclaringType, PropertyType> _set;
 
-    public override string Name => _propertyInfo.Name;
-
-    public PropertyWrapper(PropertyInfo propertyInfo, IParamConverter<T> converter)
+    public PropertyWrapper(PropertyInfo propertyInfo, IParamConverter<PropertyType> converter)
     {
-        _propertyInfo = propertyInfo;
+        Name = propertyInfo.Name;
         _converter = converter;
+        _get = FastInvoke.BuildGetter<DeclaringType, PropertyType>(propertyInfo);
+        _set = FastInvoke.BuildSetter<DeclaringType, PropertyType>(propertyInfo);
     }
 
     public override string? ReadFrom(IRequest request)
     {
-        var value = _propertyInfo.GetValue(request);
-        if (typeof(T) == typeof(string))
+        DeclaringType? convertedRequest = request as DeclaringType;
+        var value = _get(convertedRequest!);
+
+        if (typeof(PropertyType) == typeof(string))
         {
             return value as string;
         }
-        return value == null ? default : _converter.Write((T)value);
+
+        return value == null ? default : _converter.Write(value);
     }
 
     public override void WriteTo(IRequest request, string? value)
     {
-        if (typeof(T) == typeof(string))
+        DeclaringType? convertedRequest = request as DeclaringType;
+        PropertyType? convertedValue;
+
+        if (typeof(PropertyType) == typeof(string))
         {
-            _propertyInfo.SetValue(request, value);
+            convertedValue = (PropertyType)(value as object)!;
         }
         else
         {
-            var convertedValue = string.IsNullOrEmpty(value) ? default : _converter.Read(value!);
-            _propertyInfo.SetValue(request, convertedValue);
+            convertedValue = string.IsNullOrEmpty(value) ? default : _converter.Read(value!);
         }
+
+        _set(convertedRequest!, convertedValue!);
     }
 }

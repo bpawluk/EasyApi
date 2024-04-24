@@ -48,17 +48,17 @@ internal static class HttpHandler
     {
         var request = new Request();
 
-        foreach (var param in accessor.GetRouteParams(request))
+        foreach (var param in accessor.RouteParams)
         {
             param.WriteTo(request, httpRequest.RouteValues[param.Name] as string);
         }
 
-        foreach (var param in accessor.GetQueryStringParams(request))
+        foreach (var param in accessor.QueryStringParams)
         {
             param.WriteTo(request, httpRequest.Query[param.Name].FirstOrDefault());
         }
 
-        foreach (var param in accessor.GetHeaderParams(request))
+        foreach (var param in accessor.HeaderParams)
         {
             param.WriteTo(request, httpRequest.Headers[param.Name].FirstOrDefault());
         }
@@ -77,7 +77,7 @@ internal static class HttpHandler
         if (body != Stream.Null && body.CanRead)
         {
             var jsonBody = await JsonDocument.ParseAsync(body, cancellationToken: cancellationToken).ConfigureAwait(false);
-            foreach (var param in accessor.GetBodyParams(request))
+            foreach (var param in accessor.BodyParams)
             {
                 param.WriteTo(request, jsonBody.RootElement.GetProperty(param.Name).GetString());
             }

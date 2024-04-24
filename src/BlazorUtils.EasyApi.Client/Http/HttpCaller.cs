@@ -96,7 +96,7 @@ internal abstract class HttpCallerBase<Request>
         var uri = GetUri(request);
         var content = method.CanHaveContent() ? WriteContent(request) : default;
         var httpRequest = new HttpRequestMessage(method, uri) { Content = content };
-        foreach (var param in _accessor.GetHeaderParams(request))
+        foreach (var param in _accessor.HeaderParams)
         {
             httpRequest.Headers.Add(param.Name, param.ReadFrom(request));
         }
@@ -113,14 +113,14 @@ internal abstract class HttpCallerBase<Request>
     {
         var route = _accessor.Route;
 
-        foreach (var param in _accessor.GetRouteParams(request))
+        foreach (var param in _accessor.RouteParams)
         {
             var paramValue = HttpUtility.UrlEncode(param.ReadFrom(request));
             route = route.Replace($"{{{param.Name}}}", paramValue);
         }
 
         var queryString = HttpUtility.ParseQueryString(string.Empty);
-        foreach (var param in _accessor.GetQueryStringParams(request))
+        foreach (var param in _accessor.QueryStringParams)
         {
             queryString[param.Name] = param.ReadFrom(request);
         }
@@ -131,7 +131,7 @@ internal abstract class HttpCallerBase<Request>
 
     private HttpContent? WriteContent(Request request)
     {
-        if (_accessor.GetBodyParams(request).Any())
+        if (_accessor.BodyParams.Any())
         {
             return JsonContent.Create(request, options: _jsonSerializerOptions);
         }

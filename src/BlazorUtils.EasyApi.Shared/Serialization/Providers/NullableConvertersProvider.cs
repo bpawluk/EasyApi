@@ -21,8 +21,7 @@ internal class NullableConvertersProvider : IConvertersProvider
         {
             return typeof(NullableParamConverter<>)
                 .Apply(requestedType.GenericTypeArguments.Single())
-                .Invoke(nameof(NullableParamConverter<int>.GetInstance), _convertersProvider)
-                as IParamConverter<T>;
+                .Invoke(nameof(NullableParamConverter<int>.GetInstance), _convertersProvider) as IParamConverter<T>;
         }
         return null!;
     }

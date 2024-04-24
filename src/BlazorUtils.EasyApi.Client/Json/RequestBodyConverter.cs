@@ -24,7 +24,7 @@ internal class RequestBodyConverter<Request> : JsonConverter<Request>
     {
         writer.WriteStartObject();
 
-        foreach (var param in _accessor.GetBodyParams(request))
+        foreach (var param in _accessor.BodyParams)
         {
             writer.WritePropertyName(param.Name);
             JsonSerializer.Serialize(writer, param.ReadFrom(request), options);
