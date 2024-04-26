@@ -19,11 +19,15 @@ internal class HttpCaller<Request> : HttpCallerBase<Request>, ICall<Request>
     public HttpCaller(IHttpClientProvider httpClientProvider, Requests requests)
         : base(httpClientProvider, requests) { }
 
+    public Task Call(Request request) => Call(request, CancellationToken.None);
+
     public async Task Call(Request request, CancellationToken cancellationToken)
     {
         var httpResult = await CallHttp(request, cancellationToken).ConfigureAwait(false);
         httpResult.EnsureSucceeded();
     }
+
+    public Task<HttpResult> CallHttp(Request request) => CallHttp(request, CancellationToken.None);
 
     public async Task<HttpResult> CallHttp(Request request, CancellationToken cancellationToken)
     {
@@ -40,12 +44,16 @@ internal class HttpCaller<Request, Response> : HttpCallerBase<Request>, ICall<Re
     public HttpCaller(IHttpClientProvider httpClientProvider, Requests requests)
         : base(httpClientProvider, requests) { }
 
+    public Task<Response> Call(Request request) => Call(request, CancellationToken.None);
+
     public async Task<Response> Call(Request request, CancellationToken cancellationToken)
     {
         var httpResult = await CallHttp(request, cancellationToken).ConfigureAwait(false);
         httpResult.EnsureSucceeded();
         return httpResult.Response!;
     }
+
+    public Task<HttpResult<Response>> CallHttp(Request request) => CallHttp(request, CancellationToken.None);
 
     public async Task<HttpResult<Response>> CallHttp(Request request, CancellationToken cancellationToken)
     {
