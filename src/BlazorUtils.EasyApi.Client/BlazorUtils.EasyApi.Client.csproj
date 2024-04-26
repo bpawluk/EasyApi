@@ -1,13 +1,39 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Major>0</Major>
+    <Minor>1</Minor>
+    <Patch>0</Patch>
+    <VersionPrefix>$(Major).$(Minor).$(Patch)</VersionPrefix>
+    <AssemblyVersion>$(Major).0.0.0</AssemblyVersion>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Authors>Bartosz Pawluk</Authors>
+    <Title>$(AssemblyName)</Title>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Copyright>Copyright Bartosz Pawluk</Copyright>
+    <PackageProjectUrl>https://github.com/bpawluk/EasyApi</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bpawluk/EasyApi</RepositoryUrl>
+    <PackageTags>blazor; utils; easy; api; client;</PackageTags>
+    <Description>Contract-First API development with automatic Client and Server setup</Description>
+    <PackageIcon>logo-128x128.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorUtils.EasyApi.Shared\BlazorUtils.EasyApi.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\assets\logo-128x128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
