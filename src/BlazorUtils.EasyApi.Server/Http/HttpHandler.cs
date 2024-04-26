@@ -74,7 +74,7 @@ internal static class HttpHandler
         Stream body,
         CancellationToken cancellationToken) where Request : class, IRequest, new()
     {
-        if (body != Stream.Null && body.CanRead)
+        if (accessor.BodyParams.Any())
         {
             var jsonBody = await JsonDocument.ParseAsync(body, cancellationToken: cancellationToken).ConfigureAwait(false);
             foreach (var param in accessor.BodyParams)

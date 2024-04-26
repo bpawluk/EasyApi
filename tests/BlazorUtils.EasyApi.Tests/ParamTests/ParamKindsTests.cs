@@ -6,6 +6,13 @@ namespace BlazorUtils.EasyApi.Tests.ParamTests;
 public abstract class ParamKindsTests(TestsFixture fixture) : TestsBase(fixture)
 {
     [Fact]
+    public async Task Request_WithoutParams()
+    {
+        var request = new NoParamsRequest();
+        await CallHttp(request);
+    }
+
+    [Fact]
     public async Task Request_WithHeaderParams()
     {
         var request = new HeaderParamRequest()

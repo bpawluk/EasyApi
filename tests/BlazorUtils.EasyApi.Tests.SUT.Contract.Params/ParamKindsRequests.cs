@@ -2,8 +2,11 @@
 
 namespace BlazorUtils.EasyApi.Tests.SUT.Contract.Params;
 
+[Route("param-kind/no-params")]
+public class NoParamsRequest : IGet { }
+
 [Route("param-kind/header")]
-public class HeaderParamRequest : IGet
+public class HeaderParamRequest : IHead
 {
     [HeaderParam]
     public int Number { get; init; }
@@ -19,7 +22,7 @@ public class HeaderParamRequest : IGet
 }
 
 [Route($"param-kind/route/{{{nameof(Number)}}}/{{{nameof(Text)}}}/{{{nameof(Struct)}}}/{{{nameof(Class)}}}")]
-public class RouteParamRequest : IHead
+public class RouteParamRequest : IGet
 {
     [RouteParam]
     public int Number { get; init; }
