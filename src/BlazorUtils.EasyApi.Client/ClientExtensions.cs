@@ -10,6 +10,7 @@ public static class ClientExtensions
 {
     public static AppBuilder WithClient(this AppBuilder builder)
     {
+        builder.Services.AddTransient<IHttpClientProvider, HttpClientProvider>();
         foreach (var request in builder.Requests.All)
         {
             if (request.ResponseType is Type responseType)
