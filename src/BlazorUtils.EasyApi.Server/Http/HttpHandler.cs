@@ -74,13 +74,17 @@ internal static class HttpHandler
         Stream body,
         CancellationToken cancellationToken) where Request : class, IRequest, new()
     {
-        if (accessor.BodyParams.Any())
+        if (accessor.BodyParams.Any() && body != Stream.Null && body.CanRead)
         {
-            var jsonBody = await JsonDocument.ParseAsync(body, cancellationToken: cancellationToken).ConfigureAwait(false);
-            foreach (var param in accessor.BodyParams)
+            try
             {
-                param.WriteTo(request, jsonBody.RootElement.GetProperty(param.Name).GetString());
+                var jsonBody = await JsonDocument.ParseAsync(body, cancellationToken: cancellationToken).ConfigureAwait(false);
+                foreach (var param in accessor.BodyParams)
+                {
+                    param.WriteTo(request, jsonBody.RootElement.GetProperty(param.Name).GetString());
+                }
             }
+            catch (JsonException) { }
         }
     }
 }
