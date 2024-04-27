@@ -13,5 +13,5 @@ internal class HttpClientProvider : IHttpClientProvider
         _serviceProvider = serviceProvider;
     }
 
-    public HttpClient GetClient(IRequest request) => _serviceProvider.GetRequiredService<HttpClient>();
+    public HttpClient GetClient(IRequest _) => _serviceProvider.GetRequiredService<HttpClient>();
 }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Major>0</Major>
-    <Minor>1</Minor>
+    <Minor>2</Minor>
     <Patch>0</Patch>
     <VersionPrefix>$(Major).$(Minor).$(Patch)</VersionPrefix>
     <AssemblyVersion>$(Major).0.0.0</AssemblyVersion>
