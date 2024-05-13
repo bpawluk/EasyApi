@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace BlazorUtils.EasyApi.Client.Json;
 
+// TODO: Configuring customized body serialization
 internal class RequestBodyConverter<Request> : JsonConverter<Request>
     where Request : class, IRequest, new()
 {
