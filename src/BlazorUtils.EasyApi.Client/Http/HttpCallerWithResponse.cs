@@ -1,4 +1,5 @@
-﻿using BlazorUtils.EasyApi.Shared.Contract;
+﻿using BlazorUtils.EasyApi.Client.Setup;
+using BlazorUtils.EasyApi.Shared.Contract;
 using BlazorUtils.EasyApi.Shared.Json;
 using System.IO;
 using System.Net.Http;

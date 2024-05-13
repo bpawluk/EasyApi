@@ -2,7 +2,7 @@
 using System;
 using System.Net.Http;
 
-namespace BlazorUtils.EasyApi.Client.Http;
+namespace BlazorUtils.EasyApi.Client.Setup;
 
 internal class HttpClientProvider : IHttpClientProvider
 {

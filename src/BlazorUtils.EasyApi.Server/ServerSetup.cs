@@ -1,4 +1,5 @@
 ﻿using BlazorUtils.EasyApi.Server.Handling;
+using BlazorUtils.EasyApi.Server.Setup;
 using BlazorUtils.EasyApi.Shared.Exceptions;
 using BlazorUtils.EasyApi.Shared.Reflection;
 using BlazorUtils.EasyApi.Shared.Setup;
@@ -10,10 +11,12 @@ using System.Reflection;
 
 namespace BlazorUtils.EasyApi.Server;
 
-public static class ServerExtensions
+public static class ServerSetup
 {
     public static AppBuilder WithServer(this AppBuilder builder, params Assembly[] sources)
     {
+        builder.Services.AddTransient<IEndpointsCustomization, EndpointsCustomization>();
+
         var defaultSource = Assembly.GetCallingAssembly();
         var handlers = sources
             .Append(defaultSource)
@@ -25,7 +28,7 @@ public static class ServerExtensions
         {
             if (request.ResponseType is Type responseType)
             {
-                typeof(ServerExtensions).InvokeGeneric(
+                typeof(ServerSetup).InvokeGeneric(
                     nameof(AddRequestWithResponse),
                     new Type[] { request.RequestType, responseType },
                     builder.Services,
@@ -33,7 +36,7 @@ public static class ServerExtensions
             }
             else
             {
-                typeof(ServerExtensions).InvokeGeneric(
+                typeof(ServerSetup).InvokeGeneric(
                     nameof(AddRequest),
                     request.RequestType,
                     builder.Services,

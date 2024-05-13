@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 
-namespace BlazorUtils.EasyApi.Client;
+namespace BlazorUtils.EasyApi.Client.Setup;
 
 public interface IHttpClientProvider
 {

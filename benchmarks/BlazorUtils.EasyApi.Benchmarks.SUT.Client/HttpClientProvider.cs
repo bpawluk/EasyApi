@@ -1,4 +1,4 @@
-﻿using BlazorUtils.EasyApi.Client;
+﻿using BlazorUtils.EasyApi.Client.Setup;
 
 namespace BlazorUtils.EasyApi.Benchmarks.SUT.Client;
 

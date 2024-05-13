@@ -1,4 +1,5 @@
 ﻿using BlazorUtils.EasyApi.Client.Http;
+using BlazorUtils.EasyApi.Client.Setup;
 using BlazorUtils.EasyApi.Shared.Reflection;
 using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,7 +7,7 @@ using System;
 
 namespace BlazorUtils.EasyApi.Client;
 
-public static class ClientExtensions
+public static class ClientSetup
 {
     public static AppBuilder WithClient(this AppBuilder builder)
     {
@@ -15,14 +16,14 @@ public static class ClientExtensions
         {
             if (request.ResponseType is Type responseType)
             {
-                typeof(ClientExtensions).InvokeGeneric(
+                typeof(ClientSetup).InvokeGeneric(
                     nameof(AddRequestWithResponse), 
                     new Type[] { request.RequestType, responseType }, 
                     builder.Services);
             }
             else
             {
-                typeof(ClientExtensions).InvokeGeneric(
+                typeof(ClientSetup).InvokeGeneric(
                     nameof(AddRequest),
                     request.RequestType, 
                     builder.Services);
