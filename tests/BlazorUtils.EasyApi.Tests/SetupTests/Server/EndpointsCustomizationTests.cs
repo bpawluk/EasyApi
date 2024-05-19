@@ -1,8 +1,6 @@
 ﻿using BlazorUtils.EasyApi.Server;
 using BlazorUtils.EasyApi.Server.Setup;
 using BlazorUtils.EasyApi.Shared.Setup;
-using BlazorUtils.EasyApi.Tests.SUT.Contract;
-using BlazorUtils.EasyApi.Tests.SUT.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,8 +25,8 @@ public sealed class EndpointsCustomizationTests : IAsyncDisposable
 
         var easyApiBuilder = builder.Services
             .AddEasyApi()
-            .WithContract(typeof(EmptyGet).Assembly)
-            .WithServer(typeof(EmptyRequestsHandler).Assembly);
+            .WithContract(typeof(EndpointsCustomizationTestsDefaultRequest).Assembly)
+            .WithServer();
         additionalSetup(easyApiBuilder);
 
         _sut = builder.Build();
@@ -44,7 +42,7 @@ public sealed class EndpointsCustomizationTests : IAsyncDisposable
     {
         await Initialize(appBuilder => appBuilder.UsingEndpointsCustomization<TestEndpointsCustomization>());
         var client = _sut.GetTestClient();
-        var result = await client.PostAsync("empty", null);
+        var result = await client.GetAsync(nameof(EndpointsCustomizationTestsCustomizedRequest));
         Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
     }
 
@@ -53,7 +51,7 @@ public sealed class EndpointsCustomizationTests : IAsyncDisposable
     {
         await Initialize(appBuilder => appBuilder.UsingEndpointsCustomization(new TestEndpointsCustomization()));
         var client = _sut.GetTestClient();
-        var result = await client.PostAsync("empty", null);
+        var result = await client.GetAsync(nameof(EndpointsCustomizationTestsCustomizedRequest));
         Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
     }
 
@@ -62,7 +60,7 @@ public sealed class EndpointsCustomizationTests : IAsyncDisposable
     {
         await Initialize(appBuilder => appBuilder.UsingEndpointsCustomization<TestEndpointsCustomization>());
         var client = _sut.GetTestClient();
-        var result = await client.GetAsync("empty");
+        var result = await client.GetAsync(nameof(EndpointsCustomizationTestsDefaultRequest));
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
     }
 
@@ -71,15 +69,32 @@ public sealed class EndpointsCustomizationTests : IAsyncDisposable
         await _sut.StopAsync();
         await _sut.DisposeAsync();
     }
+}
 
-    private class TestEndpointsCustomization : IEndpointsCustomization
+internal class TestEndpointsCustomization : IEndpointsCustomization
+{
+    public void Customize<Request>(RouteHandlerBuilder builder)
     {
-        public void Customize<Request>(RouteHandlerBuilder builder)
+        if (typeof(Request) == typeof(EndpointsCustomizationTestsCustomizedRequest))
         {
-            if (typeof(IPost).IsAssignableFrom(typeof(Request)))
-            {
-                builder.RequireAuthorization();
-            }
+            builder.RequireAuthorization();
         }
     }
 }
+
+internal class AuthorizationTestsRequestHandler
+    : IHandle<EndpointsCustomizationTestsCustomizedRequest>
+    , IHandle<EndpointsCustomizationTestsDefaultRequest>
+{
+    public Task<HttpResult> Handle(EndpointsCustomizationTestsCustomizedRequest request, CancellationToken cancellationToken)
+        => Task.FromResult(HttpResult.Ok());
+
+    public Task<HttpResult> Handle(EndpointsCustomizationTestsDefaultRequest request, CancellationToken cancellationToken)
+        => Task.FromResult(HttpResult.Ok());
+}
+
+[Route(nameof(EndpointsCustomizationTestsCustomizedRequest))]
+public class EndpointsCustomizationTestsCustomizedRequest : IGet { }
+
+[Route(nameof(EndpointsCustomizationTestsDefaultRequest))]
+public class EndpointsCustomizationTestsDefaultRequest : IGet { }

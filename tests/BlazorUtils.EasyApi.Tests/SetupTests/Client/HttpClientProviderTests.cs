@@ -1,7 +1,7 @@
 ﻿using BlazorUtils.EasyApi.Client;
 using BlazorUtils.EasyApi.Client.Setup;
+using BlazorUtils.EasyApi.Server;
 using BlazorUtils.EasyApi.Shared.Setup;
-using BlazorUtils.EasyApi.Tests.SUT.Contract;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
@@ -18,7 +18,7 @@ public sealed class HttpClientProviderTests : IDisposable
         services.AddSingleton<OnSendCallback>(OnSend);
         var easyApiBuilder = services
             .AddEasyApi()
-            .WithContract(typeof(EmptyGet).Assembly)
+            .WithContract(typeof(HttpClientProviderTestsRequest).Assembly)
             .WithClient();
         additionalSetup(easyApiBuilder);
         _sut = services.BuildServiceProvider();
@@ -48,12 +48,12 @@ public sealed class HttpClientProviderTests : IDisposable
         await CallApi(2);
 
         var scope = _sut.CreateScope();
-        var caller = scope.ServiceProvider.GetRequiredService<ICall<EmptyGet>>();
+        var caller = scope.ServiceProvider.GetRequiredService<ICall<HttpClientProviderTestsRequest>>();
         await caller.Call(new());
         Assert.Equal(3, _calls.Count);
 
         scope = _sut.CreateScope();
-        caller = scope.ServiceProvider.GetRequiredService<ICall<EmptyGet>>();
+        caller = scope.ServiceProvider.GetRequiredService<ICall<HttpClientProviderTestsRequest>>();
         await caller.Call(new());
         Assert.Equal(4, _calls.Count);
 
@@ -80,7 +80,7 @@ public sealed class HttpClientProviderTests : IDisposable
     {
         for (int currentCall = 1; currentCall <= times; currentCall++)
         {
-            var caller = _sut.GetRequiredService<ICall<EmptyGet>>();
+            var caller = _sut.GetRequiredService<ICall<HttpClientProviderTestsRequest>>();
             await caller.Call(new());
             Assert.Equal(currentCall, _calls.Count);
         }
@@ -88,33 +88,42 @@ public sealed class HttpClientProviderTests : IDisposable
 
     private void OnSend(Guid providerId) => _calls.Add(providerId);
 
-    private class TestHttpClientProvider : IHttpClientProvider
-    {
-        private readonly HttpClient _httpClient;
-
-        public TestHttpClientProvider(OnSendCallback onSend)
-        {
-            _httpClient = new HttpClient(new TestHttpMessageHandler(onSend))
-            {
-                BaseAddress = new("https://example.com")
-            };
-        }
-
-        public HttpClient GetClient(IRequest request) => _httpClient;
-    }
-
-    private class TestHttpMessageHandler(OnSendCallback OnSend) : HttpMessageHandler
-    {
-        private readonly Guid _id = Guid.NewGuid();
-
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            OnSend(_id);
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
-        }
-    }
-
-    private delegate void OnSendCallback(Guid providerId);
-
     public void Dispose() => _sut.Dispose();
 }
+
+internal delegate void OnSendCallback(Guid providerId);
+
+internal class TestHttpMessageHandler(OnSendCallback OnSend) : HttpMessageHandler
+{
+    private readonly Guid _id = Guid.NewGuid();
+
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        OnSend(_id);
+        return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
+    }
+}
+
+internal class TestHttpClientProvider : IHttpClientProvider
+{
+    private readonly HttpClient _httpClient;
+
+    public TestHttpClientProvider(OnSendCallback onSend)
+    {
+        _httpClient = new HttpClient(new TestHttpMessageHandler(onSend))
+        {
+            BaseAddress = new("https://example.com")
+        };
+    }
+
+    public HttpClient GetClient(IRequest request) => _httpClient;
+}
+
+internal class AuthorizationTestsRequestHandler: IHandle<HttpClientProviderTestsRequest>
+{
+    public Task<HttpResult> Handle(HttpClientProviderTestsRequest request, CancellationToken cancellationToken)
+        => Task.FromResult(HttpResult.Ok());
+}
+
+[Route(nameof(HttpClientProviderTestsRequest))]
+public class HttpClientProviderTestsRequest : IGet { }

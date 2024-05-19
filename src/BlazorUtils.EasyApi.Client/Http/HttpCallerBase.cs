@@ -48,7 +48,7 @@ internal abstract class HttpCallerBase<Request>
 
     private Uri GetUri(Request request)
     {
-        var route = _accessor.Route;
+        var route = _accessor.RouteInfo.Value;
 
         foreach (var param in _accessor.RouteParams)
         {

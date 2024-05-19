@@ -14,7 +14,7 @@ internal abstract class RequestAccessor
 
     public Type? ResponseType { get; init; } = default!;
 
-    public string Route { get; init; } = default!;
+    public RouteInfo RouteInfo { get; init; } = default!;
 
     public IEnumerable<PropertyWrapper> BodyParams { get; init; } = default!;
 
@@ -32,7 +32,7 @@ internal class RequestAccessor<Request> : RequestAccessor
     {
         RequestType = GetRequestType();
         ResponseType = GetResponseType();
-        Route = GetRoute();
+        RouteInfo = GetRouteInfo();
         BodyParams = GetParamsWith<BodyParamAttribute>();
         HeaderParams = GetParamsWith<HeaderParamAttribute>();
         QueryStringParams = GetParamsWith<QueryStringParamAttribute>();
@@ -47,14 +47,12 @@ internal class RequestAccessor<Request> : RequestAccessor
         .GetGenericArguments()
         .Single();
 
-    private static string GetRoute()
+    private static RouteInfo GetRouteInfo() => Attribute.GetCustomAttribute(GetRequestType(), typeof(RouteAttribute)) switch
     {
-        if (Attribute.GetCustomAttribute(GetRequestType(), typeof(RouteAttribute)) is RouteAttribute route)
-        {
-            return route.Value;
-        }
-        return string.Empty;
-    }
+        ProtectedRouteAttribute protectedRoute => new RouteInfo(protectedRoute),
+        RouteAttribute route => new RouteInfo(route),
+        _ => RouteInfo.Default
+    };
 
     private static PropertyWrapper[] GetParamsWith<AttributeType>() => typeof(Request)
         .GetProperties(BindingFlags.Public | BindingFlags.Instance)
