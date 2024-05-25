@@ -1,6 +1,5 @@
 # EasyApi
-
-TBD
+Introducing Easy Api – a new way to define and consume Web APIs for Blazor apps. 
 
 ## Why would you want to use it?
 
@@ -23,10 +22,10 @@ TBD
   All you need to do is define the contract and handle your requests.
 
 ## Sounds good? 
-TBD
+Jump right into practice with [EasyApi Website](https://github.com/bpawluk/EasyApiWebsite) – an application that demonstrates how to set up and use EasyApi.
 
 ## Want to know more? 
-TBD
+The path to understanding EasyApi is straightforward and consists of getting to know the three key elements of the library - the contract, the server, and the client apps.
 
 ### Contract
 TBD
@@ -37,10 +36,10 @@ TBD
 ### Client
 TBD
 
-### Additional configuration
+## Additional configuration
 
-#### Client provider
+### Client provider
 TBD
 
-#### Customized endpoints
+### Customized endpoints
 TBD
