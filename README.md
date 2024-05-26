@@ -28,6 +28,32 @@ Jump right into practice with [EasyApi Website](https://github.com/bpawluk/EasyA
 The path to understanding EasyApi is straightforward and consists of getting to know the three key elements of the library - the contract, the server, and the client apps.
 
 ### Contract
+EasyApi Contract defines the structure of your API requests. It is represented as a set of C# ```classes```, each of which:
+- must implement one of the predefined ```interfaces``` that declare the HTTP method to use:
+  - ```IHead```, 
+  - ```IGet``` or ```IGet<ResponseType>``` 
+  - ```IPost``` or ```IPost<ResponseType>```, 
+  - ```IPut``` or ```IPut<ResponseType>```, 
+  - ```IPatch``` or ```IPatch<ResponseType>```, 
+  - ```IDelete``` or ```IDelete<ResponseType>```;
+
+- should be marked with one of the available ```attributes``` that declare the API endpoint route:
+  - ```RouteAttribute``` - for publicly available endpoints,
+  - ```ProtectedRouteAttribute``` - for endpoints requiring authorization;
+
+    > :warning: BEWARE  
+    > Authorization is only used to protect the API endpoint itself. Do not base your client security on it, as requests are not authorized during pre-rendering and server-side rendering scenarios. Use [Blazor authorization measures](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/#authorization) instead. 
+
+- can contain properties marked with one of the available ```attributes``` that declare the request paramaters:
+  - ```BodyParamAttribute``` - sent in the body of a HTTP request for methods that support it, 
+  - ```HeaderParamAttribute``` - sent as a HTTP header, 
+  - ```QueryStringParamAttribute``` - sent as an argument appended to the endpoint URL, 
+  - ```RouteParamAttribute``` - sent within the endpoint URL itself.
+
+    > ℹ️ NOTE  
+    > The route must contain a matching placeholder in the following format: ```{PropertyName}```.
+
+#### Setup
 TBD
 
 ### Server 
