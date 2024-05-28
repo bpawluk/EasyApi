@@ -33,6 +33,7 @@ EasyApi Contract defines the API endpoints you want to expose, along with the st
 #### Setup
 ##### 1. Add a new Class Library Project to your Solution.
 ##### 2. Reference the [BlazorUtils.EasyApi](https://www.nuget.org/packages/BlazorUtils.EasyApi) NuGet package.
+
 ```xml
 <PackageReference Include="BlazorUtils.EasyApi" Version="[use the latest version here]" />
 ```
@@ -112,7 +113,34 @@ You can specify a different way of sending values for each of the parameters by 
 TBD
 
 #### Setup
-TBD
+##### 1. You should start with a ```Microsoft.NET.Sdk.Web``` SDK Project that is the Server for your application.
+##### 2. Reference the [BlazorUtils.EasyApi.Server](https://www.nuget.org/packages/BlazorUtils.EasyApi.Server) NuGet package.
+
+```xml
+<PackageReference Include="BlazorUtils.EasyApi.Server" Version="[use the latest version here]" />
+```
+
+##### 3. Register EasyApi services.
+
+```csharp
+using BlazorUtils.EasyApi;
+using BlazorUtils.EasyApi.Server;
+
+var contractAssembly = typeof(AddComment).Assembly;
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+    .AddEasyApi()
+    .WithContract(contractAssembly)
+    .WithServer();
+```
+
+##### 4. Map EasyApi endpoints.
+```csharp
+var app = builder.Build();
+// [...]
+app.MapRequests();
+```
 
 #### Handling requests
 TBD
@@ -121,14 +149,46 @@ TBD
 TBD
 
 #### Setup
-TBD
+##### 1. You should start with a ```Microsoft.NET.Sdk.BlazorWebAssembly``` SDK Project that is your Client application.
+##### 2. Reference the [BlazorUtils.EasyApi.Client](https://www.nuget.org/packages/BlazorUtils.EasyApi.Client) NuGet package.
+
+```xml
+<PackageReference Include="BlazorUtils.EasyApi.Client" Version="[use the latest version here]" />
+```
+
+##### 3. Register EasyApi services.
+
+```csharp
+using BlazorUtils.EasyApi;
+using BlazorUtils.EasyApi.Client;
+
+var contractAssembly = typeof(AddComment).Assembly;
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+builder.Services
+    .AddEasyApi()
+    .WithContract(contractAssembly)
+    .WithClient();
+```
+
+##### 4. Setup the ```HttpClient```
+Simply register it as a service
+
+```csharp
+builder.Services.AddTransient(provider => new HttpClient
+{
+    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
+});
+```
+
+or [configure a provider](#http-client-provider) for more control over the ```HttpClient```.
 
 #### Sending requests
 TBD
 
 ## Additional configuration
 
-#### Client provider
+#### HTTP client provider
 TBD
 
 #### Customized endpoints
