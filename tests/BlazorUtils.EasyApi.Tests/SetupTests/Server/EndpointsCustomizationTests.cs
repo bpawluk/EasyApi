@@ -40,7 +40,7 @@ public sealed class EndpointsCustomizationTests : IAsyncDisposable
     [Fact]
     public async Task CustomizedEndpoint_ByType_WorksAsSpecified()
     {
-        await Initialize(appBuilder => appBuilder.UsingEndpointsCustomization<TestEndpointsCustomization>());
+        await Initialize(appBuilder => appBuilder.Using<TestEndpointsCustomization>());
         var client = _sut.GetTestClient();
         var result = await client.GetAsync(nameof(EndpointsCustomizationTestsCustomizedRequest));
         Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
@@ -49,7 +49,7 @@ public sealed class EndpointsCustomizationTests : IAsyncDisposable
     [Fact]
     public async Task CustomizedEndpoint_ByInstance_WorksAsSpecified()
     {
-        await Initialize(appBuilder => appBuilder.UsingEndpointsCustomization(new TestEndpointsCustomization()));
+        await Initialize(appBuilder => appBuilder.Using(new TestEndpointsCustomization()));
         var client = _sut.GetTestClient();
         var result = await client.GetAsync(nameof(EndpointsCustomizationTestsCustomizedRequest));
         Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
@@ -58,7 +58,7 @@ public sealed class EndpointsCustomizationTests : IAsyncDisposable
     [Fact]
     public async Task NotCustomizedEndpoint_DefaultBehavior()
     {
-        await Initialize(appBuilder => appBuilder.UsingEndpointsCustomization<TestEndpointsCustomization>());
+        await Initialize(appBuilder => appBuilder.Using<TestEndpointsCustomization>());
         var client = _sut.GetTestClient();
         var result = await client.GetAsync(nameof(EndpointsCustomizationTestsDefaultRequest));
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);

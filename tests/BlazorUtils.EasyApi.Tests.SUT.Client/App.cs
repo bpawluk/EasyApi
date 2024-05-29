@@ -22,7 +22,7 @@ public sealed class App(IHost app) : IDisposable
                             typeof(HeaderParamRequest).Assembly,
                             typeof(NoResponseRequest).Assembly)
                         .WithClient()
-                        .UsingHttpClientProvider(httpClientProvider);
+                        .Using(httpClientProvider);
         var app = builder.Build();
         app.Start();
         return new App(app);

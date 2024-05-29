@@ -27,7 +27,7 @@ public sealed class HttpClientProviderTests : IDisposable
     [Fact]
     public async Task Provider_WithDefaultLifetime()
     {
-        Initialize(appBuilder => appBuilder.UsingHttpClientProvider<TestHttpClientProvider>());
+        Initialize(appBuilder => appBuilder.Using<TestHttpClientProvider>());
         await CallApi(3);
         Assert.Equal(3, _calls.Distinct().Count());
     }
@@ -35,7 +35,7 @@ public sealed class HttpClientProviderTests : IDisposable
     [Fact]
     public async Task Provider_WithTransientLifetime()
     {
-        Initialize(appBuilder => appBuilder.UsingHttpClientProvider<TestHttpClientProvider>(ServiceLifetime.Transient));
+        Initialize(appBuilder => appBuilder.Using<TestHttpClientProvider>(ServiceLifetime.Transient));
         await CallApi(3);
         Assert.Equal(3, _calls.Distinct().Count());
     }
@@ -43,7 +43,7 @@ public sealed class HttpClientProviderTests : IDisposable
     [Fact]
     public async Task Provider_WithScopedLifetime()
     {
-        Initialize(appBuilder => appBuilder.UsingHttpClientProvider<TestHttpClientProvider>(ServiceLifetime.Scoped));
+        Initialize(appBuilder => appBuilder.Using<TestHttpClientProvider>(ServiceLifetime.Scoped));
 
         await CallApi(2);
 
@@ -63,7 +63,7 @@ public sealed class HttpClientProviderTests : IDisposable
     [Fact]
     public async Task Provider_WithSingletonLifetime()
     {
-        Initialize(appBuilder => appBuilder.UsingHttpClientProvider<TestHttpClientProvider>(ServiceLifetime.Singleton));
+        Initialize(appBuilder => appBuilder.Using<TestHttpClientProvider>(ServiceLifetime.Singleton));
         await CallApi(3);
         Assert.Single(_calls.Distinct());
     }
@@ -71,7 +71,7 @@ public sealed class HttpClientProviderTests : IDisposable
     [Fact]
     public async Task Provider_WithSingletonInstance()
     {
-        Initialize(appBuilder => appBuilder.UsingHttpClientProvider(new TestHttpClientProvider(OnSend)));
+        Initialize(appBuilder => appBuilder.Using(new TestHttpClientProvider(OnSend)));
         await CallApi(3);
         Assert.Single(_calls.Distinct());
     }

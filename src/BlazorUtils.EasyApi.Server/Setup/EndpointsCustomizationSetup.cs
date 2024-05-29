@@ -6,7 +6,7 @@ namespace BlazorUtils.EasyApi.Server.Setup;
 
 public static class EndpointsCustomizationSetup
 {
-    public static AppBuilder UsingEndpointsCustomization<EndpointsCustomizationType>(this AppBuilder builder)
+    public static AppBuilder Using<EndpointsCustomizationType>(this AppBuilder builder)
         where EndpointsCustomizationType : class, IEndpointsCustomization
     {
         var descriptor = ServiceDescriptor.Transient<IEndpointsCustomization, EndpointsCustomizationType>();
@@ -14,7 +14,7 @@ public static class EndpointsCustomizationSetup
         return builder;
     }
 
-    public static AppBuilder UsingEndpointsCustomization(this AppBuilder builder, IEndpointsCustomization httpClientProvider)
+    public static AppBuilder Using(this AppBuilder builder, IEndpointsCustomization httpClientProvider)
     {
         var descriptor = ServiceDescriptor.Singleton(httpClientProvider);
         builder.Services.Replace(descriptor);
