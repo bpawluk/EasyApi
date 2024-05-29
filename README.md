@@ -3,20 +3,20 @@ Introducing Easy Api – a new way to define and consume Web APIs for Blazor app
 
 ## Why would you want to use it?
 
-#### 1. Contract-First API development
+**✅ Contract-First API development**
 - Bring order to your development process and gain a clear and consistent API structure.
 
-#### 2. Shared data model
+**✅ Shared data model**
 - Harness the true power of Blazor with a single data model for your server and client code.  
 - Forget about countless DTOs, mapping, versioning, and runtime errors.  
 - Welcome EasyApi's type-safe contract shared between both ends of your application.
 
-#### 3. Unified logic across all Render Modes
+**✅ Unified logic across all Render Modes**
 - Stop worrying about where your client code is running.  
 - Just call your requests and let EasyApi do the rest.  
 - It does not matter if it is Wasm, SSR or prerendering – the job gets done.
 
-#### 4. No boilerplate
+**✅ No boilerplate**
 - Save time and focus on what's important.  
 - EasyApi handles both client and server configuration for you.  
 - All you need to do is define the contract and handle your requests.
@@ -32,9 +32,9 @@ EasyApi Contract defines the API endpoints you want to expose and consume. Each 
 
 #### Setup
 
-##### 1. Add a new Class Library Project to your Solution.
+**1️⃣ Add a new Class Library Project to your Solution.**
 
-##### 2. Reference the [BlazorUtils.EasyApi](https://www.nuget.org/packages/BlazorUtils.EasyApi) NuGet package.
+**2️⃣ Reference the [BlazorUtils.EasyApi](https://www.nuget.org/packages/BlazorUtils.EasyApi) NuGet package.**
 
 ```xml
 <PackageReference Include="BlazorUtils.EasyApi" Version="[use the latest version here]" />
@@ -42,13 +42,13 @@ EasyApi Contract defines the API endpoints you want to expose and consume. Each 
 
 #### Defining the Contract
 
-##### 1. Create a ```class``` for your requests.
+**1️⃣ Create a ```class``` for your requests.**
 
 ```csharp
 public class AddComment {}
 ```
 
-##### 2. Declare the HTTP Method you want to use by implementing one of the predefined ```interfaces```.
+**2️⃣ Declare the HTTP Method you want to use by implementing one of the predefined ```interfaces```.**
 
 ```csharp
 public class AddComment : IPost {}
@@ -68,7 +68,7 @@ The full list of available ```interfaces``` includes:
   - ```IPatch``` and ```IPatch<ResponseType>```, 
   - ```IDelete``` and ```IDelete<ResponseType>```.
 
-##### 3. Declare the API endpoint's route by using the ```RouteAttribute```.
+**3️⃣ Declare the API endpoint's route by using the ```RouteAttribute```.**
 
 ```csharp
 [Route("api/articles/{ArticleID}/comments")]
@@ -85,7 +85,7 @@ public class AddComment : IPost<Guid> {}
 > [!CAUTION]
 > Authorization is used only to protect the API endpoint. EasyApi requests are not authorized during pre-rendering and server-side rendering scenarios. Use [Blazor authorization measures](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/#authorization) to protect your Client app. 
 
-##### 4. Define the parameters that make up the request structure.
+**4️⃣ Define the parameters that make up the request structure.**
 
 ```csharp
 [ProtectedRoute("api/articles/{ArticleID}/comments")]
@@ -116,15 +116,15 @@ The responsibility of the EasyApi Server app is to handle all requests defined i
 
 #### Setup
 
-##### 1. You should start with a ```Microsoft.NET.Sdk.Web``` SDK Project that is the Server for your application.
+**1️⃣ You should start with a ```Microsoft.NET.Sdk.Web``` SDK Project that is the Server for your application.**
 
-##### 2. Reference the [BlazorUtils.EasyApi.Server](https://www.nuget.org/packages/BlazorUtils.EasyApi.Server) NuGet package.
+**2️⃣ Reference the [BlazorUtils.EasyApi.Server](https://www.nuget.org/packages/BlazorUtils.EasyApi.Server) NuGet package.**
 
 ```xml
 <PackageReference Include="BlazorUtils.EasyApi.Server" Version="[use the latest version here]" />
 ```
 
-##### 3. Register EasyApi services.
+**3️⃣ Register EasyApi services.**
 
 ```csharp
 using BlazorUtils.EasyApi;
@@ -139,7 +139,7 @@ builder.Services
     .WithServer();
 ```
 
-##### 4. Map EasyApi endpoints.
+**4️⃣ Map EasyApi endpoints.**
 ```csharp
 var app = builder.Build();
 // [...]
@@ -148,13 +148,13 @@ app.MapRequests();
 
 #### Handling requests
 
-##### 1. Create the request handler ```class```.
+**1️⃣ Create the request handler ```class```.**
 
 ```csharp
 internal class AddCommentHandler : IHandle<AddComment, Guid> { }
 ```
 
-##### 2. Implement the ```IHandle``` ```interface```.
+**2️⃣ Implement the ```IHandle``` ```interface```.**
 
 ```csharp
 internal class AddCommentHandler(ICommentsRepository CommentsRepository) : IHandle<AddComment, Guid>
@@ -173,15 +173,15 @@ The EasyApi Client app creates requests defined in the Contract and sends them t
 
 #### Setup
 
-##### 1. You should start with a ```Microsoft.NET.Sdk.BlazorWebAssembly``` SDK Project that is your Client application.
+**1️⃣ You should start with a ```Microsoft.NET.Sdk.BlazorWebAssembly``` SDK Project that is your Client application.**
 
-##### 2. Reference the [BlazorUtils.EasyApi.Client](https://www.nuget.org/packages/BlazorUtils.EasyApi.Client) NuGet package.
+**2️⃣ Reference the [BlazorUtils.EasyApi.Client](https://www.nuget.org/packages/BlazorUtils.EasyApi.Client) NuGet package.**
 
 ```xml
 <PackageReference Include="BlazorUtils.EasyApi.Client" Version="[use the latest version here]" />
 ```
 
-##### 3. Register EasyApi services.
+**3️⃣ Register EasyApi services.**
 
 ```csharp
 using BlazorUtils.EasyApi;
@@ -196,7 +196,8 @@ builder.Services
     .WithClient();
 ```
 
-##### 4. Setup the ```HttpClient```
+**4️⃣ Setup the ```HttpClient```.**
+
 Simply register it as a service,
 
 ```csharp
@@ -210,13 +211,13 @@ or [configure a provider](#http-client-provider) for more control over the ```Ht
 
 #### Sending requests
 
-##### 1. Inject the caller of the endpoint you want to use
+**1️⃣ Inject the caller of the endpoint you want to use.**
 
 ```csharp
 @inject ICall<AddComment, Guid> AddComment
 ```
 
-##### 2. Create the request
+**2️⃣ Create the request.**
 
 ```csharp
 var request = new AddPost()
@@ -227,7 +228,8 @@ var request = new AddPost()
 };
 ```
 
-##### 3. Call the API endpoint
+**3️⃣ Call the API endpoint.**
+
 Use the ```Call``` method to simply get the response,
 
 ```csharp
@@ -246,8 +248,54 @@ if (result.StatusCode == HttpStatusCode.Created)
 
 ## Additional configuration
 
-#### HTTP client provider
-TBD
+### Client
 
-#### Customized endpoints
-TBD
+#### HTTP client provider
+
+**1️⃣ Implement the ```IHttpClientProvider``` ```interface```.**
+
+```csharp
+internal class HttpClientProvider : IHttpClientProvider
+{
+    public HttpClient GetClient(IRequest request)
+    {
+        // your logic goes here
+    }
+}
+```
+
+**2️⃣ Register the HTTP client provider for your Client app.**
+
+```csharp
+builder.Services
+    .AddEasyApi()
+    .WithContract(contractAssembly)
+    .WithClient()
+    .UsingHttpClientProvider<HttpClientProvider>();
+```
+
+### Server
+
+#### API endpoints customization
+
+**1️⃣ Implement the ```IEndpointsCustomization``` ```interface```.**
+
+```csharp
+internal class EndpointsCustomization : IEndpointsCustomization
+{
+    public void Customize<Request>(RouteHandlerBuilder builder)
+    {
+        // your logic goes here
+    }
+}
+```
+
+**2️⃣ Register the endpoints customization for your Server app.**
+
+```csharp
+builder.Services
+    .AddEasyApi()
+    .WithContract(contractAssembly)
+    .WithServer()
+    .UsingEndpointsCustomization<EndpointsCustomization>();
+```
