@@ -201,7 +201,7 @@ builder.Services
 Simply register it as a service,
 
 ```csharp
-builder.Services.AddTransient(provider => new HttpClient
+builder.Services.AddScoped(provider => new HttpClient
 {
     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
 });
@@ -251,6 +251,7 @@ if (result.StatusCode == HttpStatusCode.Created)
 ### Client
 
 #### HTTP client provider
+By default, EasyApi uses the ```HttpClient``` registered in the service collection of your Client app. Whenever you need more control over the ```HttpClient``` creation or need to manage different ```HttpClients``` for different API requests, you should set up your own provider.
 
 **1️⃣ Implement the ```IHttpClientProvider``` ```interface```.**
 
@@ -271,12 +272,13 @@ builder.Services
     .AddEasyApi()
     .WithContract(contractAssembly)
     .WithClient()
-    .UsingHttpClientProvider<HttpClientProvider>();
+    .Using<HttpClientProvider>();
 ```
 
 ### Server
 
 #### API endpoints customization
+EasyApi handles the basic API endpoint configuration for you. For advanced scenarios that require more configuration, you should set up your own API endpoint customization.
 
 **1️⃣ Implement the ```IEndpointsCustomization``` ```interface```.**
 
@@ -297,5 +299,5 @@ builder.Services
     .AddEasyApi()
     .WithContract(contractAssembly)
     .WithServer()
-    .UsingEndpointsCustomization<EndpointsCustomization>();
+    .Using<EndpointsCustomization>();
 ```
