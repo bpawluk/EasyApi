@@ -304,5 +304,10 @@ builder.Services
 
 ## Change Log
 
+### v0.5.1
+- Fixed incorrect HTTP method mapping for IPut requests.
+- Fixed null string parameters being deserialized as empty strings.
+- Query String and Header params are now skipped when sending null values.
+
 ### v0.5.0
-Baseline version of the library.
+- Baseline version of the library.
