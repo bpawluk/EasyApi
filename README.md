@@ -301,3 +301,8 @@ builder.Services
     .WithServer()
     .Using<EndpointsCustomization>();
 ```
+
+## Change Log
+
+### v0.5.0
+Baseline version of the library.
