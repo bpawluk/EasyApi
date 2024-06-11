@@ -27,7 +27,7 @@ internal static class HttpMethodUtils
         {
             IGet<Response> => HttpMethod.Get,
             IPost<Response> => HttpMethod.Post,
-            IPut<Response> => HttpMethod.Post,
+            IPut<Response> => HttpMethod.Put,
             IPatch<Response> => HttpMethod.Patch,
             IDelete<Response> => HttpMethod.Delete,
             _ => throw new ArgumentException($"Failed to match HTTP method for {request.GetType().Name}")
