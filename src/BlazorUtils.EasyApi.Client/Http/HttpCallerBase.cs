@@ -35,7 +35,11 @@ internal abstract class HttpCallerBase<Request>
         var httpRequest = new HttpRequestMessage(method, uri) { Content = content };
         foreach (var param in _accessor.HeaderParams)
         {
-            httpRequest.Headers.Add(param.Name, param.ReadFrom(request));
+            var paramValue = param.ReadFrom(request);
+            if (paramValue != null)
+            {
+                httpRequest.Headers.Add(param.Name, paramValue);
+            }
         }
         return httpRequest;
     }
@@ -59,7 +63,11 @@ internal abstract class HttpCallerBase<Request>
         var queryString = HttpUtility.ParseQueryString(string.Empty);
         foreach (var param in _accessor.QueryStringParams)
         {
-            queryString[param.Name] = param.ReadFrom(request);
+            var paramValue = param.ReadFrom(request);
+            if (paramValue != null)
+            {
+                queryString[param.Name] = paramValue;
+            }
         }
         route = queryString.Count > 0 ? $"{route}?{queryString}" : route;
 

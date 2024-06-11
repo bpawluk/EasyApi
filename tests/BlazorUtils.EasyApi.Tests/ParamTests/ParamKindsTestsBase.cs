@@ -17,7 +17,6 @@ public abstract class ParamKindsTestsBase(TestsFixture fixture) : TestsBase(fixt
         var request = new HeaderParamRequest()
         {
             Number = 1,
-            Text = "text",
             Struct = new()
             {
                 Amount = 9.99M,
@@ -29,9 +28,20 @@ public abstract class ParamKindsTestsBase(TestsFixture fixture) : TestsBase(fixt
                 Price = 9.99,
                 StockQuantity = 100,
                 CreatedAt = DateTime.UtcNow
-            }
+            },
+            Text = "text",
+            TextDefault = null,
+            TextDefaultWithInitialValue = null
         };
-        await CallHttp(request);
+
+        var result = await CallHttp<HeaderParamRequest, HeaderParamRequest.Response>(request);
+
+        Assert.Equal(request.Number, result.Number);
+        Assert.Equal(request.Struct, result.Struct);
+        Assert.Equal(request.Class, result.Class);
+        Assert.Equal(request.Text, result.Text);
+        Assert.Equal(request.TextDefault, result.TextDefault);
+        Assert.Equal(request.TextDefaultWithInitialValue, result.TextDefaultWithInitialValue);
     }
 
     [Fact]
@@ -40,7 +50,6 @@ public abstract class ParamKindsTestsBase(TestsFixture fixture) : TestsBase(fixt
         var request = new RouteParamRequest()
         {
             Number = 1,
-            Text = "text",
             Struct = new()
             {
                 Amount = 9.99M,
@@ -52,9 +61,16 @@ public abstract class ParamKindsTestsBase(TestsFixture fixture) : TestsBase(fixt
                 Price = 9.99,
                 StockQuantity = 100,
                 CreatedAt = DateTime.UtcNow
-            }
+            },
+            Text = "text"
         };
-        await CallHttp(request);
+
+        var result = await CallHttp<RouteParamRequest, RouteParamRequest.Response>(request);
+
+        Assert.Equal(request.Number, result.Number);
+        Assert.Equal(request.Struct, result.Struct);
+        Assert.Equal(request.Class, result.Class);
+        Assert.Equal(request.Text, result.Text);
     }
 
     [Fact]
@@ -63,7 +79,6 @@ public abstract class ParamKindsTestsBase(TestsFixture fixture) : TestsBase(fixt
         var request = new QueryStringParamRequest()
         {
             Number = 1,
-            Text = "text",
             Struct = new()
             {
                 Amount = 9.99M,
@@ -75,9 +90,20 @@ public abstract class ParamKindsTestsBase(TestsFixture fixture) : TestsBase(fixt
                 Price = 9.99,
                 StockQuantity = 100,
                 CreatedAt = DateTime.UtcNow
-            }
+            },
+            Text = "text",
+            TextDefault = null,
+            TextDefaultWithInitialValue = null
         };
-        await CallHttp(request);
+
+        var result = await CallHttp<QueryStringParamRequest, QueryStringParamRequest.Response>(request);
+
+        Assert.Equal(request.Number, result.Number);
+        Assert.Equal(request.Struct, result.Struct);
+        Assert.Equal(request.Class, result.Class);
+        Assert.Equal(request.Text, result.Text);
+        Assert.Equal(request.TextDefault, result.TextDefault);
+        Assert.Equal(request.TextDefaultWithInitialValue, result.TextDefaultWithInitialValue);
     }
 
     [Fact]
@@ -86,7 +112,6 @@ public abstract class ParamKindsTestsBase(TestsFixture fixture) : TestsBase(fixt
         var request = new BodyParamRequest()
         {
             Number = 1,
-            Text = "text",
             Struct = new()
             {
                 Amount = 9.99M,
@@ -98,8 +123,19 @@ public abstract class ParamKindsTestsBase(TestsFixture fixture) : TestsBase(fixt
                 Price = 9.99,
                 StockQuantity = 100,
                 CreatedAt = DateTime.UtcNow
-            }
+            },
+            Text = "text",
+            TextDefault = null,
+            TextDefaultWithInitialValue = null
         };
-        await CallHttp(request);
+
+        var result = await CallHttp<BodyParamRequest, BodyParamRequest.Response>(request);
+
+        Assert.Equal(request.Number, result.Number);
+        Assert.Equal(request.Struct, result.Struct);
+        Assert.Equal(request.Class, result.Class);
+        Assert.Equal(request.Text, result.Text);
+        Assert.Equal(request.TextDefault, result.TextDefault);
+        Assert.Equal(request.TextDefaultWithInitialValue, result.TextDefaultWithInitialValue);
     }
 }
