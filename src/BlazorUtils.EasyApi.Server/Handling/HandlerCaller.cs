@@ -13,7 +13,7 @@ internal class HandlerCaller<Request>(IHandle<Request> handler)
 
     public async Task Call(Request request, CancellationToken cancellationToken)
     {
-        var result = await _handler.Handle(request, cancellationToken);
+        var result = await CallHttp(request, cancellationToken).ConfigureAwait(false);
         result.EnsureSucceeded();
     }
 

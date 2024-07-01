@@ -40,7 +40,7 @@ internal class HttpCaller<Request, Response>(IHttpClientProvider httpClientProvi
 
     private static async Task<(bool HasResponse, Response? Response)> TryReadContent(HttpContent content, CancellationToken cancellationToken)
     {
-        var body = await content.ReadAsStreamAsync(cancellationToken);
+        var body = await content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
         if (body != Stream.Null && body.CanRead)
         {
             try

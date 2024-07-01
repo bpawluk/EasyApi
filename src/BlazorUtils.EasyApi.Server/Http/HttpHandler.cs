@@ -44,7 +44,8 @@ internal static class HttpHandler
     private async static Task<Request> GetRequest<Request>(
         HttpRequest httpRequest,
         RequestAccessor<Request> accessor,
-        CancellationToken cancellationToken) where Request : class, IRequest, new()
+        CancellationToken cancellationToken) 
+        where Request : class, IRequest, new()
     {
         var request = new Request();
 
@@ -72,7 +73,8 @@ internal static class HttpHandler
         Request request,
         RequestAccessor<Request> accessor,
         Stream body,
-        CancellationToken cancellationToken) where Request : class, IRequest, new()
+        CancellationToken cancellationToken) 
+        where Request : class, IRequest, new()
     {
         if (accessor.BodyParams.Any() && body != Stream.Null && body.CanRead)
         {
