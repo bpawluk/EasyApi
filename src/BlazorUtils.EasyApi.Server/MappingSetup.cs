@@ -20,7 +20,7 @@ public static class MappingSetup
             {
                 typeof(MappingSetup).InvokeGeneric(
                     nameof(MapRequestWithResponse),
-                    new Type[] { request.RequestType, responseType },
+                    [request.RequestType, responseType],
                     request.RouteInfo,
                     app,
                     endpointsCustomization);

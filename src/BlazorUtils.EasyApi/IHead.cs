@@ -1,3 +1,4 @@
-﻿namespace BlazorUtils.EasyApi;
-
-public interface IHead : IRequest { }
+﻿namespace BlazorUtils.EasyApi
+{
+    public interface IHead : IRequest { }
+}

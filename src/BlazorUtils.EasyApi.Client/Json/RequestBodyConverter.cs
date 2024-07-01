@@ -6,15 +6,11 @@ using System.Text.Json.Serialization;
 namespace BlazorUtils.EasyApi.Client.Json;
 
 // TODO: Configuring customized body serialization
-internal class RequestBodyConverter<Request> : JsonConverter<Request>
+internal class RequestBodyConverter<Request>(RequestAccessor<Request> accessor) 
+    : JsonConverter<Request>
     where Request : class, IRequest, new()
 {
-    private readonly RequestAccessor<Request> _accessor;
-
-    public RequestBodyConverter(RequestAccessor<Request> accessor)
-    {
-        _accessor = accessor;
-    }
+    private readonly RequestAccessor<Request> _accessor = accessor;
 
     public override Request Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

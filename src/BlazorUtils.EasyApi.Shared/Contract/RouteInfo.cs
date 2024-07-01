@@ -26,19 +26,14 @@ internal class RouteInfo
         };
     }
 
-    public class AuthorizationInfo
+    public class AuthorizationInfo(bool authorize)
     {
-        public bool Authorize { get; }
+        public bool Authorize { get; } = authorize;
 
         public string? Policy { get; init; }
 
         public string? Roles { get; init; }
 
         public string? AuthenticationSchemes { get; init; }
-
-        public AuthorizationInfo(bool authorize)
-        {
-            Authorize = authorize;
-        }
     }
 }

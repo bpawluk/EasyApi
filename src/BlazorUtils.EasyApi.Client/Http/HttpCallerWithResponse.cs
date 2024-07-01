@@ -9,12 +9,11 @@ using System.Threading.Tasks;
 
 namespace BlazorUtils.EasyApi.Client.Http;
 
-internal class HttpCaller<Request, Response> : HttpCallerBase<Request>, ICall<Request, Response>
+internal class HttpCaller<Request, Response>(IHttpClientProvider httpClientProvider, Requests requests) 
+    : HttpCallerBase<Request>(httpClientProvider, requests)
+    , ICall<Request, Response>
     where Request : class, IRequest<Response>, new()
 {
-    public HttpCaller(IHttpClientProvider httpClientProvider, Requests requests)
-        : base(httpClientProvider, requests) { }
-
     public Task<Response> Call(Request request) => Call(request, CancellationToken.None);
 
     public async Task<Response> Call(Request request, CancellationToken cancellationToken)

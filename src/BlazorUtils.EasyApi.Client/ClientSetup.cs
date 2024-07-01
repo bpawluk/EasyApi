@@ -18,7 +18,7 @@ public static class ClientSetup
             {
                 typeof(ClientSetup).InvokeGeneric(
                     nameof(AddRequestWithResponse), 
-                    new Type[] { request.RequestType, responseType }, 
+                    [request.RequestType, responseType], 
                     builder.Services);
             }
             else

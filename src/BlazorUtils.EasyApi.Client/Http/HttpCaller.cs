@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace BlazorUtils.EasyApi.Client.Http;
 
-internal class HttpCaller<Request> : HttpCallerBase<Request>, ICall<Request>
+internal class HttpCaller<Request>(IHttpClientProvider httpClientProvider, Requests requests) 
+    : HttpCallerBase<Request>(httpClientProvider, requests)
+    , ICall<Request>
     where Request : class, IRequest, new()
 {
-    public HttpCaller(IHttpClientProvider httpClientProvider, Requests requests)
-        : base(httpClientProvider, requests) { }
-
     public Task Call(Request request) => Call(request, CancellationToken.None);
 
     public async Task Call(Request request, CancellationToken cancellationToken)

@@ -4,16 +4,11 @@ using System.Collections.Generic;
 
 namespace BlazorUtils.EasyApi.Shared.Contract;
 
-internal class Requests
+internal class Requests(IDictionary<Type, RequestAccessor> requests)
 {
-    private readonly IDictionary<Type, RequestAccessor> _requests;
+    private readonly IDictionary<Type, RequestAccessor> _requests = requests;
 
     public IEnumerable<RequestAccessor> All => _requests.Values;
-
-    public Requests(IDictionary<Type, RequestAccessor> requests)
-    {
-        _requests = requests;
-    }
 
     public RequestAccessor<Request> Get<Request>()
         where Request : class, IRequest, new()

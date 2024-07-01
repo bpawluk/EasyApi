@@ -3,15 +3,11 @@ using System.Threading.Tasks;
 
 namespace BlazorUtils.EasyApi.Server.Handling;
 
-internal class HandlerCaller<Request> : ICall<Request>
+internal class HandlerCaller<Request>(IHandle<Request> handler) 
+    : ICall<Request>
     where Request : class, IRequest, new()
 {
-    private readonly IHandle<Request> _handler;
-
-    public HandlerCaller(IHandle<Request> handler)
-    {
-        _handler = handler;
-    }
+    private readonly IHandle<Request> _handler = handler;
 
     public Task Call(Request request) => Call(request, CancellationToken.None);
 

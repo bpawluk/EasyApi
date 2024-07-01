@@ -30,7 +30,7 @@ public static class ServerSetup
             {
                 typeof(ServerSetup).InvokeGeneric(
                     nameof(AddRequestWithResponse),
-                    new Type[] { request.RequestType, responseType },
+                    [request.RequestType, responseType],
                     builder.Services,
                     handlers);
             }

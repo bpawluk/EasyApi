@@ -1,5 +1,6 @@
-﻿namespace BlazorUtils.EasyApi;
+﻿namespace BlazorUtils.EasyApi
+{
+    public interface IGet : IRequest { }
 
-public interface IGet : IRequest { }
-
-public interface IGet<out Response> : IRequest<Response> { }
+    public interface IGet<out Response> : IRequest<Response> { }
+}

@@ -4,14 +4,9 @@ using System.Net.Http;
 
 namespace BlazorUtils.EasyApi.Client.Setup;
 
-internal class HttpClientProvider : IHttpClientProvider
+internal class HttpClientProvider(IServiceProvider serviceProvider) : IHttpClientProvider
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public HttpClientProvider(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     public HttpClient GetClient(IRequest _) => _serviceProvider.GetRequiredService<HttpClient>();
 }
