@@ -9,9 +9,10 @@ namespace BlazorUtils.EasyApi.Client;
 
 public static class ClientSetup
 {
-    public static AppBuilder WithClient(this AppBuilder builder)
+    public static ClientBuilder WithClient(this AppBuilder builder)
     {
         builder.Services.AddTransient<IHttpClientProvider, HttpClientProvider>();
+
         foreach (var request in builder.Requests.All)
         {
             if (request.ResponseType is Type responseType)
@@ -29,7 +30,7 @@ public static class ClientSetup
                     builder.Services);
             }
         }
-        return builder;
+        return new(builder);
     }
 
     private static void AddRequest<Request>(IServiceCollection services)

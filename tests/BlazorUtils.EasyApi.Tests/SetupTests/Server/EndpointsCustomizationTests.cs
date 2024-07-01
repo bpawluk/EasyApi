@@ -1,6 +1,5 @@
 ﻿using BlazorUtils.EasyApi.Server;
 using BlazorUtils.EasyApi.Server.Setup;
-using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +11,7 @@ public sealed class EndpointsCustomizationTests : IAsyncDisposable
 {
     private WebApplication _sut = default!;
 
-    private async Task Initialize(Action<AppBuilder> additionalSetup)
+    private async Task Initialize(Action<ServerBuilder> additionalSetup)
     {
         var builder = WebApplication.CreateBuilder();
 

@@ -14,6 +14,7 @@ public static class MappingSetup
     public static WebApplication MapRequests(this WebApplication app)
     {
         var endpointsCustomization = app.Services.GetRequiredService<IEndpointsCustomization>();
+
         foreach (var request in app.Services.GetRequiredService<Requests>().All)
         {
             if (request.ResponseType is Type responseType)

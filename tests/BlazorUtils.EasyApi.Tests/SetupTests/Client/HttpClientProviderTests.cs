@@ -1,7 +1,6 @@
 ﻿using BlazorUtils.EasyApi.Client;
 using BlazorUtils.EasyApi.Client.Setup;
 using BlazorUtils.EasyApi.Server;
-using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
@@ -12,7 +11,7 @@ public sealed class HttpClientProviderTests : IDisposable
     private readonly List<Guid> _calls = [];
     private ServiceProvider _sut = default!;
 
-    private void Initialize(Action<AppBuilder> additionalSetup)
+    private void Initialize(Action<ClientBuilder> additionalSetup)
     {
         var services = new ServiceCollection();
         services.AddSingleton<OnSendCallback>(OnSend);

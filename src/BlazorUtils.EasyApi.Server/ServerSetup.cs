@@ -13,7 +13,7 @@ namespace BlazorUtils.EasyApi.Server;
 
 public static class ServerSetup
 {
-    public static AppBuilder WithServer(this AppBuilder builder, params Assembly[] sources)
+    public static ServerBuilder WithServer(this AppBuilder builder, params Assembly[] sources)
     {
         builder.Services.AddTransient<IEndpointsCustomization, EndpointsCustomization>();
 
@@ -44,7 +44,7 @@ public static class ServerSetup
             }
         }
 
-        return builder;
+        return new(builder);
     }
 
     private static void AddRequest<Request>(IServiceCollection services, IEnumerable<Type> handlers)
