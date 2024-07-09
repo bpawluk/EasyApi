@@ -4,7 +4,7 @@ using System.Net.Http;
 
 namespace BlazorUtils.EasyApi.Client.Setup;
 
-internal class HttpClientProvider(IServiceProvider serviceProvider) : IHttpClientProvider
+internal class DefaultHttpClientProvider(IServiceProvider serviceProvider) : IHttpClientProvider
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 

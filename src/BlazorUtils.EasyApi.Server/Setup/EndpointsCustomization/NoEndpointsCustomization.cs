@@ -2,7 +2,7 @@
 
 namespace BlazorUtils.EasyApi.Server.Setup;
 
-internal class EndpointsCustomization : IEndpointsCustomization
+internal class NoEndpointsCustomization : IEndpointsCustomization
 {
     public void Customize<Request>(RouteHandlerBuilder builder) { }
 }

@@ -1,6 +1,10 @@
 ﻿using BlazorUtils.EasyApi.Server.Handling;
+using BlazorUtils.EasyApi.Server.Persistence;
+using BlazorUtils.EasyApi.Server.Prerendering;
 using BlazorUtils.EasyApi.Server.Setup;
 using BlazorUtils.EasyApi.Shared.Exceptions;
+using BlazorUtils.EasyApi.Shared.Persistence;
+using BlazorUtils.EasyApi.Shared.Prerendering;
 using BlazorUtils.EasyApi.Shared.Reflection;
 using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +19,14 @@ public static class ServerSetup
 {
     public static ServerBuilder WithServer(this AppBuilder builder, params Assembly[] sources)
     {
-        builder.Services.AddTransient<IEndpointsCustomization, EndpointsCustomization>();
+        builder.Services.AddHttpContextAccessor();
+
+        builder.Services.AddTransient<IEndpointsCustomization, NoEndpointsCustomization>();
+        builder.Services.AddTransient<IServerResponsePersistence, NoResponsePersistence>();
+
+        builder.Services.AddScoped<IPrerenderingDetector, PrerenderingDetector>();
+        builder.Services.AddScoped<IResponseStoreFactory, ResponseStoreFactory>();
+        builder.Services.AddScoped(typeof(PrerenderedResponseStore<>));
 
         var defaultSource = Assembly.GetCallingAssembly();
         var handlers = sources
@@ -61,6 +72,7 @@ public static class ServerSetup
         var handlerInterface = typeof(IHandle<Request, Response>);
         services.AddTransient(handlerInterface, FindHandler(handlers, handlerInterface));
         services.AddTransient<ICall<Request, Response>, HandlerCaller<Request, Response>>();
+        services.AddTransient<IPersistentCall<Request, Response>, PersistentCaller<Request, Response>>();
     }
 
     private static Type FindHandler(IEnumerable<Type> handlers, Type handlerInterface)
