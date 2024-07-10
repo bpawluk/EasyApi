@@ -37,6 +37,8 @@
   <ItemGroup>
     <InternalsVisibleTo Include="BlazorUtils.EasyApi.Client" />
     <InternalsVisibleTo Include="BlazorUtils.EasyApi.Server" />
+    <InternalsVisibleTo Include="BlazorUtils.EasyApi.UnitTests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 
   <ItemGroup>

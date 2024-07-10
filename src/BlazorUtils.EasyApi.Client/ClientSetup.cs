@@ -52,5 +52,6 @@ public static class ClientSetup
         where Request : class, IRequest<Response>, new()
     {
         services.AddTransient<ICall<Request, Response>, HttpCaller<Request, Response>>();
+        services.AddTransient<IPersistentCall<Request, Response>, PersistentCaller<Request, Response>>();
     }
 }
