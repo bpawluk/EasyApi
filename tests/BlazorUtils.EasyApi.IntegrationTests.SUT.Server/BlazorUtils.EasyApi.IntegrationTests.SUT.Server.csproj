@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Utils\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Utils.csproj" />
+    <ProjectReference Include="..\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Params\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Params.csproj" />
+    <ProjectReference Include="..\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Response\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Response.csproj" />
+  </ItemGroup>
+
+</Project>
