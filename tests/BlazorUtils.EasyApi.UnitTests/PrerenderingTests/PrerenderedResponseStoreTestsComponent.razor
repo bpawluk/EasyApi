@@ -1,0 +1,19 @@
+﻿@using System.Net
+
+@inject IPersistentCall<PrerenderedResponseStoreTestsRequest, string> Caller;
+
+<p id="statusCodeElement">@_statusCode</p>
+<p id="responseElement">@_response</p>
+
+@code {
+    private HttpStatusCode? _statusCode;
+    private string? _response;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new PrerenderedResponseStoreTestsRequest();
+        var result = await Caller.CallHttp(PrerenderedResponseStoreTestsBase.StorageKey, request);
+        _statusCode = result.StatusCode;
+        _response = result.Response;
+    }
+}

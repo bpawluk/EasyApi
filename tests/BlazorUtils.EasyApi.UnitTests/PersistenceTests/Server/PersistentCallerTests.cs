@@ -40,7 +40,7 @@ public class PersistentCallerTests : PersistentCallerTestsBase
     } 
 }
 
-internal class AuthorizationTestsRequestHandler(InnerCallerResponseProvider responseProvider) 
+internal class PersistentCallerTestsRequestHandler(InnerCallerResponseProvider responseProvider) 
     : IHandle<PersistentCallerTestsRequest, string>
 {
     private readonly InnerCallerResponseProvider _innerCallerResponseProvider = responseProvider;

@@ -8,7 +8,7 @@ namespace BlazorUtils.EasyApi.UnitTests.PersistenceTests;
 
 public abstract class PersistentCallerTestsBase : IAsyncLifetime
 {
-    private const string _storageKey = "storage-key";
+    public const string _storageKey = "storage-key";
 
     private IServiceProvider _sut = default!;
     private Mock<IResponseStore<string>> _responseStoreMock = default!;
@@ -47,7 +47,7 @@ public abstract class PersistentCallerTestsBase : IAsyncLifetime
     }
 
     [Fact]
-    public async Task PersistentCaller_NoPersistedResponse_InnerCallerSucceeds_ReturnsInnerResponse_AndPersistsIt()
+    public async Task PersistentCaller_NoPersistedResponse_InnerCallerSucceeded_ReturnsInnerResponse_AndPersistsIt()
     {
         var innerCallerResponse = HttpResult<string>.Ok("inner-caller-response");
         _innerCallerResponseProvider.Response = innerCallerResponse;
@@ -61,7 +61,7 @@ public abstract class PersistentCallerTestsBase : IAsyncLifetime
     }
 
     [Fact]
-    public async Task PersistentCaller_NoPersistedResponse_InnerCallerFails_ReturnsInnerResponse_DoesNotPersistIt()
+    public async Task PersistentCaller_NoPersistedResponse_InnerCallerFailed_ReturnsInnerResponse_DoesNotPersistIt()
     {
         var innerCallerResponse = HttpResult<string>.BadRequest();
         _innerCallerResponseProvider.Response = innerCallerResponse;
