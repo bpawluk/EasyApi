@@ -10,7 +10,7 @@ namespace BlazorUtils.EasyApi.UnitTests.PrerenderingTests.Server;
 
 public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
 {
-    private Mock<IInteractivityDetector> _interactivityDetectorMock = default!;
+    private readonly Mock<IInteractivityDetector> _interactivityDetectorMock = default!;
 
     public PrerenderedResponseStoreTests()
     {

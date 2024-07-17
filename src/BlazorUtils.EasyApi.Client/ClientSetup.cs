@@ -1,10 +1,9 @@
 ﻿using BlazorUtils.EasyApi.Client.Http;
-using BlazorUtils.EasyApi.Client.Persistence;
 using BlazorUtils.EasyApi.Client.Rendering;
 using BlazorUtils.EasyApi.Client.Setup;
 using BlazorUtils.EasyApi.Shared.Persistence;
-using BlazorUtils.EasyApi.Shared.Rendering;
 using BlazorUtils.EasyApi.Shared.Reflection;
+using BlazorUtils.EasyApi.Shared.Rendering;
 using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -15,12 +14,9 @@ public static class ClientSetup
 {
     public static ClientBuilder WithClient(this AppBuilder builder)
     {
-        builder.Services.AddTransient<IHttpClientProvider, DefaultHttpClientProvider>();
-        builder.Services.AddTransient<IClientResponsePersistence, NoResponsePersistence>();
-
         builder.Services.AddScoped<IInteractivityDetector, InteractivityDetector>();
         builder.Services.AddScoped<IResponseStoreFactory, ResponseStoreFactory>();
-        builder.Services.AddScoped(typeof(PrerenderedResponseStore<>));
+        builder.Services.AddTransient<IHttpClientProvider, DefaultHttpClientProvider>();
 
         foreach (var request in builder.Requests.All)
         {

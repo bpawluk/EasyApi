@@ -1,11 +1,10 @@
 ﻿using BlazorUtils.EasyApi.Server.Handling;
-using BlazorUtils.EasyApi.Server.Persistence;
 using BlazorUtils.EasyApi.Server.Rendering;
 using BlazorUtils.EasyApi.Server.Setup;
 using BlazorUtils.EasyApi.Shared.Exceptions;
 using BlazorUtils.EasyApi.Shared.Persistence;
-using BlazorUtils.EasyApi.Shared.Rendering;
 using BlazorUtils.EasyApi.Shared.Reflection;
+using BlazorUtils.EasyApi.Shared.Rendering;
 using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -20,13 +19,9 @@ public static class ServerSetup
     public static ServerBuilder WithServer(this AppBuilder builder, params Assembly[] sources)
     {
         builder.Services.AddHttpContextAccessor();
-
-        builder.Services.AddTransient<IEndpointsCustomization, NoEndpointsCustomization>();
-        builder.Services.AddTransient<IServerResponsePersistence, NoResponsePersistence>();
-
         builder.Services.AddScoped<IInteractivityDetector, InteractivityDetector>();
         builder.Services.AddScoped<IResponseStoreFactory, ResponseStoreFactory>();
-        builder.Services.AddScoped(typeof(PrerenderedResponseStore<>));
+        builder.Services.AddTransient<IEndpointsCustomization, NoEndpointsCustomization>();
 
         var defaultSource = Assembly.GetCallingAssembly();
         var handlers = sources

@@ -1,6 +1,8 @@
-﻿namespace BlazorUtils.EasyApi.Client.Setup;
+﻿using BlazorUtils.EasyApi.Shared.Setup;
 
-public class PrerenderedResponsePersistence : IClientResponsePersistence
+namespace BlazorUtils.EasyApi.Client.Setup;
+
+public class PrerenderedResponsePersistence : IPrerenderedResponsePersistence
 {
-    public ClientResponsePersistenceOptions Configure(IRequest _) => new() { UsePrerenderedResponses = true };
+    public PrerenderedResponsePersistenceOptions Configure(IRequest _) => new() { IsEnabled = true };
 }
