@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BlazorUtils.EasyApi.Shared.Prerendering;
+namespace BlazorUtils.EasyApi.Shared.Rendering;
 
 internal class PrerenderedResponseStore<ResponseType> : IResponseStore<ResponseType>, IDisposable
 {
@@ -15,11 +15,11 @@ internal class PrerenderedResponseStore<ResponseType> : IResponseStore<ResponseT
 
     private bool ShouldPersist => _subscription is not null;
 
-    public PrerenderedResponseStore(PersistentComponentState state, IPrerenderingDetector detector)
+    public PrerenderedResponseStore(PersistentComponentState state, IInteractivityDetector detector)
     {
         _state = state;
 
-        if (detector.IsPrerendering)
+        if (!detector.IsInteractive)
         {
             _subscription = _state.RegisterOnPersisting(OnPersisting, RenderMode.InteractiveAuto);
         }

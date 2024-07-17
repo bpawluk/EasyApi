@@ -1,7 +1,7 @@
 ﻿using BlazorUtils.EasyApi.Server;
 using BlazorUtils.EasyApi.Server.Setup;
 using BlazorUtils.EasyApi.Shared.Persistence;
-using BlazorUtils.EasyApi.Shared.Prerendering;
+using BlazorUtils.EasyApi.Shared.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
@@ -10,7 +10,7 @@ namespace BlazorUtils.EasyApi.UnitTests.PrerenderingTests.Server;
 
 public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
 {
-    private Mock<IPrerenderingDetector> _prerenderingDetectorMock = default!;
+    private Mock<IInteractivityDetector> _interactivityDetectorMock = default!;
 
     public PrerenderedResponseStoreTests()
     {
@@ -20,17 +20,13 @@ public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
             .WithServer()
             .Using<PrerenderedResponsePersistence>();
 
-        _prerenderingDetectorMock = new Mock<IPrerenderingDetector>();
-        Services.Replace(ServiceDescriptor.Singleton(_prerenderingDetectorMock.Object));
+        _interactivityDetectorMock = new Mock<IInteractivityDetector>();
+        Services.Replace(ServiceDescriptor.Singleton(_interactivityDetectorMock.Object));
     }
 
     [Fact]
     public void PrerenderedResponseStore_NoPersistedResponse_IsPrerendering_InnerCallerSucceeded_PersistsItsResponse()
     {
-        _prerenderingDetectorMock
-            .Setup(detector => detector.IsPrerendering)
-            .Returns(true);
-
         var innerCallerResponse = HttpResult<string>.Ok("inner-caller-response");
         _innerCallerResponseProvider.Response = innerCallerResponse;
 
@@ -49,10 +45,6 @@ public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
     [Fact]
     public void PrerenderedResponseStore_NoPersistedResponse_IsPrerendering_InnerCallerFailed_DoesNotPersist()
     {
-        _prerenderingDetectorMock
-            .Setup(detector => detector.IsPrerendering)
-            .Returns(true);
-
         var innerCallerResponse = HttpResult<string>.BadRequest();
         _innerCallerResponseProvider.Response = innerCallerResponse;
 
@@ -68,9 +60,9 @@ public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
     [Fact]
     public void PrerenderedResponseStore_NoPersistedResponse_NotPrerendering_InnerCallerSucceeded_DoesNotPersist()
     {
-        _prerenderingDetectorMock
-            .Setup(detector => detector.IsPrerendering)
-            .Returns(false);
+        _interactivityDetectorMock
+            .Setup(detector => detector.IsInteractive)
+            .Returns(true);
 
         var innerCallerResponse = HttpResult<string>.Ok("inner-caller-response");
         _innerCallerResponseProvider.Response = innerCallerResponse;
@@ -87,9 +79,9 @@ public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
     [Fact]
     public void PrerenderedResponseStore_NoPersistedResponse_NotPrerendering_InnerCallerFailed_DoesNotPersist()
     {
-        _prerenderingDetectorMock
-            .Setup(detector => detector.IsPrerendering)
-            .Returns(false);
+        _interactivityDetectorMock
+            .Setup(detector => detector.IsInteractive)
+            .Returns(true);
 
         var innerCallerResponse = HttpResult<string>.BadRequest();
         _innerCallerResponseProvider.Response = innerCallerResponse;

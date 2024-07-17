@@ -1,10 +1,10 @@
 ﻿using BlazorUtils.EasyApi.Server.Handling;
 using BlazorUtils.EasyApi.Server.Persistence;
-using BlazorUtils.EasyApi.Server.Prerendering;
+using BlazorUtils.EasyApi.Server.Rendering;
 using BlazorUtils.EasyApi.Server.Setup;
 using BlazorUtils.EasyApi.Shared.Exceptions;
 using BlazorUtils.EasyApi.Shared.Persistence;
-using BlazorUtils.EasyApi.Shared.Prerendering;
+using BlazorUtils.EasyApi.Shared.Rendering;
 using BlazorUtils.EasyApi.Shared.Reflection;
 using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +24,7 @@ public static class ServerSetup
         builder.Services.AddTransient<IEndpointsCustomization, NoEndpointsCustomization>();
         builder.Services.AddTransient<IServerResponsePersistence, NoResponsePersistence>();
 
-        builder.Services.AddScoped<IPrerenderingDetector, PrerenderingDetector>();
+        builder.Services.AddScoped<IInteractivityDetector, InteractivityDetector>();
         builder.Services.AddScoped<IResponseStoreFactory, ResponseStoreFactory>();
         builder.Services.AddScoped(typeof(PrerenderedResponseStore<>));
 
