@@ -2,7 +2,7 @@
 
 internal interface IResponseStore<ResponseType>
 {
-    public void Save(string key, HttpResult<ResponseType> respone);
+    void Save(string key, HttpResult<ResponseType> response);
 
-    public HttpResult<ResponseType>? Retrieve(string key);
+    HttpResult<ResponseType>? Retrieve(string key);
 }

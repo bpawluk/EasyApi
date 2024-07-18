@@ -25,11 +25,11 @@ internal class PrerenderedResponseStore<ResponseType> : IResponseStore<ResponseT
         }
     }
 
-    public void Save(string key, HttpResult<ResponseType> respone)
+    public void Save(string key, HttpResult<ResponseType> response)
     {
         if (ShouldPersist)
         {
-            _responsesToPersist[key] = new(respone.StatusCode, respone.Response!);
+            _responsesToPersist[key] = new(response.StatusCode, response.Response!);
         }
     }
 

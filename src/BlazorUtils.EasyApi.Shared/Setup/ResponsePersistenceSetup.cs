@@ -1,4 +1,5 @@
-﻿using BlazorUtils.EasyApi.Shared.Rendering;
+﻿using BlazorUtils.EasyApi.Shared.Memory;
+using BlazorUtils.EasyApi.Shared.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -6,7 +7,7 @@ namespace BlazorUtils.EasyApi.Shared.Setup;
 
 internal static class ResponsePersistenceSetup
 {
-    public static AppBuilder Using<PrerenderedResponsePersistenceType>(
+    public static AppBuilder UsingPrerendered<PrerenderedResponsePersistenceType>(
         this AppBuilder builder, 
         ServiceLifetime lifetime)
         where PrerenderedResponsePersistenceType : class, IPrerenderedResponsePersistence
@@ -16,11 +17,30 @@ internal static class ResponsePersistenceSetup
         return builder;
     }
 
-    public static AppBuilder Using(
+    public static AppBuilder UsingPrerendered(
         this AppBuilder builder, 
         IPrerenderedResponsePersistence responsePersistence)
     {
         builder.Services.AddScoped(typeof(PrerenderedResponseStore<>));
+        builder.Services.AddResponsePersistence(responsePersistence);
+        return builder;
+    }
+
+    public static AppBuilder UsingInMemory<InMemoryResponsePersistenceType>(
+        this AppBuilder builder,
+        ServiceLifetime lifetime)
+        where InMemoryResponsePersistenceType : class, IInMemoryResponsePersistence
+    {
+        builder.Services.AddScoped(typeof(InMemoryResponseStore<>));
+        builder.Services.AddResponsePersistence(typeof(InMemoryResponsePersistenceType), lifetime);
+        return builder;
+    }
+
+    public static AppBuilder UsingInMemory(
+        this AppBuilder builder,
+        IInMemoryResponsePersistence responsePersistence)
+    {
+        builder.Services.AddScoped(typeof(InMemoryResponseStore<>));
         builder.Services.AddResponsePersistence(responsePersistence);
         return builder;
     }

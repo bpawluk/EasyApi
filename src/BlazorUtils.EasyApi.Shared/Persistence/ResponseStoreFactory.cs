@@ -1,4 +1,5 @@
-﻿using BlazorUtils.EasyApi.Shared.Rendering;
+﻿using BlazorUtils.EasyApi.Shared.Memory;
+using BlazorUtils.EasyApi.Shared.Rendering;
 using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -29,7 +30,7 @@ internal class ResponseStoreFactory(IServiceProvider services) : IResponseStoreF
         }
         else
         {
-            return stores.First();
+            return new CompoundResponseStore<ResponseType>(stores!);
         }
     }
 
@@ -40,16 +41,26 @@ internal class ResponseStoreFactory(IServiceProvider services) : IResponseStoreF
         return configuration switch
         {
             IPrerenderedResponsePersistence prpConfig => GetPrerenderedResponseStore(prpConfig, request),
+            IInMemoryResponsePersistence impConfig => GetInMemoryResponseStore(impConfig, request),
             _ => null
         };
     }
 
-    private IResponseStore<ResponseType>? GetPrerenderedResponseStore<ResponseType>(
+    private PrerenderedResponseStore<ResponseType>? GetPrerenderedResponseStore<ResponseType>(
         IPrerenderedResponsePersistence configuration,
         IRequest<ResponseType> request)
     {
         return configuration.Configure(request).IsEnabled 
             ? _services.GetRequiredService<PrerenderedResponseStore<ResponseType>>()
+            : null;
+    }
+
+    private InMemoryResponseStore<ResponseType>? GetInMemoryResponseStore<ResponseType>(
+        IInMemoryResponsePersistence configuration,
+        IRequest<ResponseType> request)
+    {
+        return configuration.Configure(request).IsEnabled
+            ? _services.GetRequiredService<InMemoryResponseStore<ResponseType>>()
             : null;
     }
 }
