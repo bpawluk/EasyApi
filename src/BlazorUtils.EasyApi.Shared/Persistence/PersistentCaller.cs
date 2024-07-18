@@ -27,9 +27,9 @@ internal class PersistentCaller<Request, Response>(
     {
         var responseStore = _storeFactory.GetStore(request);
 
-        if (responseStore?.Retrieve(storageKey) is HttpResult<Response> persistedResult)
+        if (GetPersistedResponse(responseStore, storageKey, request) is HttpResult<Response> persistedResponse)
         {
-            return persistedResult;
+            return persistedResponse;
         }
 
         var result = await _caller.CallHttp(request, cancellationToken).ConfigureAwait(false);
@@ -40,5 +40,18 @@ internal class PersistentCaller<Request, Response>(
         }
 
         return result;
+    }
+
+    public static HttpResult<Response>? GetPersistedResponse(IResponseStore<Response>? responseStore, string storageKey, Request request)
+    {
+        if (responseStore?.Retrieve(storageKey) is PersistedResponse<Response> persistedResponse)
+        {
+            if (persistedResponse.IsSticky)
+            {
+                responseStore?.Save(storageKey, persistedResponse.Value);
+            }
+            return persistedResponse.Value;
+        }
+        return null;
     }
 }

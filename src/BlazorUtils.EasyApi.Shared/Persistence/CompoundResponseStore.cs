@@ -15,14 +15,13 @@ internal class CompoundResponseStore<ResponseType>(IReadOnlyCollection<IResponse
         }
     }
 
-    public HttpResult<ResponseType>? Retrieve(string key)
+    public PersistedResponse<ResponseType>? Retrieve(string key)
     {
         foreach (var store in _stores)
         {
-            var result = store.Retrieve(key);
-            if (result is not null)
+            if (store.Retrieve(key) is PersistedResponse<ResponseType> response)
             {
-                return result;
+                return response;
             }
         }
         return null;

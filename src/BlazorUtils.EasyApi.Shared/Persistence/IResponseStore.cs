@@ -4,5 +4,5 @@ internal interface IResponseStore<ResponseType>
 {
     void Save(string key, HttpResult<ResponseType> response);
 
-    HttpResult<ResponseType>? Retrieve(string key);
+    PersistedResponse<ResponseType>? Retrieve(string key);
 }

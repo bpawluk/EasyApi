@@ -13,13 +13,18 @@ internal class PrerenderedResponseStore<ResponseType> : IResponseStore<ResponseT
     private readonly PersistingComponentStateSubscription? _subscription;
     private readonly Dictionary<string, ResponseSnapshot<ResponseType>> _responsesToPersist = [];
 
-    private bool ShouldPersist => _subscription is not null;
+    private bool ShouldSave { get; }
+
+    private bool ShouldRetrieve { get; }
 
     public PrerenderedResponseStore(PersistentComponentState state, IInteractivityDetector detector)
     {
         _state = state;
 
-        if (!detector.IsInteractive)
+        ShouldSave = !detector.IsInteractive;
+        ShouldRetrieve = detector.IsInteractive;
+
+        if (ShouldSave)
         {
             _subscription = _state.RegisterOnPersisting(OnPersisting, RenderMode.InteractiveAuto);
         }
@@ -27,17 +32,18 @@ internal class PrerenderedResponseStore<ResponseType> : IResponseStore<ResponseT
 
     public void Save(string key, HttpResult<ResponseType> response)
     {
-        if (ShouldPersist)
+        if (ShouldSave)
         {
             _responsesToPersist[key] = new(response.StatusCode, response.Response!);
         }
     }
 
-    public HttpResult<ResponseType>? Retrieve(string key)
+    public PersistedResponse<ResponseType>? Retrieve(string key)
     {
-        if (_state.TryTakeFromJson<ResponseSnapshot<ResponseType>>(key, out var result) && result is not null)
+        if (ShouldRetrieve && _state.TryTakeFromJson<ResponseSnapshot<ResponseType>>(key, out var result) && result is not null)
         {
-            return HttpResult<ResponseType>.WithStatusCode(result.StatusCode, result.Response);
+            var response = HttpResult<ResponseType>.WithStatusCode(result.StatusCode, result.Response);
+            return PersistedResponse<ResponseType>.Sticky(response);
         }
         return null;
     }

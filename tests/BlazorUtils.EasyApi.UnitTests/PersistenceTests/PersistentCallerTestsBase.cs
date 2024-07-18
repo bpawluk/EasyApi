@@ -36,7 +36,7 @@ public abstract class PersistentCallerTestsBase : IAsyncLifetime
         var persistedResponse = HttpResult<string>.Ok("persisted-response");
         _responseStoreMock
             .Setup(store => store.Retrieve(_storageKey))
-            .Returns(persistedResponse);
+            .Returns(PersistedResponse<string>.Create(persistedResponse));
 
         var caller = _sut.GetRequiredService<IPersistentCall<PersistentCallerTestsRequest, string>>();
         var result = await caller.CallHttp(_storageKey, new());

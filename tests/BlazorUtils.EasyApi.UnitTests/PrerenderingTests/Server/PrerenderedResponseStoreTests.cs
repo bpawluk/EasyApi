@@ -21,12 +21,21 @@ public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
             .Using<PrerenderedResponsePersistence>();
 
         _interactivityDetectorMock = new Mock<IInteractivityDetector>();
+
+        _interactivityDetectorMock
+            .Setup(detector => detector.IsInteractive)
+            .Returns(true);
+
         Services.Replace(ServiceDescriptor.Singleton(_interactivityDetectorMock.Object));
     }
 
     [Fact]
     public void PrerenderedResponseStore_NoPersistedResponse_IsPrerendering_InnerCallerSucceeded_PersistsItsResponse()
     {
+        _interactivityDetectorMock
+            .Setup(detector => detector.IsInteractive)
+            .Returns(false);
+
         var innerCallerResponse = HttpResult<string>.Ok("inner-caller-response");
         _innerCallerResponseProvider.Response = innerCallerResponse;
 
@@ -45,6 +54,10 @@ public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
     [Fact]
     public void PrerenderedResponseStore_NoPersistedResponse_IsPrerendering_InnerCallerFailed_DoesNotPersist()
     {
+        _interactivityDetectorMock
+            .Setup(detector => detector.IsInteractive)
+            .Returns(false);
+
         var innerCallerResponse = HttpResult<string>.BadRequest();
         _innerCallerResponseProvider.Response = innerCallerResponse;
 
@@ -60,10 +73,6 @@ public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
     [Fact]
     public void PrerenderedResponseStore_NoPersistedResponse_NotPrerendering_InnerCallerSucceeded_DoesNotPersist()
     {
-        _interactivityDetectorMock
-            .Setup(detector => detector.IsInteractive)
-            .Returns(true);
-
         var innerCallerResponse = HttpResult<string>.Ok("inner-caller-response");
         _innerCallerResponseProvider.Response = innerCallerResponse;
 
@@ -79,10 +88,6 @@ public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
     [Fact]
     public void PrerenderedResponseStore_NoPersistedResponse_NotPrerendering_InnerCallerFailed_DoesNotPersist()
     {
-        _interactivityDetectorMock
-            .Setup(detector => detector.IsInteractive)
-            .Returns(true);
-
         var innerCallerResponse = HttpResult<string>.BadRequest();
         _innerCallerResponseProvider.Response = innerCallerResponse;
 
