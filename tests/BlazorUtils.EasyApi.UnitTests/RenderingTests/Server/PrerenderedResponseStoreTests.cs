@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 
-namespace BlazorUtils.EasyApi.UnitTests.PrerenderingTests.Server;
+namespace BlazorUtils.EasyApi.UnitTests.RenderingTests.Server;
 
 public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
 {

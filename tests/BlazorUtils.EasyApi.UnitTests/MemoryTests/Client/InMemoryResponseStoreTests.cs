@@ -1,19 +1,23 @@
 ﻿using BlazorUtils.EasyApi.Client;
 using BlazorUtils.EasyApi.Client.Setup;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Net.Http.Json;
 
-namespace BlazorUtils.EasyApi.UnitTests.PrerenderingTests.Client;
+namespace BlazorUtils.EasyApi.UnitTests.MemoryTests.Client;
 
-public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
+public class InMemoryResponseStoreTests : InMemoryResponseStoreTestsBase
 {
-    public PrerenderedResponseStoreTests()
+    public InMemoryResponseStoreTests()
     {
         Services
             .AddEasyApi()
             .WithContract(GetType().Assembly)
             .WithClient()
             .Using<TestHttpClientProvider>()
-            .Using<PrerenderedResponsePersistence>();
+            .Using<InMemoryResponsePersistence>();
+
+        Services.Replace(ServiceDescriptor.Singleton(_interactivityDetectorMock.Object));
     }
 }
 

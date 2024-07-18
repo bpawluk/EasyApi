@@ -3,7 +3,7 @@ using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazorUtils.EasyApi.UnitTests.PrerenderingTests;
+namespace BlazorUtils.EasyApi.UnitTests.RenderingTests;
 
 public abstract class PrerenderedResponseStoreTestsBase : TestContext
 {
