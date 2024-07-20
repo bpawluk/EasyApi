@@ -248,7 +248,81 @@ if (result.StatusCode == HttpStatusCode.Created)
 
 ## Additional configuration
 
-### Client
+### Response Persistence
+TODO
+
+**1️⃣ Configure one of the available persistence options.**
+- [Prerendered Response Persistence](#prerendered-response-persistence)
+- [In-memory Response Persistence](#in-memory-response-persistence)
+
+**2️⃣ TODO**
+
+```csharp
+@inject IPersistentCall<GetComments, IEnumerable<Comment>> GetComments
+```
+
+**3️⃣ TODO**
+
+```csharp
+var comments = await GetComments.Call("some-request-identifier", request);
+```
+
+#### Prerendered Response Persistence
+TODO
+
+```csharp
+builder.Services
+    .AddEasyApi()
+    .WithContract(contractAssembly)
+    .WithServer()
+    .Using<PrerenderedResponsePersistence>();
+```
+
+```csharp
+builder.Services
+    .AddEasyApi()
+    .WithContract(contractAssembly)
+    .WithClient()
+    .Using<PrerenderedResponsePersistence>();
+```
+
+#### In-memory Response Persistence
+TODO
+
+```csharp
+builder.Services
+    .AddEasyApi()
+    .WithContract(contractAssembly)
+    .With[Client/Server]()
+    .Using<InMemoryResponsePersistence>();
+```
+
+> [!NOTE]  
+> TODO
+
+```csharp
+internal class CustomInMemoryResponsePersistence : IInMemoryResponsePersistence
+{
+    public InMemoryResponsePersistenceOptions Configure(IRequest request)
+    {
+        if (request response should be persisted)
+        {
+            return new() { IsEnabled = true };
+        }
+        return new() { IsEnabled = false };
+    }
+}
+```
+
+```csharp
+builder.Services
+    .AddEasyApi()
+    .WithContract(contractAssembly)
+    .With[Client/Server]()
+    .Using<CustomInMemoryResponsePersistence>();
+```
+
+### Client extensions
 
 #### HTTP client provider
 By default, EasyApi uses the ```HttpClient``` registered in the service collection of your Client app. Whenever you need more control over the ```HttpClient``` creation or need to manage different ```HttpClients``` for different API requests, you should set up your own provider.
@@ -275,7 +349,7 @@ builder.Services
     .Using<HttpClientProvider>();
 ```
 
-### Server
+### Server extensions
 
 #### API endpoints customization
 EasyApi handles the basic API endpoint configuration for you. For advanced scenarios that require more configuration, you should set up your own API endpoint customization.
@@ -303,6 +377,12 @@ builder.Services
 ```
 
 ## Change Log
+
+### v1.0.0
+- .NET 8 upgrade
+- Introduced IPersistentCall
+- Introduced PrerenderedResponsePersistence
+- Introduced InMemoryResponsePersistence
 
 ### v0.5.1
 - Fixed incorrect HTTP method mapping for IPut requests.
