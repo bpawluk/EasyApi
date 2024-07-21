@@ -249,26 +249,34 @@ if (result.StatusCode == HttpStatusCode.Created)
 ## Additional configuration
 
 ### Response Persistence
-TODO
+Response Persistence allows you to seamlessly store and reuse EasyApi request responses for improved performance and user experience.
 
-**1️⃣ Configure one of the available persistence options.**
+**1️⃣ In order to use it, you must first configure one of the available persistence options.**
 - [Prerendered Response Persistence](#prerendered-response-persistence)
 - [In-memory Response Persistence](#in-memory-response-persistence)
 
-**2️⃣ TODO**
+**2️⃣ Then inject IPersistentCall as the caller of the endpoint you want to use.**
 
 ```csharp
 @inject IPersistentCall<GetComments, IEnumerable<Comment>> GetComments
 ```
 
-**3️⃣ TODO**
+**3️⃣ And provide a unique storage key for the request when calling the API endpoint.**
 
 ```csharp
-var comments = await GetComments.Call("some-request-identifier", request);
+var comments = await GetComments.Call("a-unique-request-identifier", request);
 ```
 
+Once the initial request is completed and persisted, it can be used for subsequent calls according to the rules of the configured persistence options.
+
 #### Prerendered Response Persistence
-TODO
+Prerendered Response Persistence is a useful option when running your Blazor applications with prerendering. 
+
+It can be used to avoid repeated requests between prerendered and interactive sessions, improving performance and eliminating UI flicker.
+
+https://github.com/user-attachments/assets/cf770605-21cc-4587-be76-e96a3cc3d902
+
+Prerendered Response Persistence needs to be configured both in the Server...
 
 ```csharp
 builder.Services
@@ -278,6 +286,8 @@ builder.Services
     .Using<PrerenderedResponsePersistence>();
 ```
 
+... and Client setup.
+
 ```csharp
 builder.Services
     .AddEasyApi()
@@ -286,8 +296,15 @@ builder.Services
     .Using<PrerenderedResponsePersistence>();
 ```
 
+After that, it can be used as described in [Response Persistence](#response-persistence).
+
+> [!NOTE]  
+> Prerendered Response Persistence is a one-time persistence option. It persists the request responses received during prerendering and discards them once they have been used again when the interactive session starts.
+
 #### In-memory Response Persistence
-TODO
+In-memory Response Persistence can be used to avoid repeated requests for static data that does not change and is not modified by user actions through a single application session. 
+
+You can configure it in your Client and/or Server setup.
 
 ```csharp
 builder.Services
@@ -297,15 +314,20 @@ builder.Services
     .Using<InMemoryResponsePersistence>();
 ```
 
-> [!NOTE]  
-> TODO
+After that, it can be used as described in [Response Persistence](#response-persistence).
+
+#### Custom configuration
+
+When using multiple Response Persistence options, it may be useful to configure them separately for each EasyApi request. 
+
+To do this, you can implement your custom persistence configuration.
 
 ```csharp
 internal class CustomInMemoryResponsePersistence : IInMemoryResponsePersistence
 {
     public InMemoryResponsePersistenceOptions Configure(IRequest request)
     {
-        if (request response should be persisted)
+        if (response should be persisted for the request)
         {
             return new() { IsEnabled = true };
         }
@@ -314,11 +336,14 @@ internal class CustomInMemoryResponsePersistence : IInMemoryResponsePersistence
 }
 ```
 
+And configure it in your Client and/or Server setup.
+
 ```csharp
 builder.Services
     .AddEasyApi()
     .WithContract(contractAssembly)
     .With[Client/Server]()
+    .Using<PrerenderedResponsePersistence>()
     .Using<CustomInMemoryResponsePersistence>();
 ```
 
