@@ -5,14 +5,9 @@ using System.Linq;
 
 namespace BlazorUtils.EasyApi.Shared.Serialization.Providers;
 
-internal class NullableConvertersProvider : IConvertersProvider
+internal class NullableConvertersProvider(IConvertersProvider convertersProvider) : IConvertersProvider
 {
-    private readonly IConvertersProvider _convertersProvider;
-
-    public NullableConvertersProvider(IConvertersProvider convertersProvider)
-    {
-        _convertersProvider = convertersProvider;
-    }
+    private readonly IConvertersProvider _convertersProvider = convertersProvider;
 
     public IParamConverter<T>? Get<T>()
     {

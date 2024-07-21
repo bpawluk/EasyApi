@@ -6,15 +6,15 @@ internal class ConvertersProvider : IConvertersProvider
 
     public ConvertersProvider()
     {
-        _providers = new IConvertersProvider[]
-        {
+        _providers =
+        [
             new NullableConvertersProvider(this),
             new CustomConvertersProvider(),
             new SystemConvertersProvider(),
             new TimeConvertersProvider(),
             new EnumConvertersProvider(),
             new DefaultConvertersProvider()
-        };
+        ];
     }
 
     public IParamConverter<T>? Get<T>()

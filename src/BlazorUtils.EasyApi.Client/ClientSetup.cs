@@ -1,6 +1,9 @@
 ﻿using BlazorUtils.EasyApi.Client.Http;
+using BlazorUtils.EasyApi.Client.Rendering;
 using BlazorUtils.EasyApi.Client.Setup;
+using BlazorUtils.EasyApi.Shared.Persistence;
 using BlazorUtils.EasyApi.Shared.Reflection;
+using BlazorUtils.EasyApi.Shared.Rendering;
 using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -9,16 +12,19 @@ namespace BlazorUtils.EasyApi.Client;
 
 public static class ClientSetup
 {
-    public static AppBuilder WithClient(this AppBuilder builder)
+    public static ClientBuilder WithClient(this AppBuilder builder)
     {
-        builder.Services.AddTransient<IHttpClientProvider, HttpClientProvider>();
+        builder.Services.AddScoped<IInteractivityDetector, InteractivityDetector>();
+        builder.Services.AddScoped<IResponseStoreFactory, ResponseStoreFactory>();
+        builder.Services.AddTransient<IHttpClientProvider, DefaultHttpClientProvider>();
+
         foreach (var request in builder.Requests.All)
         {
             if (request.ResponseType is Type responseType)
             {
                 typeof(ClientSetup).InvokeGeneric(
                     nameof(AddRequestWithResponse), 
-                    new Type[] { request.RequestType, responseType }, 
+                    [request.RequestType, responseType], 
                     builder.Services);
             }
             else
@@ -29,7 +35,7 @@ public static class ClientSetup
                     builder.Services);
             }
         }
-        return builder;
+        return new(builder);
     }
 
     private static void AddRequest<Request>(IServiceCollection services)
@@ -42,5 +48,6 @@ public static class ClientSetup
         where Request : class, IRequest<Response>, new()
     {
         services.AddTransient<ICall<Request, Response>, HttpCaller<Request, Response>>();
+        services.AddTransient<IPersistentCall<Request, Response>, PersistentCaller<Request, Response>>();
     }
 }

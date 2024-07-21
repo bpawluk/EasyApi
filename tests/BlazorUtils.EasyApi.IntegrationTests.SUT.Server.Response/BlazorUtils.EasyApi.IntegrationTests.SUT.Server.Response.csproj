@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Utils\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Utils.csproj" />
+    <ProjectReference Include="..\BlazorUtils.EasyApi.IntegrationTests.SUT.Contract.Response\BlazorUtils.EasyApi.IntegrationTests.SUT.Contract.Response.csproj" />
+  </ItemGroup>
+
+</Project>

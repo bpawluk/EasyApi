@@ -3,20 +3,15 @@ using System.Net.Http;
 
 namespace BlazorUtils.EasyApi;
 
-public abstract class HttpResultBase
+public abstract class HttpResultBase(HttpStatusCode statusCode)
 {
     protected abstract bool Succeeded { get; }
 
     protected abstract string StatusPhrase { get; }
 
-    protected bool IsSuccessStatusCode => (int)StatusCode >= 200 && (int)StatusCode <= 299;
+    public HttpStatusCode StatusCode { get; } = statusCode;
 
-    public HttpStatusCode StatusCode { get; }
-
-    protected HttpResultBase(HttpStatusCode statusCode)
-    {
-        StatusCode = statusCode;
-    }
+    public bool IsSuccessStatusCode => (int)StatusCode >= 200 && (int)StatusCode <= 299;
 
     public void EnsureSucceeded()
     {

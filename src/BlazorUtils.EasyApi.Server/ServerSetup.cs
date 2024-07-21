@@ -1,7 +1,10 @@
 ﻿using BlazorUtils.EasyApi.Server.Handling;
+using BlazorUtils.EasyApi.Server.Rendering;
 using BlazorUtils.EasyApi.Server.Setup;
 using BlazorUtils.EasyApi.Shared.Exceptions;
+using BlazorUtils.EasyApi.Shared.Persistence;
 using BlazorUtils.EasyApi.Shared.Reflection;
+using BlazorUtils.EasyApi.Shared.Rendering;
 using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -13,9 +16,12 @@ namespace BlazorUtils.EasyApi.Server;
 
 public static class ServerSetup
 {
-    public static AppBuilder WithServer(this AppBuilder builder, params Assembly[] sources)
+    public static ServerBuilder WithServer(this AppBuilder builder, params Assembly[] sources)
     {
-        builder.Services.AddTransient<IEndpointsCustomization, EndpointsCustomization>();
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<IInteractivityDetector, InteractivityDetector>();
+        builder.Services.AddScoped<IResponseStoreFactory, ResponseStoreFactory>();
+        builder.Services.AddTransient<IEndpointsCustomization, NoEndpointsCustomization>();
 
         var defaultSource = Assembly.GetCallingAssembly();
         var handlers = sources
@@ -30,7 +36,7 @@ public static class ServerSetup
             {
                 typeof(ServerSetup).InvokeGeneric(
                     nameof(AddRequestWithResponse),
-                    new Type[] { request.RequestType, responseType },
+                    [request.RequestType, responseType],
                     builder.Services,
                     handlers);
             }
@@ -44,7 +50,7 @@ public static class ServerSetup
             }
         }
 
-        return builder;
+        return new(builder);
     }
 
     private static void AddRequest<Request>(IServiceCollection services, IEnumerable<Type> handlers)
@@ -61,6 +67,7 @@ public static class ServerSetup
         var handlerInterface = typeof(IHandle<Request, Response>);
         services.AddTransient(handlerInterface, FindHandler(handlers, handlerInterface));
         services.AddTransient<ICall<Request, Response>, HandlerCaller<Request, Response>>();
+        services.AddTransient<IPersistentCall<Request, Response>, PersistentCaller<Request, Response>>();
     }
 
     private static Type FindHandler(IEnumerable<Type> handlers, Type handlerInterface)

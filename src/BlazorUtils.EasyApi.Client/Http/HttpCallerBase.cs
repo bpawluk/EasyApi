@@ -74,7 +74,7 @@ internal abstract class HttpCallerBase<Request>
         return new(route, UriKind.Relative);
     }
 
-    private HttpContent? WriteContent(Request request)
+    private JsonContent? WriteContent(Request request)
     {
         if (_accessor.BodyParams.Any())
         {

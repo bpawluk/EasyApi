@@ -3,13 +3,11 @@ using System.Net;
 
 namespace BlazorUtils.EasyApi;
 
-public class HttpResult : HttpResultBase
+public class HttpResult(HttpStatusCode statusCode) : HttpResultBase(statusCode)
 {
     protected override bool Succeeded => IsSuccessStatusCode;
 
     protected override string StatusPhrase => StatusCode.ToPhrase();
-
-    private HttpResult(HttpStatusCode statusCode) : base(statusCode) { }
 
     public static HttpResult Ok() => new(HttpStatusCode.OK);
 

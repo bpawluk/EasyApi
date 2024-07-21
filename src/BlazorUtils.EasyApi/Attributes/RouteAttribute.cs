@@ -1,14 +1,15 @@
 ﻿using System;
 
-namespace BlazorUtils.EasyApi;
-
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-public class RouteAttribute : Attribute 
+namespace BlazorUtils.EasyApi
 {
-    public string Value { get; }
-
-    public RouteAttribute(string value)
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+    public class RouteAttribute : Attribute 
     {
-        Value = value;
+        public string Value { get; }
+
+        public RouteAttribute(string value)
+        {
+            Value = value;
+        }
     }
 }

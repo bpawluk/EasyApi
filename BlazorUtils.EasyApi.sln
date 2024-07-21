@@ -27,25 +27,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.Benchma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.Benchmarks.SUT.Server", "benchmarks\BlazorUtils.EasyApi.Benchmarks.SUT.Server\BlazorUtils.EasyApi.Benchmarks.SUT.Server.csproj", "{7BDD1319-8100-4640-8070-6B2567F27ACA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.Tests", "tests\BlazorUtils.EasyApi.Tests\BlazorUtils.EasyApi.Tests.csproj", "{E8CA9EFC-1F81-42E1-9759-1BD6ABE551E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.IntegrationTests", "tests\BlazorUtils.EasyApi.IntegrationTests\BlazorUtils.EasyApi.IntegrationTests.csproj", "{E8CA9EFC-1F81-42E1-9759-1BD6ABE551E4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SUT", "SUT", "{5C97F842-C018-4CB1-8329-CAE9D3DF8524}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.Tests.SUT.Contract", "tests\BlazorUtils.EasyApi.Tests.SUT.Contract\BlazorUtils.EasyApi.Tests.SUT.Contract.csproj", "{F0D95DFE-7AC8-47C8-B8EE-22198A7C87E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.IntegrationTests.SUT.Contract", "tests\BlazorUtils.EasyApi.IntegrationTests.SUT.Contract\BlazorUtils.EasyApi.IntegrationTests.SUT.Contract.csproj", "{F0D95DFE-7AC8-47C8-B8EE-22198A7C87E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.Tests.SUT.Contract.Params", "tests\BlazorUtils.EasyApi.Tests.SUT.Contract.Params\BlazorUtils.EasyApi.Tests.SUT.Contract.Params.csproj", "{E4BD613B-EC57-4123-952D-9BC37D8AA028}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.IntegrationTests.SUT.Contract.Params", "tests\BlazorUtils.EasyApi.IntegrationTests.SUT.Contract.Params\BlazorUtils.EasyApi.IntegrationTests.SUT.Contract.Params.csproj", "{E4BD613B-EC57-4123-952D-9BC37D8AA028}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.Tests.SUT.Contract.Response", "tests\BlazorUtils.EasyApi.Tests.SUT.Contract.Response\BlazorUtils.EasyApi.Tests.SUT.Contract.Response.csproj", "{200B44D7-873F-4C86-9483-373EA1DDB353}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.IntegrationTests.SUT.Contract.Response", "tests\BlazorUtils.EasyApi.IntegrationTests.SUT.Contract.Response\BlazorUtils.EasyApi.IntegrationTests.SUT.Contract.Response.csproj", "{200B44D7-873F-4C86-9483-373EA1DDB353}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.Tests.SUT.Client", "tests\BlazorUtils.EasyApi.Tests.SUT.Client\BlazorUtils.EasyApi.Tests.SUT.Client.csproj", "{3E897393-8A98-42A6-A66C-FA6F08A41737}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.IntegrationTests.SUT.Client", "tests\BlazorUtils.EasyApi.IntegrationTests.SUT.Client\BlazorUtils.EasyApi.IntegrationTests.SUT.Client.csproj", "{3E897393-8A98-42A6-A66C-FA6F08A41737}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.Tests.SUT.Server", "tests\BlazorUtils.EasyApi.Tests.SUT.Server\BlazorUtils.EasyApi.Tests.SUT.Server.csproj", "{4EB0BDA2-B834-40E6-A0BF-4A40A98DC79F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.IntegrationTests.SUT.Server", "tests\BlazorUtils.EasyApi.IntegrationTests.SUT.Server\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.csproj", "{4EB0BDA2-B834-40E6-A0BF-4A40A98DC79F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.Tests.SUT.Server.Params", "tests\BlazorUtils.EasyApi.Tests.SUT.Server.Params\BlazorUtils.EasyApi.Tests.SUT.Server.Params.csproj", "{E8AF78E7-A059-4CD1-B8B3-72D4469D0866}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Params", "tests\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Params\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Params.csproj", "{E8AF78E7-A059-4CD1-B8B3-72D4469D0866}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.Tests.SUT.Server.Response", "tests\BlazorUtils.EasyApi.Tests.SUT.Server.Response\BlazorUtils.EasyApi.Tests.SUT.Server.Response.csproj", "{AA19B111-C62D-4B6D-853A-EF0E598E61C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Response", "tests\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Response\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Response.csproj", "{AA19B111-C62D-4B6D-853A-EF0E598E61C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorUtils.EasyApi.Tests.SUT.Server.Utils", "tests\BlazorUtils.EasyApi.Tests.SUT.Server.Utils\BlazorUtils.EasyApi.Tests.SUT.Server.Utils.csproj", "{6FBA2590-E65E-43F8-965A-1E9F09421815}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Utils", "tests\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Utils\BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Utils.csproj", "{6FBA2590-E65E-43F8-965A-1E9F09421815}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorUtils.EasyApi.UnitTests", "tests\BlazorUtils.EasyApi.UnitTests\BlazorUtils.EasyApi.UnitTests.csproj", "{DB31E0FA-7C2C-47E7-A172-D2F7DD7307FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,6 +123,10 @@ Global
 		{6FBA2590-E65E-43F8-965A-1E9F09421815}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FBA2590-E65E-43F8-965A-1E9F09421815}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FBA2590-E65E-43F8-965A-1E9F09421815}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB31E0FA-7C2C-47E7-A172-D2F7DD7307FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB31E0FA-7C2C-47E7-A172-D2F7DD7307FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB31E0FA-7C2C-47E7-A172-D2F7DD7307FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB31E0FA-7C2C-47E7-A172-D2F7DD7307FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +151,7 @@ Global
 		{E8AF78E7-A059-4CD1-B8B3-72D4469D0866} = {5C97F842-C018-4CB1-8329-CAE9D3DF8524}
 		{AA19B111-C62D-4B6D-853A-EF0E598E61C5} = {5C97F842-C018-4CB1-8329-CAE9D3DF8524}
 		{6FBA2590-E65E-43F8-965A-1E9F09421815} = {5C97F842-C018-4CB1-8329-CAE9D3DF8524}
+		{DB31E0FA-7C2C-47E7-A172-D2F7DD7307FE} = {438506C3-E578-4FE0-925C-9F02C0418537}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F8F0A019-4A8A-4836-A99F-A6C90945DC29}

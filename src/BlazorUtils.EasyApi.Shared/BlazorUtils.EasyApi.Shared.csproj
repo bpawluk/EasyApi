@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Major>0</Major>
-    <Minor>5</Minor>
-    <Patch>1</Patch>
+    <Major>1</Major>
+    <Minor>0</Minor>
+    <Patch>0</Patch>
     <VersionPrefix>$(Major).$(Minor).$(Patch)</VersionPrefix>
     <AssemblyVersion>$(Major).0.0.0</AssemblyVersion>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -30,12 +30,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.7" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="BlazorUtils.EasyApi.Client" />
     <InternalsVisibleTo Include="BlazorUtils.EasyApi.Server" />
+    <InternalsVisibleTo Include="BlazorUtils.EasyApi.UnitTests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 
   <ItemGroup>
