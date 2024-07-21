@@ -267,7 +267,7 @@ Response Persistence allows you to seamlessly store and reuse EasyApi request re
 var comments = await GetComments.Call("a-unique-request-identifier", request);
 ```
 
-Once the initial request is completed and persisted, it can be used for subsequent calls according to the rules of the configured persistence options.
+Once the initial request is completed and persisted, it will be used for subsequent calls according to the rules of the configured persistence options.
 
 #### Prerendered Response Persistence
 Prerendered Response Persistence is a useful option when running your Blazor applications with prerendering. 
