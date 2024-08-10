@@ -220,7 +220,7 @@ or [configure a provider](#http-client-provider) for more control over the ```Ht
 **2️⃣ Create the request.**
 
 ```csharp
-var request = new AddPost()
+var request = new AddComment()
 {
     ArticleID = Article.ID,
     Author = "EasyApi Enjoyer",
