@@ -3,7 +3,7 @@ using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
-namespace BlazorUtils.EasyApi.UnitTests.MemoryTests;
+namespace BlazorUtils.EasyApi.UnitTests.PersistenceTests.InMemory;
 
 public abstract class InMemoryResponseStoreTestsBase : TestContext
 {
@@ -82,7 +82,7 @@ public abstract class InMemoryResponseStoreTestsBase : TestContext
     }
 
     protected static void AssertCorrectResponse(
-        IRenderedComponent<InMemoryResponseStoreTestsComponent> renderedComponent, 
+        IRenderedComponent<InMemoryResponseStoreTestsComponent> renderedComponent,
         HttpResult<string> expectedResponse)
     {
         var statusCodeElement = renderedComponent.Find("#statusCodeElement");
