@@ -1,6 +1,6 @@
 ﻿using BlazorUtils.EasyApi.Server;
 using BlazorUtils.EasyApi.Server.Setup;
-using BlazorUtils.EasyApi.Shared.Persistence;
+using BlazorUtils.EasyApi.Shared.Persistence.Response;
 using BlazorUtils.EasyApi.Shared.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

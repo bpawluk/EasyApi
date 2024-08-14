@@ -1,5 +1,5 @@
-﻿using BlazorUtils.EasyApi.Shared.Memory;
-using BlazorUtils.EasyApi.Shared.Rendering;
+﻿using BlazorUtils.EasyApi.Shared.Persistence.InMemory;
+using BlazorUtils.EasyApi.Shared.Persistence.Prerendered;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 

@@ -1,5 +1,6 @@
-﻿using BlazorUtils.EasyApi.Shared.Memory;
-using BlazorUtils.EasyApi.Shared.Rendering;
+﻿using BlazorUtils.EasyApi.Shared.Persistence.Compound;
+using BlazorUtils.EasyApi.Shared.Persistence.InMemory;
+using BlazorUtils.EasyApi.Shared.Persistence.Prerendered;
 using BlazorUtils.EasyApi.Shared.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -48,12 +49,9 @@ internal class ResponseStoreFactory(IServiceProvider services) : IResponseStoreF
 
     private PrerenderedResponseStore<ResponseType>? GetPrerenderedResponseStore<ResponseType>(
         IPrerenderedResponsePersistence configuration,
-        IRequest<ResponseType> request)
-    {
-        return configuration.Configure(request).IsEnabled 
+        IRequest<ResponseType> request) => configuration.Configure(request).IsEnabled
             ? _services.GetRequiredService<PrerenderedResponseStore<ResponseType>>()
             : null;
-    }
 
     private InMemoryResponseStore<ResponseType>? GetInMemoryResponseStore<ResponseType>(
         IInMemoryResponsePersistence configuration,

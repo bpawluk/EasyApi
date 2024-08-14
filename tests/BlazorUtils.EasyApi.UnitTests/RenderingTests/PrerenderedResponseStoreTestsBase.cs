@@ -1,4 +1,4 @@
-﻿using BlazorUtils.EasyApi.Shared.Persistence;
+﻿using BlazorUtils.EasyApi.Shared.Persistence.Response;
 using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.Extensions.DependencyInjection;
