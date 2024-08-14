@@ -1,4 +1,6 @@
-﻿namespace BlazorUtils.EasyApi.Shared.Persistence;
+﻿using BlazorUtils.EasyApi.Shared.Persistence.Response;
+
+namespace BlazorUtils.EasyApi.Shared.Persistence;
 
 internal interface IResponseStore<ResponseType>
 {

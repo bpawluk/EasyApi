@@ -1,4 +1,4 @@
-﻿namespace BlazorUtils.EasyApi.Shared.Persistence;
+﻿namespace BlazorUtils.EasyApi.Shared.Persistence.Response;
 
 internal record PersistedResponse<ResponseType>
 {

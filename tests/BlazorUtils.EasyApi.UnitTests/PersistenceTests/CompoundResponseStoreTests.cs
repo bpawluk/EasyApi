@@ -1,4 +1,6 @@
 ﻿using BlazorUtils.EasyApi.Shared.Persistence;
+using BlazorUtils.EasyApi.Shared.Persistence.Compound;
+using BlazorUtils.EasyApi.Shared.Persistence.Response;
 using Moq;
 using System.Net;
 

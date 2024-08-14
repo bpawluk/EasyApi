@@ -1,8 +1,8 @@
-﻿using BlazorUtils.EasyApi.Shared.Persistence;
+﻿using BlazorUtils.EasyApi.Shared.Persistence.Response;
 using BlazorUtils.EasyApi.Shared.Rendering;
 using System.Collections.Generic;
 
-namespace BlazorUtils.EasyApi.Shared.Memory;
+namespace BlazorUtils.EasyApi.Shared.Persistence.InMemory;
 
 internal class InMemoryResponseStore<ResponseType>(IInteractivityDetector detector) : IResponseStore<ResponseType>
 {
