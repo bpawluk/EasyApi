@@ -3,7 +3,7 @@ using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazorUtils.EasyApi.UnitTests.RenderingTests;
+namespace BlazorUtils.EasyApi.UnitTests.PersistenceTests.Prerendered;
 
 public abstract class PrerenderedResponseStoreTestsBase : TestContext
 {
@@ -25,9 +25,9 @@ public abstract class PrerenderedResponseStoreTestsBase : TestContext
     {
         var persistedResponse = HttpResult<string>.Ok("persisted-response");
         _persistentComponentState.Persist(
-            StorageKey, 
+            StorageKey,
             new ResponseSnapshot<string>(
-                persistedResponse.StatusCode, 
+                persistedResponse.StatusCode,
                 persistedResponse.Response!));
 
         var renderedComponent = RenderComponent<PrerenderedResponseStoreTestsComponent>();
@@ -47,7 +47,7 @@ public abstract class PrerenderedResponseStoreTestsBase : TestContext
     }
 
     protected static void AssertCorrectResponse(
-        IRenderedComponent<PrerenderedResponseStoreTestsComponent> renderedComponent, 
+        IRenderedComponent<PrerenderedResponseStoreTestsComponent> renderedComponent,
         HttpResult<string> expectedResponse)
     {
         var statusCodeElement = renderedComponent.Find("#statusCodeElement");

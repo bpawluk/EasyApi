@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using System.Net;
 
-namespace BlazorUtils.EasyApi.UnitTests.PersistenceTests;
+namespace BlazorUtils.EasyApi.UnitTests.PersistenceTests.Caller;
 
 public abstract class PersistentCallerTestsBase : IAsyncLifetime
 {

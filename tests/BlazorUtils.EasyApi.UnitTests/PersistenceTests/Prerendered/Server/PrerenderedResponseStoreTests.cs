@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 
-namespace BlazorUtils.EasyApi.UnitTests.RenderingTests.Server;
+namespace BlazorUtils.EasyApi.UnitTests.PersistenceTests.Prerendered.Server;
 
 public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
 {
@@ -98,10 +98,10 @@ public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
 
         var isPersisted = _persistentComponentState.TryTake<ResponseSnapshot<string>>(StorageKey, out var _);
         Assert.False(isPersisted);
-    } 
+    }
 }
 
-internal class PrerenderedResponseStoreTestsRequestHandler(InnerCallerResponseProvider responseProvider) 
+internal class PrerenderedResponseStoreTestsRequestHandler(InnerCallerResponseProvider responseProvider)
     : IHandle<PrerenderedResponseStoreTestsRequest, string>
 {
     private readonly InnerCallerResponseProvider _innerCallerResponseProvider = responseProvider;

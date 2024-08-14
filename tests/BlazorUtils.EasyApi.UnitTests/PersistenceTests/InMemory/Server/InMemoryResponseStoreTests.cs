@@ -3,7 +3,7 @@ using BlazorUtils.EasyApi.Server.Setup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace BlazorUtils.EasyApi.UnitTests.MemoryTests.Server;
+namespace BlazorUtils.EasyApi.UnitTests.PersistenceTests.InMemory.Server;
 
 public class InMemoryResponseStoreTests : InMemoryResponseStoreTestsBase
 {
@@ -19,7 +19,7 @@ public class InMemoryResponseStoreTests : InMemoryResponseStoreTestsBase
     }
 }
 
-internal class InMemoryResponseStoreTestsRequestHandler(InnerCallerResponseProvider responseProvider) 
+internal class InMemoryResponseStoreTestsRequestHandler(InnerCallerResponseProvider responseProvider)
     : IHandle<InMemoryResponseStoreTestsRequest, string>
 {
     private readonly InnerCallerResponseProvider _innerCallerResponseProvider = responseProvider;

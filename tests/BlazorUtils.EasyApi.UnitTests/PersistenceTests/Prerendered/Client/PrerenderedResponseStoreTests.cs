@@ -1,29 +1,20 @@
 ﻿using BlazorUtils.EasyApi.Client;
 using BlazorUtils.EasyApi.Client.Setup;
-using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
 
-namespace BlazorUtils.EasyApi.UnitTests.PersistenceTests.Client;
+namespace BlazorUtils.EasyApi.UnitTests.PersistenceTests.Prerendered.Client;
 
-public class PersistentCallerTests : PersistentCallerTestsBase
+public class PrerenderedResponseStoreTests : PrerenderedResponseStoreTestsBase
 {
-    protected override Task<IServiceProvider> CreateSUT(Action<IServiceCollection> servicesOverride)
+    public PrerenderedResponseStoreTests()
     {
-        var services = new ServiceCollection();
-
-        services
+        Services
             .AddEasyApi()
             .WithContract(GetType().Assembly)
             .WithClient()
             .Using<TestHttpClientProvider>()
             .Using<PrerenderedResponsePersistence>();
-
-        servicesOverride(services);
-
-        return Task.FromResult<IServiceProvider>(services.BuildServiceProvider());
     }
-
-    public override Task DisposeAsync() => Task.CompletedTask;
 }
 
 internal class TestHttpMessageHandler(InnerCallerResponseProvider responseProvider) : HttpMessageHandler

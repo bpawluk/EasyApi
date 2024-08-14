@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazorUtils.EasyApi.UnitTests.PersistenceTests.Server;
+namespace BlazorUtils.EasyApi.UnitTests.PersistenceTests.Caller.Server;
 
 public class PersistentCallerTests : PersistentCallerTestsBase
 {
@@ -37,10 +37,10 @@ public class PersistentCallerTests : PersistentCallerTestsBase
     {
         await _webApp.StopAsync();
         await _webApp.DisposeAsync();
-    } 
+    }
 }
 
-internal class PersistentCallerTestsRequestHandler(InnerCallerResponseProvider responseProvider) 
+internal class PersistentCallerTestsRequestHandler(InnerCallerResponseProvider responseProvider)
     : IHandle<PersistentCallerTestsRequest, string>
 {
     private readonly InnerCallerResponseProvider _innerCallerResponseProvider = responseProvider;
