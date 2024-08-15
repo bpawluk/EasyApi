@@ -10,7 +10,7 @@ public static class InMemoryResponsePersistenceSetup
         ServiceLifetime lifetime = ServiceLifetime.Transient)
         where InMemoryResponsePersistenceType : class, IInMemoryResponsePersistence
     {
-        return (builder.UsingInMemory<InMemoryResponsePersistence>(lifetime) as ClientBuilder)!;
+        return (builder.UsingInMemory<InMemoryResponsePersistenceType>(lifetime) as ClientBuilder)!;
     }
 
     public static ClientBuilder Using(this ClientBuilder builder, IInMemoryResponsePersistence responsePersistence)

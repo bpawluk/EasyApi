@@ -10,7 +10,7 @@ public static class InMemoryResponsePersistenceSetup
         ServiceLifetime lifetime = ServiceLifetime.Transient)
         where InMemoryResponsePersistenceType : class, IInMemoryResponsePersistence
     {
-        return (builder.UsingInMemory<InMemoryResponsePersistence>(lifetime) as ServerBuilder)!;
+        return (builder.UsingInMemory<InMemoryResponsePersistenceType>(lifetime) as ServerBuilder)!;
     }
 
     public static ServerBuilder Using(this ServerBuilder builder, IInMemoryResponsePersistence responsePersistence)
