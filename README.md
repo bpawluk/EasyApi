@@ -403,6 +403,13 @@ builder.Services
 
 ## Change Log
 
+### v1.1.0
+- Introduced new overloads for IPersistentCall methods to allow forcing fresh request calls ignoring all persisted data
+- Introduced absolute expiration of responses in in-memory persistence
+- Introduced sliding expiration of responses in in-memory persistence
+- Fixed intermittent loss of responses persisted during prerendering
+- Fixed incorrect setup of custom response persistence 
+
 ### v1.0.0
 - .NET 8 upgrade
 - Introduced IPersistentCall
