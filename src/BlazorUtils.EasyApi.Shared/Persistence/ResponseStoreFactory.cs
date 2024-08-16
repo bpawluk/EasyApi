@@ -3,7 +3,6 @@ using BlazorUtils.EasyApi.Shared.Persistence.InMemory;
 using BlazorUtils.EasyApi.Shared.Persistence.Prerendered;
 using BlazorUtils.EasyApi.Shared.Rendering;
 using BlazorUtils.EasyApi.Shared.Setup;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
@@ -70,7 +69,7 @@ internal class ResponseStoreFactory(IServiceProvider services) : IResponseStoreF
         var storeOptions = configuration.Configure(request);
         return storeOptions.IsEnabled
             ? new(
-                _services.GetRequiredService<IMemoryCache>(),
+                _services.GetRequiredService<MemoryCacheProvider>().Cache,
                 _services.GetRequiredService<IInteractivityDetector>(),
                 storeOptions.AbsoluteExpiration,
                 storeOptions.SlidingExpiration)

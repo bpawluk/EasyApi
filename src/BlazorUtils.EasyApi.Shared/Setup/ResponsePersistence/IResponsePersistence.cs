@@ -1,3 +1,3 @@
 ﻿namespace BlazorUtils.EasyApi.Shared.Setup;
 
-public interface IResponsePersistence { }
+public interface IResponsePersistence;
