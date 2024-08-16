@@ -10,7 +10,7 @@ public static class PrerenderedResponsePersistenceSetup
         ServiceLifetime lifetime = ServiceLifetime.Transient)
         where PrerenderedResponsePersistenceType : class, IPrerenderedResponsePersistence
     {
-        return (builder.UsingPrerendered<PrerenderedResponsePersistence>(lifetime) as ServerBuilder)!;
+        return (builder.UsingPrerendered<PrerenderedResponsePersistenceType>(lifetime) as ServerBuilder)!;
     }
 
     public static ServerBuilder Using(this ServerBuilder builder, IPrerenderedResponsePersistence responsePersistence)

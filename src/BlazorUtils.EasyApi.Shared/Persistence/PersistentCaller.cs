@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using BlazorUtils.EasyApi.Shared.Persistence.Response;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BlazorUtils.EasyApi.Shared.Persistence;
@@ -12,22 +13,32 @@ internal class PersistentCaller<Request, Response>(
     private readonly ICall<Request, Response> _caller = caller;
     private readonly IResponseStoreFactory _storeFactory = storeFactory;
 
-    public Task<Response> Call(string storageKey, Request request) => Call(storageKey, request, CancellationToken.None);
+    public Task<Response> Call(string storageKey, Request request, CancellationToken cancellationToken)
+        => Call(storageKey, request, false, cancellationToken);
 
-    public async Task<Response> Call(string storageKey, Request request, CancellationToken cancellationToken)
+    public async Task<Response> Call(
+        string storageKey, 
+        Request request,
+        bool forceFreshCall,
+        CancellationToken cancellationToken)
     {
-        var result = await CallHttp(storageKey, request, cancellationToken).ConfigureAwait(false);
+        var result = await CallHttp(storageKey, request, forceFreshCall, cancellationToken).ConfigureAwait(false);
         result.EnsureSucceeded();
         return result.Response!;
     }
 
-    public Task<HttpResult<Response>> CallHttp(string storageKey, Request request) => CallHttp(storageKey, request, CancellationToken.None);
+    public Task<HttpResult<Response>> CallHttp(string storageKey, Request request, CancellationToken cancellationToken)
+        => CallHttp(storageKey, request, false, cancellationToken);
 
-    public async Task<HttpResult<Response>> CallHttp(string storageKey, Request request, CancellationToken cancellationToken)
+    public async Task<HttpResult<Response>> CallHttp(
+        string storageKey, 
+        Request request, 
+        bool forceFreshCall, 
+        CancellationToken cancellationToken)
     {
         var responseStore = _storeFactory.GetStore(request);
 
-        if (GetPersistedResponse(responseStore, storageKey, request) is HttpResult<Response> persistedResponse)
+        if (!forceFreshCall && GetPersistedResponse(responseStore, storageKey, request) is HttpResult<Response> persistedResponse)
         {
             return persistedResponse;
         }

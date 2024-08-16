@@ -1,5 +1,5 @@
-﻿using BlazorUtils.EasyApi.Shared.Memory;
-using BlazorUtils.EasyApi.Shared.Rendering;
+﻿using BlazorUtils.EasyApi.Shared.Persistence.InMemory;
+using BlazorUtils.EasyApi.Shared.Persistence.Prerendered;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -31,6 +31,7 @@ internal static class ResponsePersistenceSetup
         ServiceLifetime lifetime)
         where InMemoryResponsePersistenceType : class, IInMemoryResponsePersistence
     {
+        builder.Services.AddScoped<MemoryCacheProvider>();
         builder.Services.AddScoped(typeof(InMemoryResponseStore<>));
         builder.Services.AddResponsePersistence(typeof(InMemoryResponsePersistenceType), lifetime);
         return builder;
@@ -40,6 +41,7 @@ internal static class ResponsePersistenceSetup
         this AppBuilder builder,
         IInMemoryResponsePersistence responsePersistence)
     {
+        builder.Services.AddScoped<MemoryCacheProvider>();
         builder.Services.AddScoped(typeof(InMemoryResponseStore<>));
         builder.Services.AddResponsePersistence(responsePersistence);
         return builder;

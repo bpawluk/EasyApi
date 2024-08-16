@@ -1,17 +1,18 @@
-﻿using BlazorUtils.EasyApi.Shared.Persistence;
+﻿using BlazorUtils.EasyApi.Shared.Persistence.Response;
+using BlazorUtils.EasyApi.Shared.Rendering;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace BlazorUtils.EasyApi.Shared.Rendering;
+namespace BlazorUtils.EasyApi.Shared.Persistence.Prerendered;
 
 internal class PrerenderedResponseStore<ResponseType> : IResponseStore<ResponseType>, IDisposable
 {
     private readonly PersistentComponentState _state;
     private readonly PersistingComponentStateSubscription? _subscription;
-    private readonly Dictionary<string, ResponseSnapshot<ResponseType>> _responsesToPersist = [];
+    private readonly ConcurrentDictionary<string, ResponseSnapshot<ResponseType>> _responsesToPersist = [];
 
     private bool ShouldSave { get; }
 

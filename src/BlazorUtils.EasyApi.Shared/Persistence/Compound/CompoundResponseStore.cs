@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using BlazorUtils.EasyApi.Shared.Persistence.Response;
+using System.Collections.Generic;
 
-namespace BlazorUtils.EasyApi.Shared.Persistence;
+namespace BlazorUtils.EasyApi.Shared.Persistence.Compound;
 
 internal class CompoundResponseStore<ResponseType>(IReadOnlyCollection<IResponseStore<ResponseType>> stores)
     : IResponseStore<ResponseType>
