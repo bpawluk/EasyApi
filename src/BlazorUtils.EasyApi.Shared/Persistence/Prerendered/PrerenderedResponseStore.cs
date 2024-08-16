@@ -53,10 +53,7 @@ internal class PrerenderedResponseStore<ResponseType> : IResponseStore<ResponseT
     {
         foreach (var response in _responsesToPersist)
         {
-            if (response.Key is not null)
-            {
-                _state.PersistAsJson(response.Key, response.Value);
-            }
+            _state.PersistAsJson(response.Key, response.Value);
         }
         return Task.CompletedTask;
     }
