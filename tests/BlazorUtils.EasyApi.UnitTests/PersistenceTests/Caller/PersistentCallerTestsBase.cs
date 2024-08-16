@@ -49,6 +49,22 @@ public abstract class PersistentCallerTestsBase : IAsyncLifetime
     }
 
     [Fact]
+    public async Task PersistentCaller_WithPersistedResponse_FreshCallForced_ReturnsInnerResponse_AndPersistsIt()
+    {
+        var persistedResponse = HttpResult<string>.Ok("persisted-response");
+        _responseStoreMock
+            .Setup(store => store.Retrieve(_storageKey))
+            .Returns(PersistedResponse<string>.Create(persistedResponse));
+
+        var caller = _sut.GetRequiredService<IPersistentCall<PersistentCallerTestsRequest, string>>();
+        var result = await caller.CallHttp(_storageKey, new(), true);
+
+        Assert.Equal(_responseProvider.Response.StatusCode, result.StatusCode);
+        Assert.Equal(_responseProvider.Response.Response, result.Response);
+        _responseStoreMock.Verify(store => store.Save(_storageKey, It.IsAny<HttpResult<string>>()), Times.Once);
+    }
+
+    [Fact]
     public async Task PersistentCaller_WithPersistedStickyResponse_ReturnsTheResponse_AndPersistsIt()
     {
         var persistedResponse = HttpResult<string>.Ok("persisted-response");
