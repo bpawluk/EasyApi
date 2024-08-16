@@ -269,6 +269,13 @@ var comments = await GetComments.Call("a-unique-request-identifier", request);
 
 Once the initial request is completed and persisted, it will be used for subsequent calls according to the rules of the configured persistence options.
 
+#### Forcing fresh calls
+To ensure that fresh data is loaded from the server (e.g. after a user action), you can set the `forceFreshCall` flag to `true` when using `IPersistentCall`. It will bypass all persistence options and send the request directly to the server.
+
+```csharp
+var comments = await GetComments.Call("a-unique-request-identifier", request, true);
+```
+
 #### Prerendered Response Persistence
 Prerendered Response Persistence is a useful option when running your Blazor applications with prerendering. 
 
@@ -302,9 +309,9 @@ After that, it can be used as described in [Response Persistence](#response-pers
 > Prerendered Response Persistence is a one-time persistence option. It persists the request responses received during prerendering and discards them once they have been used again when the interactive session starts.
 
 #### In-memory Response Persistence
-In-memory Response Persistence can be used to avoid repeated requests for static data that does not change and is not modified by user actions through a single application session. 
+In-memory Response Persistence can be used to increase the responsiveness of your application by reducing the number of backend calls within an interactive user session. It involves storing request responses in the application's memory and reusing them for repeated requests (e.g. when navigating to the same page multiple times). 
 
-You can configure it in your Client and/or Server setup.
+You can configure it in your Client and/or Server setup depending on your needs.
 
 ```csharp
 builder.Services
@@ -318,7 +325,7 @@ After that, it can be used as described in [Response Persistence](#response-pers
 
 #### Custom configuration
 
-When using multiple Response Persistence options, it may be useful to configure them separately for each EasyApi request. 
+The default In-memory Response Persistence configuration does not include data expiration. Responses are persisted and reused for the duration of a single user session. Consider using custom configuration to set up expiration, or turn off persistence altogether for requests that contain highly dynamic data.
 
 To do this, you can implement your custom persistence configuration.
 
@@ -327,11 +334,22 @@ internal class CustomInMemoryResponsePersistence : IInMemoryResponsePersistence
 {
     public InMemoryResponsePersistenceOptions Configure(IRequest request)
     {
-        if (response should be persisted for the request)
+        if (responses should not be persisted for the request)
         {
-            return new() { IsEnabled = true };
+            return new() { IsEnabled = false };
         }
-        return new() { IsEnabled = false };
+
+        if (responses should expire for the request)
+        {
+            return new()
+            {
+                IsEnabled = true,
+                AbsoluteExpiration = TimeSpan.FromMinutes(5),
+                SlidingExpiration = TimeSpan.FromMinutes(1)
+            };
+        }
+
+        return new() { IsEnabled = true };
     }
 }
 ```
@@ -343,7 +361,6 @@ builder.Services
     .AddEasyApi()
     .WithContract(contractAssembly)
     .With[Client/Server]()
-    .Using<PrerenderedResponsePersistence>()
     .Using<CustomInMemoryResponsePersistence>();
 ```
 
