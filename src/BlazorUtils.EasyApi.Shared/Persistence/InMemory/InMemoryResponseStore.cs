@@ -1,32 +1,62 @@
 ﻿using BlazorUtils.EasyApi.Shared.Persistence.Response;
 using BlazorUtils.EasyApi.Shared.Rendering;
-using System.Collections.Generic;
+using Microsoft.Extensions.Caching.Memory;
+using System;
 
 namespace BlazorUtils.EasyApi.Shared.Persistence.InMemory;
 
-internal class InMemoryResponseStore<ResponseType>(IInteractivityDetector detector) : IResponseStore<ResponseType>
+internal class InMemoryResponseStore<ResponseType> : IResponseStore<ResponseType>
 {
-    private readonly Dictionary<string, ResponseSnapshot<ResponseType>> _persistedResponses = [];
+    private readonly IMemoryCache _memoryCache;
+    private readonly MemoryCacheEntryOptions _options;
 
-    private bool ShouldSave { get; } = detector.IsInteractive;
+    private bool ShouldSave { get; }
 
-    private bool ShouldRetrieve { get; } = detector.IsInteractive;
+    private bool ShouldRetrieve { get; }
+
+    public InMemoryResponseStore(
+        IMemoryCache memoryCache,
+        IInteractivityDetector detector,
+        TimeSpan? absoluteExpiration,
+        TimeSpan? slidingExpiration)
+    {
+        _memoryCache = memoryCache;
+        _options = new();
+
+        ShouldSave = detector.IsInteractive;
+        ShouldRetrieve = detector.IsInteractive;
+
+        if (absoluteExpiration.HasValue)
+        {
+            _options.AbsoluteExpirationRelativeToNow = absoluteExpiration;
+        }
+
+        if (slidingExpiration.HasValue)
+        {
+            _options.SlidingExpiration = slidingExpiration;
+        }
+    }
 
     public void Save(string key, HttpResult<ResponseType> response)
     {
         if (ShouldSave)
         {
-            _persistedResponses[key] = new(response.StatusCode, response.Response!);
+            var snapshot = new ResponseSnapshot<ResponseType>(response.StatusCode, response.Response!);
+            _memoryCache.Set(GetUniqueKey(key), snapshot, _options);
         }
     }
 
     public PersistedResponse<ResponseType>? Retrieve(string key)
     {
-        if (ShouldRetrieve && _persistedResponses.TryGetValue(key, out var result) && result is not null)
+        if (ShouldRetrieve
+            && _memoryCache.TryGetValue(GetUniqueKey(key), out var result)
+            && result is ResponseSnapshot<ResponseType> snapshot)
         {
-            var response = HttpResult<ResponseType>.WithStatusCode(result.StatusCode, result.Response);
+            var response = HttpResult<ResponseType>.WithStatusCode(snapshot.StatusCode, snapshot.Response);
             return PersistedResponse<ResponseType>.Create(response);
         }
         return null;
     }
+
+    private static string GetUniqueKey(string key) => $"{typeof(ResponseType).FullName}-{key}";
 }
