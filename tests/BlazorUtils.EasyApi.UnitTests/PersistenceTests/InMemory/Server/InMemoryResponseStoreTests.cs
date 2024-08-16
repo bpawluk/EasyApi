@@ -13,7 +13,7 @@ public class InMemoryResponseStoreTests : InMemoryResponseStoreTestsBase
             .AddEasyApi()
             .WithContract(GetType().Assembly)
             .WithServer()
-            .Using<InMemoryResponsePersistence>();
+            .Using<TestInMemoryResponsePersistence>();
 
         Services.Replace(ServiceDescriptor.Singleton(_interactivityDetectorMock.Object));
     }

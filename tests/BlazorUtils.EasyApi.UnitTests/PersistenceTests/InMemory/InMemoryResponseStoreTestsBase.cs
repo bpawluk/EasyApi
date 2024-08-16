@@ -1,4 +1,5 @@
 ﻿using BlazorUtils.EasyApi.Shared.Rendering;
+using BlazorUtils.EasyApi.Shared.Setup;
 using BlazorUtils.EasyApi.UnitTests.Utils;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +38,57 @@ public abstract class InMemoryResponseStoreTestsBase : TestContext
         var renderedComponent = RenderComponent<InMemoryResponseStoreTestsComponent>();
 
         AssertCorrectResponse(renderedComponent, persistedResponse);
+    }
+
+    [Fact]
+    public async Task InMemoryResponseStore_BlazorInteractive_WithPersistedResponse_AndAbsoluteExpiration_RetrievesTheResponse()
+    {
+        _interactivityDetectorMock.Setup(detector => detector.IsInteractive).Returns(true);
+
+        var persistedResponse = HttpResult<string>.Ok("persisted-response");
+        _responseProvider.Response = persistedResponse;
+
+        var caller = Services.GetRequiredService<IPersistentCall<InMemoryResponseStoreWithAbsoluteExpirationTestsRequest, string>>();
+        await caller.CallHttp(StorageKey, new());
+
+        _responseProvider.Response = HttpResult<string>.Ok("inner-caller-response");
+
+        var renderedComponent = RenderComponent<InMemoryResponseStoreTestsComponent>();
+        AssertCorrectResponse(renderedComponent, persistedResponse);
+
+        await Task.Delay(1000);
+
+        renderedComponent = RenderComponent<InMemoryResponseStoreTestsComponent>();
+        AssertCorrectResponse(renderedComponent, _responseProvider.Response);
+    }
+
+    [Fact]
+    public async Task InMemoryResponseStore_BlazorInteractive_WithPersistedResponse_AndSlidingExpiration_RetrievesTheResponse()
+    {
+        _interactivityDetectorMock.Setup(detector => detector.IsInteractive).Returns(true);
+
+        var persistedResponse = HttpResult<string>.Ok("persisted-response");
+        _responseProvider.Response = persistedResponse;
+
+        var caller = Services.GetRequiredService<IPersistentCall<InMemoryResponseStoreWithSlidingExpirationTestsRequest, string>>();
+        await caller.CallHttp(StorageKey, new());
+
+        _responseProvider.Response = HttpResult<string>.Ok("inner-caller-response");
+
+        await Task.Delay(300);
+
+        var renderedComponent = RenderComponent<InMemoryResponseStoreTestsComponent>();
+        AssertCorrectResponse(renderedComponent, persistedResponse);
+
+        await Task.Delay(300);
+
+        renderedComponent = RenderComponent<InMemoryResponseStoreTestsComponent>();
+        AssertCorrectResponse(renderedComponent, persistedResponse);
+
+        await Task.Delay(500);
+
+        renderedComponent = RenderComponent<InMemoryResponseStoreTestsComponent>();
+        AssertCorrectResponse(renderedComponent, _responseProvider.Response);
     }
 
     [Fact]
@@ -86,6 +138,24 @@ public abstract class InMemoryResponseStoreTestsBase : TestContext
 [Route(nameof(InMemoryResponseStoreTestsRequest))]
 public class InMemoryResponseStoreTestsRequest : IGet<string> { }
 
+[Route(nameof(InMemoryResponseStoreWithAbsoluteExpirationTestsRequest))]
+public class InMemoryResponseStoreWithAbsoluteExpirationTestsRequest : IGet<string> { }
+
+[Route(nameof(InMemoryResponseStoreWithSlidingExpirationTestsRequest))]
+public class InMemoryResponseStoreWithSlidingExpirationTestsRequest : IGet<string> { }
+
 internal class InMemoryResponseStoreTestsRequestHandler(TestResponseProvider responseProvider) : TestRequestHandler<InMemoryResponseStoreTestsRequest>(responseProvider) { }
 
+internal class InMemoryResponseStoreWithAbsoluteExpirationTestsRequestHandler(TestResponseProvider responseProvider) : TestRequestHandler<InMemoryResponseStoreWithAbsoluteExpirationTestsRequest>(responseProvider) { }
 
+internal class InMemoryResponseStoreWithSlidingExpirationTestsRequestHandler(TestResponseProvider responseProvider) : TestRequestHandler<InMemoryResponseStoreWithSlidingExpirationTestsRequest>(responseProvider) { }
+
+internal class TestInMemoryResponsePersistence : IInMemoryResponsePersistence
+{
+    public InMemoryResponsePersistenceOptions Configure(IRequest request) => request switch
+    {
+        InMemoryResponseStoreWithAbsoluteExpirationTestsRequest _ => new() { IsEnabled = true, AbsoluteExpiration = TimeSpan.FromMilliseconds(1000) },
+        InMemoryResponseStoreWithSlidingExpirationTestsRequest _ => new() { IsEnabled = true, SlidingExpiration = TimeSpan.FromMilliseconds(500) },
+        _ => new() { IsEnabled = true },
+    };
+}

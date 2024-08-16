@@ -15,7 +15,7 @@ public class InMemoryResponseStoreTests : InMemoryResponseStoreTestsBase
             .WithContract(GetType().Assembly)
             .WithClient()
             .Using<TestHttpClientProvider>()
-            .Using<InMemoryResponsePersistence>();
+            .Using<TestInMemoryResponsePersistence>();
 
         Services.Replace(ServiceDescriptor.Singleton(_interactivityDetectorMock.Object));
     }
