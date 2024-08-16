@@ -1,4 +1,5 @@
 ﻿using BlazorUtils.EasyApi.Shared.Persistence.Response;
+using BlazorUtils.EasyApi.UnitTests.Utils;
 using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,13 +10,13 @@ public abstract class PrerenderedResponseStoreTestsBase : TestContext
 {
     public const string StorageKey = "storage-key";
 
-    protected readonly InnerCallerResponseProvider _innerCallerResponseProvider;
+    protected readonly TestResponseProvider _responseProvider;
     protected readonly FakePersistentComponentState _persistentComponentState;
 
     public PrerenderedResponseStoreTestsBase()
     {
-        _innerCallerResponseProvider = new();
-        Services.AddSingleton(_innerCallerResponseProvider);
+        _responseProvider = new();
+        Services.AddSingleton(_responseProvider);
 
         _persistentComponentState = this.AddFakePersistentComponentState();
     }
@@ -24,11 +25,7 @@ public abstract class PrerenderedResponseStoreTestsBase : TestContext
     public void PrerenderedResponseStore_WithPersistedResponse_RetrievesTheResponse()
     {
         var persistedResponse = HttpResult<string>.Ok("persisted-response");
-        _persistentComponentState.Persist(
-            StorageKey,
-            new ResponseSnapshot<string>(
-                persistedResponse.StatusCode,
-                persistedResponse.Response!));
+        _persistentComponentState.Persist(StorageKey, new ResponseSnapshot<string>(persistedResponse.StatusCode, persistedResponse.Response!));
 
         var renderedComponent = RenderComponent<PrerenderedResponseStoreTestsComponent>();
 
@@ -38,12 +35,8 @@ public abstract class PrerenderedResponseStoreTestsBase : TestContext
     [Fact]
     public void PrerenderedResponseStore_NoPersistedResponse_DoesNotRetrieve()
     {
-        var innerCallerResponse = HttpResult<string>.Ok("inner-caller-response");
-        _innerCallerResponseProvider.Response = innerCallerResponse;
-
         var renderedComponent = RenderComponent<PrerenderedResponseStoreTestsComponent>();
-
-        AssertCorrectResponse(renderedComponent, innerCallerResponse);
+        AssertCorrectResponse(renderedComponent, _responseProvider.Response);
     }
 
     protected static void AssertCorrectResponse(
@@ -61,8 +54,4 @@ public abstract class PrerenderedResponseStoreTestsBase : TestContext
 [Route(nameof(PrerenderedResponseStoreTestsRequest))]
 public class PrerenderedResponseStoreTestsRequest : IGet<string> { }
 
-public class InnerCallerResponseProvider
-{
-    public HttpResult<string> Response { get; set; } = default!;
-}
-
+internal class PrerenderedResponseStoreTestsRequestHandler(TestResponseProvider responseProvider) : TestRequestHandler<PrerenderedResponseStoreTestsRequest>(responseProvider) { }

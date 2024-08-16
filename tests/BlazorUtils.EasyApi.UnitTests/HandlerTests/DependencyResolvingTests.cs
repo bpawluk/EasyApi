@@ -124,14 +124,8 @@ public sealed class DependencyResolvingTests : IAsyncDisposable
     }
 }
 
-internal delegate void DependencyUsedCallback(Guid providerId);
-
-internal class TestDependency(DependencyUsedCallback DependencyUsed)
-{
-    private readonly Guid _id = Guid.NewGuid();
-
-    public void Acknowledge() => DependencyUsed(_id);
-}
+[Route(nameof(DependencyResolvingTestsRequest))]
+public class DependencyResolvingTestsRequest : IGet { }
 
 internal class DependencyResolvingTestsRequestHandler(TestDependency TestDependency) : IHandle<DependencyResolvingTestsRequest>
 {
@@ -142,5 +136,11 @@ internal class DependencyResolvingTestsRequestHandler(TestDependency TestDepende
     }
 }
 
-[Route(nameof(DependencyResolvingTestsRequest))]
-public class DependencyResolvingTestsRequest : IGet { }
+internal class TestDependency(DependencyUsedCallback DependencyUsed)
+{
+    private readonly Guid _id = Guid.NewGuid();
+
+    public void Acknowledge() => DependencyUsed(_id);
+}
+
+internal delegate void DependencyUsedCallback(Guid providerId);

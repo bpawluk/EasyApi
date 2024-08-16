@@ -18,14 +18,3 @@ public class InMemoryResponseStoreTests : InMemoryResponseStoreTestsBase
         Services.Replace(ServiceDescriptor.Singleton(_interactivityDetectorMock.Object));
     }
 }
-
-internal class InMemoryResponseStoreTestsRequestHandler(InnerCallerResponseProvider responseProvider)
-    : IHandle<InMemoryResponseStoreTestsRequest, string>
-{
-    private readonly InnerCallerResponseProvider _innerCallerResponseProvider = responseProvider;
-
-    public Task<HttpResult<string>> Handle(InMemoryResponseStoreTestsRequest request, CancellationToken cancellationToken)
-    {
-        return Task.FromResult(_innerCallerResponseProvider.Response);
-    }
-}

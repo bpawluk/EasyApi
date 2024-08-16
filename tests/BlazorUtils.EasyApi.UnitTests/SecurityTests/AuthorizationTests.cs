@@ -86,13 +86,24 @@ public sealed class AuthorizationTests : IAsyncDisposable
     }
 }
 
-internal class TestAuthOptions : AuthenticationSchemeOptions
+[Route(nameof(AuthorizationTestsPublicRequest))]
+public class AuthorizationTestsPublicRequest : IGet { }
+
+[ProtectedRoute(nameof(AuthorizationTestsProtectedRequest))]
+public class AuthorizationTestsProtectedRequest : IGet { }
+
+internal class AuthorizationTestsRequestHandler
+    : IHandle<AuthorizationTestsPublicRequest>
+    , IHandle<AuthorizationTestsProtectedRequest>
 {
-    public bool ShouldAuthenticate { get; set; }
+    public Task<HttpResult> Handle(AuthorizationTestsPublicRequest request, CancellationToken cancellationToken)
+        => Task.FromResult(HttpResult.Ok());
+
+    public Task<HttpResult> Handle(AuthorizationTestsProtectedRequest request, CancellationToken cancellationToken)
+        => Task.FromResult(HttpResult.Ok());
 }
 
-internal class TestAuthHandler(IOptionsMonitor<TestAuthOptions> options, ILoggerFactory logger, UrlEncoder encoder)
-    : AuthenticationHandler<TestAuthOptions>(options, logger, encoder)
+internal class TestAuthHandler(IOptionsMonitor<TestAuthOptions> options, ILoggerFactory logger, UrlEncoder encoder) : AuthenticationHandler<TestAuthOptions>(options, logger, encoder)
 {
     public const string AuthType = "test-auth";
     public const string AuthScheme = "test-sheme";
@@ -117,19 +128,7 @@ internal class TestAuthHandler(IOptionsMonitor<TestAuthOptions> options, ILogger
     }
 }
 
-internal class AuthorizationTestsRequestHandler
-    : IHandle<AuthorizationTestsPublicRequest>
-    , IHandle<AuthorizationTestsProtectedRequest>
+internal class TestAuthOptions : AuthenticationSchemeOptions
 {
-    public Task<HttpResult> Handle(AuthorizationTestsPublicRequest request, CancellationToken cancellationToken)
-        => Task.FromResult(HttpResult.Ok());
-
-    public Task<HttpResult> Handle(AuthorizationTestsProtectedRequest request, CancellationToken cancellationToken)
-        => Task.FromResult(HttpResult.Ok());
+    public bool ShouldAuthenticate { get; set; }
 }
-
-[Route(nameof(AuthorizationTestsPublicRequest))]
-public class AuthorizationTestsPublicRequest : IGet { }
-
-[ProtectedRoute(nameof(AuthorizationTestsProtectedRequest))]
-public class AuthorizationTestsProtectedRequest : IGet { }
