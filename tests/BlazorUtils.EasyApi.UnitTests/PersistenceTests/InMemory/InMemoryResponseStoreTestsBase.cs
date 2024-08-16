@@ -1,4 +1,5 @@
 ﻿using BlazorUtils.EasyApi.Shared.Rendering;
+using BlazorUtils.EasyApi.UnitTests.Utils;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -9,13 +10,13 @@ public abstract class InMemoryResponseStoreTestsBase : TestContext
 {
     public const string StorageKey = "storage-key";
 
-    protected readonly InnerCallerResponseProvider _innerCallerResponseProvider;
+    protected readonly TestResponseProvider _responseProvider;
     internal readonly Mock<IInteractivityDetector> _interactivityDetectorMock;
 
     public InMemoryResponseStoreTestsBase()
     {
-        _innerCallerResponseProvider = new();
-        Services.AddSingleton(_innerCallerResponseProvider);
+        _responseProvider = new();
+        Services.AddSingleton(_responseProvider);
 
         _interactivityDetectorMock = new Mock<IInteractivityDetector>();
     }
@@ -26,12 +27,12 @@ public abstract class InMemoryResponseStoreTestsBase : TestContext
         _interactivityDetectorMock.Setup(detector => detector.IsInteractive).Returns(true);
 
         var persistedResponse = HttpResult<string>.Ok("persisted-response");
-        _innerCallerResponseProvider.Response = persistedResponse;
+        _responseProvider.Response = persistedResponse;
 
         var caller = Services.GetRequiredService<IPersistentCall<InMemoryResponseStoreTestsRequest, string>>();
         await caller.CallHttp(StorageKey, new());
 
-        _innerCallerResponseProvider.Response = default!;
+        _responseProvider.Response = HttpResult<string>.Ok("inner-caller-response");
 
         var renderedComponent = RenderComponent<InMemoryResponseStoreTestsComponent>();
 
@@ -43,42 +44,31 @@ public abstract class InMemoryResponseStoreTestsBase : TestContext
     {
         _interactivityDetectorMock.Setup(detector => detector.IsInteractive).Returns(true);
 
-        var innerCallerResponse = HttpResult<string>.Ok("inner-caller-response");
-        _innerCallerResponseProvider.Response = innerCallerResponse;
-
         var renderedComponent = RenderComponent<InMemoryResponseStoreTestsComponent>();
 
-        AssertCorrectResponse(renderedComponent, innerCallerResponse);
+        AssertCorrectResponse(renderedComponent, _responseProvider.Response);
     }
 
     [Fact]
     public async Task InMemoryResponseStore_BlazorStatic_WithPersistedResponse_DoesNotRetrieve()
     {
-        var persistedResponse = HttpResult<string>.Ok("persisted-response");
-        _innerCallerResponseProvider.Response = persistedResponse;
+        _responseProvider.Response = HttpResult<string>.Ok("persisted-response");
 
         var caller = Services.GetRequiredService<IPersistentCall<InMemoryResponseStoreTestsRequest, string>>();
         await caller.CallHttp(StorageKey, new());
 
-        _innerCallerResponseProvider.Response = default!;
-
-        var innerCallerResponse = HttpResult<string>.Ok("inner-caller-response");
-        _innerCallerResponseProvider.Response = innerCallerResponse;
+        _responseProvider.Response = HttpResult<string>.Ok("inner-caller-response");
 
         var renderedComponent = RenderComponent<InMemoryResponseStoreTestsComponent>();
 
-        AssertCorrectResponse(renderedComponent, innerCallerResponse);
+        AssertCorrectResponse(renderedComponent, _responseProvider.Response);
     }
 
     [Fact]
     public void InMemoryResponseStore_BlazorStatic_NoPersistedResponse_DoesNotRetrieve()
     {
-        var innerCallerResponse = HttpResult<string>.Ok("inner-caller-response");
-        _innerCallerResponseProvider.Response = innerCallerResponse;
-
         var renderedComponent = RenderComponent<InMemoryResponseStoreTestsComponent>();
-
-        AssertCorrectResponse(renderedComponent, innerCallerResponse);
+        AssertCorrectResponse(renderedComponent, _responseProvider.Response);
     }
 
     protected static void AssertCorrectResponse(
@@ -96,8 +86,6 @@ public abstract class InMemoryResponseStoreTestsBase : TestContext
 [Route(nameof(InMemoryResponseStoreTestsRequest))]
 public class InMemoryResponseStoreTestsRequest : IGet<string> { }
 
-public class InnerCallerResponseProvider
-{
-    public HttpResult<string> Response { get; set; } = default!;
-}
+internal class InMemoryResponseStoreTestsRequestHandler(TestResponseProvider responseProvider) : TestRequestHandler<InMemoryResponseStoreTestsRequest>(responseProvider) { }
+
 

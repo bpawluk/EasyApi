@@ -70,16 +70,11 @@ public sealed class EndpointsCustomizationTests : IAsyncDisposable
     }
 }
 
-internal class TestEndpointsCustomization : IEndpointsCustomization
-{
-    public void Customize<Request>(RouteHandlerBuilder builder)
-    {
-        if (typeof(Request) == typeof(EndpointsCustomizationTestsCustomizedRequest))
-        {
-            builder.RequireAuthorization();
-        }
-    }
-}
+[Route(nameof(EndpointsCustomizationTestsCustomizedRequest))]
+public class EndpointsCustomizationTestsCustomizedRequest : IGet { }
+
+[Route(nameof(EndpointsCustomizationTestsDefaultRequest))]
+public class EndpointsCustomizationTestsDefaultRequest : IGet { }
 
 internal class AuthorizationTestsRequestHandler
     : IHandle<EndpointsCustomizationTestsCustomizedRequest>
@@ -92,8 +87,13 @@ internal class AuthorizationTestsRequestHandler
         => Task.FromResult(HttpResult.Ok());
 }
 
-[Route(nameof(EndpointsCustomizationTestsCustomizedRequest))]
-public class EndpointsCustomizationTestsCustomizedRequest : IGet { }
-
-[Route(nameof(EndpointsCustomizationTestsDefaultRequest))]
-public class EndpointsCustomizationTestsDefaultRequest : IGet { }
+internal class TestEndpointsCustomization : IEndpointsCustomization
+{
+    public void Customize<Request>(RouteHandlerBuilder builder)
+    {
+        if (typeof(Request) == typeof(EndpointsCustomizationTestsCustomizedRequest))
+        {
+            builder.RequireAuthorization();
+        }
+    }
+}

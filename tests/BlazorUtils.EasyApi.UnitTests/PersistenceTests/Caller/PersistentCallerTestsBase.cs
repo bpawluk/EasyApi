@@ -1,5 +1,6 @@
 ﻿using BlazorUtils.EasyApi.Shared.Persistence;
 using BlazorUtils.EasyApi.Shared.Persistence.Response;
+using BlazorUtils.EasyApi.UnitTests.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
@@ -13,7 +14,7 @@ public abstract class PersistentCallerTestsBase : IAsyncLifetime
 
     private IServiceProvider _sut = default!;
     private Mock<IResponseStore<string>> _responseStoreMock = default!;
-    private readonly InnerCallerResponseProvider _innerCallerResponseProvider = new();
+    private readonly TestResponseProvider _responseProvider = new();
 
     public async Task InitializeAsync()
     {
@@ -27,7 +28,7 @@ public abstract class PersistentCallerTestsBase : IAsyncLifetime
         _sut = await CreateSUT(services =>
         {
             services.Replace(ServiceDescriptor.Singleton(responseStoreFactoryMock.Object));
-            services.AddSingleton(_innerCallerResponseProvider);
+            services.AddSingleton(_responseProvider);
         });
     }
 
@@ -66,14 +67,11 @@ public abstract class PersistentCallerTestsBase : IAsyncLifetime
     [Fact]
     public async Task PersistentCaller_NoPersistedResponse_InnerCallerSucceeded_ReturnsInnerResponse_AndPersistsIt()
     {
-        var innerCallerResponse = HttpResult<string>.Ok("inner-caller-response");
-        _innerCallerResponseProvider.Response = innerCallerResponse;
-
         var caller = _sut.GetRequiredService<IPersistentCall<PersistentCallerTestsRequest, string>>();
         var result = await caller.CallHttp(_storageKey, new());
 
-        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-        Assert.Equal(innerCallerResponse.Response, result.Response);
+        Assert.Equal(_responseProvider.Response.StatusCode, result.StatusCode);
+        Assert.Equal(_responseProvider.Response.Response, result.Response);
         _responseStoreMock.Verify(store => store.Save(_storageKey, It.IsAny<HttpResult<string>>()), Times.Once);
     }
 
@@ -81,7 +79,7 @@ public abstract class PersistentCallerTestsBase : IAsyncLifetime
     public async Task PersistentCaller_NoPersistedResponse_InnerCallerFailed_ReturnsInnerResponse_DoesNotPersistIt()
     {
         var innerCallerResponse = HttpResult<string>.BadRequest();
-        _innerCallerResponseProvider.Response = innerCallerResponse;
+        _responseProvider.Response = innerCallerResponse;
 
         var caller = _sut.GetRequiredService<IPersistentCall<PersistentCallerTestsRequest, string>>();
         var result = await caller.CallHttp(_storageKey, new());
@@ -99,7 +97,4 @@ public abstract class PersistentCallerTestsBase : IAsyncLifetime
 [Route(nameof(PersistentCallerTestsRequest))]
 public class PersistentCallerTestsRequest : IGet<string> { }
 
-public class InnerCallerResponseProvider
-{
-    public HttpResult<string> Response { get; set; } = default!;
-}
+internal class PersistentCallerTestsRequestHandler(TestResponseProvider responseProvider) : TestRequestHandler<PersistentCallerTestsRequest>(responseProvider) { }
