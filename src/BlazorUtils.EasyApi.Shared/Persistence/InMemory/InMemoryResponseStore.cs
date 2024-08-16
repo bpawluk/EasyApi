@@ -42,14 +42,14 @@ internal class InMemoryResponseStore<ResponseType> : IResponseStore<ResponseType
         if (ShouldSave)
         {
             var snapshot = new ResponseSnapshot<ResponseType>(response.StatusCode, response.Response!);
-            _memoryCache.Set(GetUniqueKey(key), snapshot, _options);
+            _memoryCache.Set(key, snapshot, _options);
         }
     }
 
     public PersistedResponse<ResponseType>? Retrieve(string key)
     {
         if (ShouldRetrieve
-            && _memoryCache.TryGetValue(GetUniqueKey(key), out var result)
+            && _memoryCache.TryGetValue(key, out var result)
             && result is ResponseSnapshot<ResponseType> snapshot)
         {
             var response = HttpResult<ResponseType>.WithStatusCode(snapshot.StatusCode, snapshot.Response);
@@ -57,6 +57,4 @@ internal class InMemoryResponseStore<ResponseType> : IResponseStore<ResponseType
         }
         return null;
     }
-
-    private static string GetUniqueKey(string key) => $"{typeof(ResponseType).FullName}-{key}";
 }
