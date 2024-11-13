@@ -420,6 +420,9 @@ builder.Services
 
 ## Change Log
 
+### v2.0.0
+- .NET 9 upgrade
+
 ### v1.1.0
 - Introduced new overloads for IPersistentCall methods to allow forcing fresh request calls ignoring all persisted data
 - Introduced absolute expiration of responses in in-memory persistence
