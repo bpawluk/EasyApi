@@ -75,12 +75,12 @@ public abstract class InMemoryResponseStoreTestsBase : TestContext
 
         _responseProvider.Response = HttpResult<string>.Ok("inner-caller-response");
 
-        await Task.Delay(300);
+        await Task.Delay(200);
 
         var renderedComponent = RenderComponent<InMemoryResponseStoreTestsComponent>();
         AssertCorrectResponse(renderedComponent, persistedResponse);
 
-        await Task.Delay(300);
+        await Task.Delay(200);
 
         renderedComponent = RenderComponent<InMemoryResponseStoreTestsComponent>();
         AssertCorrectResponse(renderedComponent, persistedResponse);
