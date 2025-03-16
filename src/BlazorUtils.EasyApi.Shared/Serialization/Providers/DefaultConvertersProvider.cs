@@ -1,8 +1,11 @@
-﻿using BlazorUtils.EasyApi.Shared.Serialization.Converters;
+﻿using BlazorUtils.EasyApi.Shared.Json;
+using BlazorUtils.EasyApi.Shared.Serialization.Converters;
 
 namespace BlazorUtils.EasyApi.Shared.Serialization.Providers;
 
-internal class DefaultConvertersProvider : IConvertersProvider
+internal class DefaultConvertersProvider(JsonOptionsProvider jsonOptions) : IConvertersProvider
 {
-    public IParamConverter<T>? Get<T>() => DefaultParamConverter<T>.Instance;
+    private readonly JsonOptionsProvider _jsonOptions = jsonOptions;
+
+    public IParamConverter<T>? Get<T>() => DefaultParamConverter<T>.GetInstance(_jsonOptions);
 }

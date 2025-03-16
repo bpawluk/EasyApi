@@ -1,10 +1,12 @@
-﻿namespace BlazorUtils.EasyApi.Shared.Serialization.Providers;
+﻿using BlazorUtils.EasyApi.Shared.Json;
+
+namespace BlazorUtils.EasyApi.Shared.Serialization.Providers;
 
 internal class ConvertersProvider : IConvertersProvider
 {
     private readonly IConvertersProvider[] _providers;
 
-    public ConvertersProvider()
+    public ConvertersProvider(JsonOptionsProvider jsonOptions)
     {
         _providers =
         [
@@ -13,7 +15,7 @@ internal class ConvertersProvider : IConvertersProvider
             new SystemConvertersProvider(),
             new TimeConvertersProvider(),
             new EnumConvertersProvider(),
-            new DefaultConvertersProvider()
+            new DefaultConvertersProvider(jsonOptions)
         ];
     }
 

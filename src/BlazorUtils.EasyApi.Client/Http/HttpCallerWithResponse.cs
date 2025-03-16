@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace BlazorUtils.EasyApi.Client.Http;
 
-internal class HttpCaller<Request, Response>(IHttpClientProvider httpClientProvider, Requests requests) 
-    : HttpCallerBase<Request>(httpClientProvider, requests)
+internal class HttpCaller<Request, Response>(IHttpClientProvider httpClientProvider, Requests requests, JsonOptionsProvider jsonOptions) 
+    : HttpCallerBase<Request>(httpClientProvider, requests, jsonOptions)
     , ICall<Request, Response>
     where Request : class, IRequest<Response>, new()
 {
@@ -38,14 +38,14 @@ internal class HttpCaller<Request, Response>(IHttpClientProvider httpClientProvi
         return HttpResult<Response>.WithStatusCode(httpResponse.StatusCode);
     }
 
-    private static async Task<(bool HasResponse, Response? Response)> TryReadContent(HttpContent content, CancellationToken cancellationToken)
+    private async Task<(bool HasResponse, Response? Response)> TryReadContent(HttpContent content, CancellationToken cancellationToken)
     {
         var body = await content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
         if (body != Stream.Null && body.CanRead)
         {
             try
             {
-                var response = await JsonSerializer.DeserializeAsync<Response>(body, JsonOptions.Get, cancellationToken).ConfigureAwait(false);
+                var response = await JsonSerializer.DeserializeAsync<Response>(body, _jsonOptions.Get(), cancellationToken).ConfigureAwait(false);
                 return (true, response);
             }
             catch (JsonException) { }

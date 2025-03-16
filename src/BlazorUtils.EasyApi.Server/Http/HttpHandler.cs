@@ -27,6 +27,7 @@ internal static class HttpHandler
     public async static Task<IResult> Handle<Request, Response>(
         HttpRequest httpRequest,
         Requests requests,
+        JsonOptionsProvider jsonOptions,
         IHandle<Request, Response> handler,
         CancellationToken cancellationToken)
         where Request : class, IRequest<Response>, new()
@@ -36,7 +37,7 @@ internal static class HttpHandler
         var result = await handler.Handle(request, cancellationToken).ConfigureAwait(false);
         if (result.HasResponse)
         {
-            return Results.Json(result.Response, options: JsonOptions.Get, statusCode: (int)result.StatusCode);
+            return Results.Json(result.Response, options: jsonOptions.Get(), statusCode: (int)result.StatusCode);
         }
         return Results.StatusCode((int)result.StatusCode);
     }
