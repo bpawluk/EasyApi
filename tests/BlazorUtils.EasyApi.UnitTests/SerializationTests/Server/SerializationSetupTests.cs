@@ -18,7 +18,7 @@ public sealed class SerializationSetupTests : IAsyncDisposable
 
         builder.Services
             .AddEasyApi()
-            .WithConfiguration(serializationConfig)
+            .ConfigureSerialization(serializationConfig)
             .WithContract(GetType().Assembly)
             .WithServer();
 

@@ -24,7 +24,7 @@ public sealed class SerializationSetupTests : IDisposable
 
         var easyApiBuilder = services
             .AddEasyApi()
-            .WithConfiguration(serializationConfig)
+            .ConfigureSerialization(serializationConfig)
             .WithContract(GetType().Assembly)
             .WithClient()
             .Using(httpClientProviderMock.Object);
