@@ -420,6 +420,9 @@ builder.Services
 
 ## Change Log
 
+### v2.1.0
+- Added possibility to configure JSON Serialization, see issue https://github.com/bpawluk/EasyApi/issues/7
+
 ### v2.0.0
 - .NET 9 upgrade
 
