@@ -6,9 +6,12 @@ namespace BlazorUtils.EasyApi.Shared.Serialization.Converters.Time;
 internal class DateTimeParamConverter : IParamConverter<DateTime>
 {
     private const string _format = "o";
-    private static DateTimeParamConverter? _instance;
 
-    public static DateTimeParamConverter Instance => _instance ??= new DateTimeParamConverter();
+    private static readonly Lazy<DateTimeParamConverter> _instance = new(() => new DateTimeParamConverter());
+
+    public static DateTimeParamConverter Instance => _instance.Value;
+
+    private DateTimeParamConverter() { }
 
     public DateTime Read(string value) => DateTime.ParseExact(value, _format, CultureInfo.InvariantCulture);
 

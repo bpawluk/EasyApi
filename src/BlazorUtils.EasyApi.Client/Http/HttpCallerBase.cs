@@ -16,16 +16,19 @@ namespace BlazorUtils.EasyApi.Client.Http;
 internal abstract class HttpCallerBase<Request>
     where Request : class, IRequest, new()
 {
+    protected readonly JsonOptionsProvider _jsonOptions;
+
     private readonly IHttpClientProvider _httpClientProvider;
     private readonly RequestAccessor<Request> _accessor;
-    private readonly JsonSerializerOptions _jsonSerializerOptions;
+    private readonly JsonSerializerOptions _bodyParamsJsonSerializerOptions;
 
-    protected HttpCallerBase(IHttpClientProvider httpClientProvider, Requests requests)
+    protected HttpCallerBase(IHttpClientProvider httpClientProvider, Requests requests, JsonOptionsProvider jsonOptions)
     {
         _httpClientProvider = httpClientProvider;
         _accessor = requests.Get<Request>();
-        _jsonSerializerOptions = JsonOptions.Create();
-        _jsonSerializerOptions.Converters.Add(new RequestBodyConverter<Request>(_accessor));
+        _jsonOptions = jsonOptions;
+        _bodyParamsJsonSerializerOptions = _jsonOptions.Create();
+        _bodyParamsJsonSerializerOptions.Converters.Add(new RequestBodyConverter<Request>(_accessor));
     }
 
     protected HttpRequestMessage GetHttpRequest(Request request, HttpMethod method)
@@ -78,7 +81,7 @@ internal abstract class HttpCallerBase<Request>
     {
         if (_accessor.BodyParams.Any())
         {
-            return JsonContent.Create(request, options: _jsonSerializerOptions);
+            return JsonContent.Create(request, options: _bodyParamsJsonSerializerOptions);
         }
         return null;
     }

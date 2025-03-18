@@ -6,9 +6,12 @@ namespace BlazorUtils.EasyApi.Shared.Serialization.Converters.Time;
 internal class TimeOnlyParamConverter : IParamConverter<TimeOnly>
 {
     private const string _format = "o";
-    private static TimeOnlyParamConverter? _instance;
 
-    public static TimeOnlyParamConverter Instance => _instance ??= new TimeOnlyParamConverter();
+    private static readonly Lazy<TimeOnlyParamConverter> _instance = new(() => new TimeOnlyParamConverter());
+
+    public static TimeOnlyParamConverter Instance => _instance.Value;
+
+    private TimeOnlyParamConverter() { }
 
     public TimeOnly Read(string value) => TimeOnly.ParseExact(value, _format, CultureInfo.InvariantCulture);
 

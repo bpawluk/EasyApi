@@ -4,9 +4,11 @@ namespace BlazorUtils.EasyApi.Shared.Serialization.Converters.System;
 
 internal class UriParamConverter : IParamConverter<Uri>
 {
-    private static UriParamConverter? _instance;
+    private static readonly Lazy<UriParamConverter> _instance = new(() => new UriParamConverter());
 
-    public static UriParamConverter Instance => _instance ??= new UriParamConverter();
+    public static UriParamConverter Instance => _instance.Value;
+
+    private UriParamConverter() { }
 
     public Uri Read(string value) => new(value);
 
