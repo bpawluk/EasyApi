@@ -4,7 +4,7 @@
     <Major>2</Major>
     <Minor>2</Minor>
     <Patch>0</Patch>
-    <VersionPrefix>$(Major).$(Minor).$(Patch)-preview</VersionPrefix>
+    <VersionPrefix>$(Major).$(Minor).$(Patch)</VersionPrefix>
     <AssemblyVersion>$(Major).0.0.0</AssemblyVersion>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
