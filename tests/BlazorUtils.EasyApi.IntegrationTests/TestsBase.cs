@@ -1,14 +1,23 @@
 ﻿using BlazorUtils.EasyApi.IntegrationTests.SUT.Client;
 using BlazorUtils.EasyApi.IntegrationTests.SUT.Server;
+using BlazorUtils.EasyApi.IntegrationTests.SUT.Server.Auth;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
 namespace BlazorUtils.EasyApi.IntegrationTests;
 
-public abstract class TestsBase(TestsFixture fixture) : IClassFixture<TestsFixture>
+public abstract class TestsBase : IClassFixture<TestsFixture>
 {
-    protected readonly App _client = fixture.Client;
-    protected readonly WebApplicationFactory<Program> _server = fixture.Server;
+    protected readonly App _client;
+    protected readonly WebApplicationFactory<Program> _server;
+
+    public TestsBase(TestsFixture fixture)
+    {
+        _client = fixture.Client;
+        _server = fixture.Server;
+        SignOut();
+    }
 
     protected abstract ICall<Request> GetCaller<Request>() 
         where Request : class, IRequest, new();
@@ -34,5 +43,15 @@ public abstract class TestsBase(TestsFixture fixture) : IClassFixture<TestsFixtu
         Assert.Equal(expectedStatusCode, response.StatusCode);
         Assert.True(response.HasResponse);
         return response.Response!;
+    }
+
+    protected void SignIn(string username)
+    {
+        _server.Services.GetRequiredService<TestAuthenticationSettings>().UserName = username;
+    }
+
+    protected void SignOut()
+    {
+        _server.Services.GetRequiredService<TestAuthenticationSettings>().UserName = null;
     }
 }

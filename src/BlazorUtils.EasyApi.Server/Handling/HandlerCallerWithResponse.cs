@@ -1,13 +1,22 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BlazorUtils.EasyApi.Server.Handling;
 
-internal class HandlerCaller<Request, Response>(IHandle<Request, Response> handler) 
-    : ICall<Request, Response>
+internal class HandlerCaller<Request, Response> : ICall<Request, Response>
     where Request : class, IRequest<Response>, new()
 {
-    private readonly IHandle<Request, Response> _handler = handler;
+    private readonly IHandle<Request, Response> _handler;
+
+    public HandlerCaller(IHandle<Request, Response> handler, AuthenticationStateProvider? authStateProvider = null)
+    {
+        _handler = handler;
+        if (_handler is Handler baseHandler)
+        {
+            baseHandler.AuthStateProvider = authStateProvider;
+        }
+    }
 
     public Task<Response> Call(Request request) => Call(request, CancellationToken.None);
 
