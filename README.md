@@ -420,6 +420,9 @@ builder.Services
 
 ## Change Log
 
+### v2.2.0
+- Added possibility to access ClaimsPrincipal of the current User from EasyApi Handlers, see issue https://github.com/bpawluk/EasyApi/issues/6
+
 ### v2.1.0
 - Added possibility to configure JSON Serialization, see issue https://github.com/bpawluk/EasyApi/issues/7
 
